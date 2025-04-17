@@ -1,0 +1,91 @@
+{
+  "siteInfo": {
+    "heroTitle": "Millisecond Pulsar Parallax Program",
+    "heroSubtitle": "Mapping the Galaxy's Most Precise Timekeepers",
+    "heroDescription": "MSPSRπ measures millisecond pulsar positions with microarcsecond precision, now targeting 44 neutron stars vital for gravitational wave detection. This second-phase campaign establishes a definitive three-dimensional map of these extremely stable rotators, enabling rigorous tests of gravitational theories while providing essential astrometric foundations for detecting nanohertz gravitational waves from supermassive black hole binaries across cosmic history.",
+    "timeline": [
+      {
+        "period": "2011-2013",
+        "phase": "PSRPI",
+        "current": false
+      },
+      {
+        "period": "2015-2018",
+        "phase": "MSPSRPI",
+        "current": false
+      },
+      {
+        "period": "2022-Present",
+        "phase": "MSPSRPI2",
+        "current": true
+      }
+    ]
+  },
+  "psrpi": {
+    "title": "PSRPI (2011-2013)",
+    "subtitle": "Original Pulsar Parallax Initiative",
+    "description": "The PSRPI program laid the groundwork for high-precision astrometry of pulsars using Very Long Baseline Interferometry. This initial phase targeted 60 pulsars and developed key observational techniques.",
+    "objectives": [
+      "Measure precise distances to 60 pulsars",
+      "Improve understanding of Galactic electron distribution",
+      "Develop in-beam calibration techniques",
+      "Create foundation for millisecond pulsar astrometry"
+    ],
+    "achievements": [
+      "Successfully observed 60 pulsars with VLBA",
+      "Achieved parallax measurements for 57 pulsars",
+      "Developed in-beam calibration methodology",
+      "Published comprehensive catalogs of pulsar proper motions"
+    ],
+    "stats": {
+      "pulsars": 60,
+      "precision": "45 μas",
+      "publications": 2
+    }
+  },
+  "mspsrpi": {
+    "title": "MSPSRPI (2015-2018)",
+    "subtitle": "Focused Millisecond Pulsar Astrometry Initiative",
+    "description": "Building on PSRπ, this phase exclusively targeted millisecond pulsars due to their exceptional rotational stability and importance for gravitational wave detection through pulsar timing arrays.",
+    "objectives": [
+      "Measure precise distances to 18 millisecond pulsars with VLBA",
+      "Enhance tests of gravitational theories through binary pulsar measurements",
+      "Provide astrometric priors to improve pulsar timing array sensitivity",
+      "Refine Galactic electron density distribution models"
+    ],
+    "achievements": [
+      "Obtained significant parallax measurements for 15 out of 18 millisecond pulsars",
+      "Developed novel 'inverse-referenced 1D interpolation' technique",
+      "Created 'sterne', a specialized Bayesian astrometry inference package",
+      "Measured the most significant model-independent distance for a double neutron star system (PSR J1518+4904)"
+    ],
+    "stats": {
+      "pulsars": 18,
+      "precision": "30 μas",
+      "publications": 4
+    }
+  },
+  "mspsrpi2": {
+    "title": "MSPSRPI2 (2022-Present)",
+    "subtitle": "Extended Millisecond Pulsar Astrometry Campaign",
+    "description": "The second phase of MSPSRPI commenced in 2024 with VLBA project code BD247. This phase targets 44 pulsars, all of which are currently being observed by one or more pulsar timing arrays, representing a significant expansion of the millisecond pulsar sample studied with VLBI astrometry.",
+    "objectives": [
+      "Determine precise astrometric parameters for pulsar timing array sources",
+      "Expand the sample of millisecond pulsars with model-independent distances",
+      "Support ongoing gravitational wave detection efforts through improved astrometry",
+      "Further refine our understanding of the Galactic millisecond pulsar population"
+    ],
+    "achievements": [
+      "Project observations commenced in 2024",
+      "Observational progress can be tracked below [MSPSRPI2 Progress Tracker]",
+      "Analysis pipeline established based on methodologies developed in MSPSRPI",
+      "Collaborative framework established with international pulsar timing arrays"
+    ],
+    "stats": {
+      "pulsars": 44,
+      "precision": "in progress",
+      "publications": "in progress",
+      "progress": "Observations in progress"
+    }
+  }
+}
