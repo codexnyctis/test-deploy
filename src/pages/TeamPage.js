@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import BackgroundImage from '../assets/TeamBackground.jpg'
 import { 
+  Users, 
   Mail, 
-  Github
+  ExternalLink,
+  Github,
+  Linkedin,
+  Globe,
+  ChevronRight,
+  Building,
+  GraduationCap,
+  Award,
+  Radio
 } from 'lucide-react';
+
+/* Hi Ryan,
+The data of the team members might not be correct, so you need the information confirmed by Adam and Bailey.
+The data here is hardcoded, you need it to be retrieved from github. Also you will need the pictures of 
+teammembers if they are willing to be displayed. Moreover, you can redesign it as you wish */
 
 const TeamPage = () => {
   const [activeTab, setActiveTab] = useState('research');
-  // (Moved useState and filteredTeam logic below the researchTeam declaration)
 
   // Research Team Members
   const researchTeam = [
@@ -18,17 +30,11 @@ const TeamPage = () => {
       role: "Principal Investigator",
       institution: "Swinburne University of Technology",
       country: "Australia",
-      expertise: ["Radio Astronomy"],
-      email: "mailto:adam.deller@swin.edu.au",
-      github: "https://github.com/adamdeller",
-      projects: ["VLBA/24A-213", "MSPSRπ", "MSPSRπ2"],
-      responsibilities: [
-        "Proposal Lead",
-        "Scientific Strategy",
-        "ICRF Frame Tie",
-        "Pulsar Gate Calibration"
-      ],
-      highlightedContribution: "Principal architect of the MSPSRπ2 campaign; leading the astrometric VLBI effort targeting PTA MSPs for gravitational wave research."
+      bio: "Leading astrophysicist specializing in the physics of compact astronomical objects, with a particular focus on pulsars and fast radio bursts. Principal investigator of the MSPSRPI project.",
+      image: "/api/placeholder/300/300",
+      email: "adeller@astro.swin.edu.au",
+      website: "https://www.swinburne.edu.au/research/our-research/staff-profiles/adam-deller",
+      expertise: ["Radio Astronomy", "Very Long Baseline Interferometry", "Pulsar Astrometry"]
     },
     {
       id: 2,
@@ -36,274 +42,522 @@ const TeamPage = () => {
       role: "Research Lead",
       institution: "Swinburne University of Technology",
       country: "Australia",
-      expertise: ["Pulsar Astrometry"],
-      email: "mailto:hao.ding@swin.edu.au",
-      github: "https://github.com/haoding"
+      bio: "Specialized in pulsar astrometry and VLBI techniques. Led data analysis for the MSPSRPI project and developed the 'sterne' Bayesian astrometry inference package.",
+      image: "/api/placeholder/300/300",
+      email: "hdingastro@hotmail.com",
+      github: "https://github.com/dingswin",
+      expertise: ["Pulsar Astrometry", "Data Analysis", "Bayesian Inference"]
     },
     {
       id: 3,
-      name: "Bailee Wolfe",
-      role: "Teaching Sessional",
-      institution: "Swinburne University of Technology",
-      country: "Australia",
-      expertise: ["Astrometry"],
-      email: "mailto:bailee.wolfe@swin.edu.au",
-      github: "https://github.com/baileewolfe",
-      projects: ["VLBA/24A-213", "MSPSRπ2 Pilot"],
-      responsibilities: [
-        "Source Coordination",
-        "In-beam Calibrator Selection",
-        "Astrometric Planning",
-        "Observation Logistics"
-      ],
-      highlightedContribution: "Supported pulsar target matching and source parameter coordination across 44 MSPs; contributed to observation setup for calibrator search sessions."
-    },
-    {
-      id: 4,
       name: "Dr. Bettina Posselt",
       role: "Senior Researcher",
       institution: "Max Planck Institute for Radio Astronomy",
       country: "Germany",
-      expertise: ["Neutron Stars"],
-      email: "mailto:bettina.posselt@mpifr-bonn.mpg.de",
-      github: "https://github.com/bettinaposselt"
+      bio: "Expert in neutron star science and radio astronomy techniques. Contributed to data acquisition and calibration strategies for the MSPSRPI project.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Neutron Stars", "Radio Astronomy", "X-ray Astronomy"]
     },
     {
-      id: 5,
+      id: 4,
       name: "Dr. Shami Chatterjee",
       role: "Radio Astronomy Specialist",
       institution: "Cornell University",
       country: "USA",
-      expertise: ["Radio Astronomy"],
-      email: "mailto:shami.chatterjee@cornell.edu",
-      github: "https://github.com/shamichatterjee"
+      bio: "Distinguished research scientist with expertise in radio astronomy and VLBI techniques. Contributed to observational planning and data interpretation.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Radio Astronomy", "Pulsar Timing", "VLBI"]
     },
     {
-      id: 6,
+      id: 5,
       name: "Dr. Ben Stappers",
       role: "Pulsar Timing Expert",
       institution: "University of Manchester",
       country: "UK",
-      expertise: ["Pulsar Timing Arrays"],
-      email: "mailto:ben.stappers@manchester.ac.uk",
-      github: "https://github.com/benstappers"
+      bio: "Leading researcher in pulsar timing arrays and gravitational wave detection using pulsars. Provided crucial pulsar timing data for the MSPSRPI project.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Pulsar Timing Arrays", "Gravitational Wave Detection", "Radio Astronomy"]
     },
     {
-      id: 7,
+      id: 6,
       name: "Dr. Paulo Freire",
       role: "Binary Pulsar Specialist",
       institution: "Max Planck Institute for Radio Astronomy",
       country: "Germany",
-      expertise: ["Binary Pulsars"],
-      email: "mailto:paulo.freire@mpifr-bonn.mpg.de",
-      github: "https://github.com/paulofreire"
+      bio: "Expert in binary and millisecond pulsars. Contributed to the interpretation of binary pulsar systems in the MSPSRPI sample and their implications for testing theories of gravity.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Binary Pulsars", "Tests of Gravity", "Relativistic Astrophysics"]
     },
     {
-      id: 8,
+      id: 7,
       name: "Dr. Ingrid Stairs",
       role: "Pulsar Physics Specialist",
       institution: "University of British Columbia",
       country: "Canada",
-      expertise: ["Pulsar Timing"],
-      email: "mailto:ingrid.stairs@ubc.ca",
-      github: "https://github.com/ingridstairs"
+      bio: "Renowned for work on pulsar timing and tests of gravitational theories. Contributed to analysis and interpretation of the MSPSRPI results.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Pulsar Timing", "Tests of Gravity", "Observational Astrophysics"]
     },
     {
-      id: 9,
+      id: 8,
       name: "Dr. T. Joseph W. Lazio",
       role: "Radio Astronomy Expert",
       institution: "Jet Propulsion Laboratory, Caltech",
       country: "USA",
-      expertise: ["Radio Astronomy"],
-      email: "mailto:joseph.lazio@jpl.nasa.gov",
-      github: "https://github.com/josephlazio"
+      bio: "Specialized in radio astronomy and galactic structure. Contributed to the interpretation of pulsar distances in the context of galactic electron distribution models.",
+      image: "/api/placeholder/300/300",
+      expertise: ["Radio Astronomy", "Galactic Structure", "Interstellar Medium"]
     }
   ];
-  const publications = [
+
+  // Development Team Members
+  const developmentTeam = [
     {
       id: 1,
-      title: "VLBI Astrometry of Millisecond Pulsars",
-      year: 2023,
-      authors: ["Dr. Adam Deller", "Dr. Hao Ding"],
-      projectTags: ["VLBA/24A-213"]
+      name: "Nur Sarikaya",
+      role: "UI/UX Design Lead",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Specializes in UX design with a background in learning experience design. Leads the visual and interaction design of the MSPSRπ website, focusing on making complex astronomical data accessible.",
+      image: "/api/placeholder/300/300",
+      email: "104520751@student.swin.edu.au",
+      expertise: ["User Experience", "Interface Design", "Data Visualization", "Research Methods"]
     },
     {
       id: 2,
-      title: "Expanding the PTA Network with MSPSRπ2",
-      year: 2024,
-      authors: ["Bailee Wolfe", "Dr. Adam Deller"],
-      projectTags: ["MSPSRπ2"]
+      name: "Allen Huang",
+      role: "Research & Planning Lead",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Brings a diverse background combining accounting and software development expertise. Leads project planning and research, ensuring the technical implementation aligns with scientific goals.",
+      image: "/api/placeholder/300/300",
+      email: "104947567@student.swin.edu.au",
+      expertise: ["Project Planning", "Full-stack Development", "Research Methodology"]
     },
     {
       id: 3,
-      title: "Proper Motion Studies with VLBA",
-      year: 2023,
-      authors: ["Dr. Shami Chatterjee", "Dr. Ben Stappers"],
-      projectTags: ["VLBA/24A-213"]
+      name: "Xiang Li",
+      role: "Visualization Development",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Specialized in creating interactive data visualizations that make complex pulsar astrometry data comprehensible. Previously studied game development, bringing creative approaches to scientific visualization.",
+      image: "/api/placeholder/300/300",
+      email: "104099837@student.swin.edu.au",
+      expertise: ["Data Visualization", "Interactive Graphics", "Frontend Development"]
     },
     {
       id: 4,
-      title: "Astrometry and General Relativity Tests",
-      year: 2022,
-      authors: ["Dr. Paulo Freire", "Dr. Ingrid Stairs"],
-      projectTags: ["MSPSRπ"]
+      name: "Nisha Jose",
+      role: "Data Processing & Integration",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Expert in data processing with a background in Computer Science engineering. Leads the integration of pulsar observation data with the website, ensuring accuracy and performance.",
+      image: "/api/placeholder/300/300",
+      email: "104482424@student.swin.edu.au",
+      expertise: ["Data Processing", "System Integration", "Cloud Computing", "Data Analytics"]
+    },
+    {
+      id: 5,
+      name: "Ryan Lo",
+      role: "Testing & Documentation",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Leads quality assurance and documentation, ensuring the website functions correctly across platforms and is thoroughly documented for both users and future developers.",
+      image: "/api/placeholder/300/300",
+      email: "104188201@student.swin.edu.au",
+      expertise: ["Software Testing", "Technical Documentation", "Project Management"]
+    },
+    {
+      id: 6,
+      name: "HM Kavindu",
+      role: "Front-end Development",
+      institution: "Swinburne University of Technology",
+      country: "Australia",
+      bio: "Experienced Site Reliability Engineer specializing in frontend development. Creates responsive and accessible interfaces for the MSPSRπ website, with a focus on performance and browser compatibility.",
+      image: "/api/placeholder/300/300",
+      email: "104689542@student.swin.edu.au",
+      expertise: ["Frontend Development", "DevOps", "SRE", "Cloud Technologies"]
     }
   ];
-  const [selectedProject, setSelectedProject] = useState("All");
-  const filteredTeam = researchTeam.filter(member =>
-    selectedProject === "All" || member.projects?.includes(selectedProject)
-  );
+
+  // Institutions involved in the project
+  const institutions = [
+    {
+      name: "Swinburne University of Technology",
+      country: "Australia",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "Max Planck Institute for Radio Astronomy",
+      country: "Germany",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "Cornell University",
+      country: "USA",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "University of Manchester",
+      country: "UK",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "Jet Propulsion Laboratory, Caltech",
+      country: "USA",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "University of British Columbia",
+      country: "Canada",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "National Radio Astronomy Observatory",
+      country: "USA",
+      logo: "/api/placeholder/200/80"
+    },
+    {
+      name: "Observatoire de Paris",
+      country: "France",
+      logo: "/api/placeholder/200/80"
+    }
+  ];
 
   return (
-    <div
-      id="top"
-      className="relative min-h-screen text-gray-100"
-      style={{
-        background: `linear-gradient(
-          to bottom,
-          rgba(10, 20, 40, 0.7),
-          rgba(10, 20, 40, 0.5)
-        ), url(${BackgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      <nav className="bg-gray-900 text-white py-4 px-8 flex justify-between items-center">
-        <Link to="/" className="text-lg font-bold text-white">MSPSRπ</Link>
-        <div className="space-x-6">
-          <Link to="/" className="hover:text-indigo-400">Home</Link>
-          <Link to="/project" className="hover:text-indigo-400">Project</Link>
-          <Link to="/data" className="hover:text-indigo-400">Data Release</Link>
-          <Link to="/publications" className="hover:text-indigo-400">Publications</Link>
-          <Link to="/team" className="text-indigo-400">Team</Link>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100">
+      {/* Navigation */}
+      <nav className="bg-slate-900/90 backdrop-blur-md fixed w-full z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex-shrink-0 flex items-center">
+              <Link to="/" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Home</Link>
+              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
+              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
+              <Link to="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
+              <Link to="/team" className="text-indigo-400 px-3 py-2 font-medium">Team</Link>
+            </div>
+          </div>
         </div>
       </nav>
-      <header className="relative flex flex-col items-center justify-center text-center py-20">
-        <div className="relative z-10 animate-fade-in-down">
-          <h1 className="text-5xl font-bold mb-4 text-white">Our Team</h1>
-          <p className="text-indigo-300">Meet the minds behind the mission.</p>
-        </div>
-      </header>
 
-
-      {/* Team Members 區塊 */}
-      <section className="py-6">
-        <div className="relative mx-auto w-3/4 my-4 flex justify-center items-center">
-          <div className="absolute -top-10 left-0 w-full overflow-visible pointer-events-none">
-            <div
-              className="rocket-fly animate-rocket-fly w-10 h-10 bg-contain bg-no-repeat bg-center"
-              style={{ backgroundImage: "url('https://img.icons8.com/color/48/rocket--v1.png')" }}
-            />
+      {/* Hero Section with starry background */}
+      <div className="relative pt-16 pb-4">
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Dark starry background with multiple star layers for depth */}
+          <div className="w-full h-full bg-slate-950">
+            {/* Large stars layer */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-50"></div>
+            
+            {/* Small stars layer */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-60"></div>
+            
+            {/* Subtle blue glow effect for nebula-like impression */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/10 to-transparent"></div>
+            
+            {/* Darker gradient overlay at the edges */}
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 opacity-40"></div>
           </div>
-          <div className="w-full h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 rounded-full animate-pulse"></div>
-          <div className="absolute w-4 h-4 bg-purple-500 rounded-full animate-ping"></div>
         </div>
-        <div className="flex justify-center mb-8 space-x-2">
-          {[
-            { label: "All", emoji: "🧠" },
-            { label: "VLBA/24A-213", emoji: "📡" },
-            { label: "MSPSRπ", emoji: "🔭" },
-            { label: "MSPSRπ2", emoji: "🌌" }
-          ].map(({ label, emoji }) => (
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl font-bold text-white mb-4">Our Team</h1>
+            <p className="text-xl text-indigo-200 mb-4">
+              Meet the researchers and developers behind the MSPSRπ project
+            </p>
+            <p className="text-gray-300 mb-2">
+              MSPSRπ brings together astronomers, data scientists, and developers from 
+              institutions around the world. Our international collaboration combines 
+              diverse expertise in radio astronomy, pulsar timing, and data visualization.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Team Navigation Tabs */}
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex rounded-md shadow-sm bg-slate-900/70 backdrop-blur-sm p-1 border border-slate-700/50">
             <button
-              key={label}
-              onClick={() => setSelectedProject(label)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200
-                ${
-                  selectedProject === label
-                    ? "bg-indigo-600 text-white shadow-md"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                }`}
+              className={`px-6 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
+                activeTab === 'research'
+                  ? 'text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.6)] border border-indigo-400/50'
+                  : 'text-gray-400 hover:text-indigo-300 hover:shadow-[0_0_8px_rgba(99,102,241,0.3)]'
+              }`}
+              onClick={() => setActiveTab('research')}
             >
-              <span className="mr-1">{emoji}</span>{label}
+              Research Team
             </button>
-          ))}
-        </div>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
-          {filteredTeam.map((member) => (
-            <div
-              key={member.id}
-              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition transform hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.01] duration-300 flex flex-col justify-between group"
+            <button
+              className={`px-6 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
+                activeTab === 'institutions'
+                  ? 'text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.6)] border border-indigo-400/50'
+                  : 'text-gray-400 hover:text-indigo-300 hover:shadow-[0_0_8px_rgba(99,102,241,0.3)]'
+              }`}
+              onClick={() => setActiveTab('institutions')}
             >
-              <div className="p-4 flex-grow flex justify-between">
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-1">{member.name}</h3>
-                  <p className="text-sm text-gray-400">{member.role}</p>
-                  {publications.filter(pub => pub.authors.includes(member.name)).length > 0 && (
-                    <a
-                      href={`/publications?author=${encodeURIComponent(member.name)}`}
-                      className="inline-flex items-center gap-1 text-xs bg-indigo-600 text-white px-2 py-1 rounded-full mt-2 hover:bg-indigo-500 transition"
-                      title={`View publications by ${member.name}`}
-                    >
-                      📄 {publications.filter(pub => pub.authors.includes(member.name)).length} publication{publications.filter(pub => pub.authors.includes(member.name)).length > 1 ? 's' : ''}
-                    </a>
-                  )}
-                </div>
-                {member.image ? (
-                  <div className="w-32 h-32 overflow-hidden rounded">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
+              Institutions
+            </button>
+          </div>
+        </div>
+
+        {/* Team Section */}
+        {activeTab === 'research' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {researchTeam.map((member) => (
+              <div 
+                key={member.id}
+                className="bg-gradient-to-br from-slate-900/90 via-indigo-950/30 to-slate-900/90 backdrop-blur-sm border border-indigo-500/30 rounded-lg overflow-hidden shadow-lg hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-300"
+              >
+                <div className="relative overflow-hidden">
+                  {/* Team member image with cosmic overlay */}
+                  <div className="h-40 bg-indigo-900/30">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent opacity-70"></div>
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-10"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-slate-900 to-transparent"></div>
+                    
+                    {/* Profile image or avatar */}
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+                      <div className="w-20 h-20 rounded-full border-4 border-slate-900 overflow-hidden bg-indigo-800/30 flex items-center justify-center">
+                        <Users className="h-10 w-10 text-indigo-300/70" />
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="w-32 h-32 bg-gray-600"></div>
-                )}
+                </div>
+                
+                <div className="pt-12 px-6 pb-6">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-indigo-200">{member.name}</h3>
+                    <p className="text-cyan-400 text-sm">{member.role}</p>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-gray-400 mb-3">
+                    <Building className="h-4 w-4 mr-2 text-indigo-400/70" />
+                    <span>{member.institution}, {member.country}</span>
+                  </div>
+                  
+                  <p className="text-gray-300 text-sm mb-4">{member.bio}</p>
+                  
+                  {/* Expertise tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {member.expertise && member.expertise.map((skill, index) => (
+                      <span 
+                        key={index} 
+                        className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-indigo-300 border border-indigo-500/20"
+                      >
+                        <GraduationCap className="h-3 w-3 mr-1" />
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Contact links */}
+                  <div className="flex space-x-3 mt-4">
+                    {member.email && (
+                      <a 
+                        href={`mailto:${member.email}`} 
+                        className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                        title="Email"
+                      >
+                        <Mail className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.website && (
+                      <a 
+                        href={member.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                        title="Website"
+                      >
+                        <Globe className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.github && (
+                      <a 
+                        href={member.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                        title="GitHub"
+                      >
+                        <Github className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.linkedin && (
+                      <a 
+                        href={member.linkedin} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                        title="LinkedIn"
+                      >
+                        <Linkedin className="h-5 w-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="flex space-x-4 text-gray-300 p-4">
-                {member.email && (
-                  <a
-                    href={member.email}
-                    className="hover:text-indigo-400"
-                    title="Email"
-                  >
-                    <Mail className="w-5 h-5" />
-                  </a>
-                )}
-                {member.github && (
-                  <a
-                    href={member.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-indigo-400"
-                    title="GitHub"
-                  >
-                    <Github className="w-5 h-5" />
-                  </a>
-                )}
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'development' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {developmentTeam.map((member) => (
+              <div 
+                key={member.id}
+                className="bg-gradient-to-br from-slate-900/90 via-purple-950/30 to-slate-900/90 backdrop-blur-sm border border-purple-500/30 rounded-lg overflow-hidden shadow-lg hover:shadow-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
+              >
+                <div className="relative overflow-hidden">
+                  {/* Team member image with cosmic overlay */}
+                  <div className="h-40 bg-purple-900/30">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-70"></div>
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-10"></div>
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-slate-900 to-transparent"></div>
+                    
+                    {/* Profile image or avatar */}
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+                      <div className="w-20 h-20 rounded-full border-4 border-slate-900 overflow-hidden bg-purple-800/30 flex items-center justify-center">
+                        <Users className="h-10 w-10 text-purple-300/70" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-12 px-6 pb-6">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-purple-200">{member.name}</h3>
+                    <p className="text-purple-400 text-sm">{member.role}</p>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-gray-400 mb-3">
+                    <Building className="h-4 w-4 mr-2 text-purple-400/70" />
+                    <span>{member.institution}, {member.country}</span>
+                  </div>
+                  
+                  <p className="text-gray-300 text-sm mb-4">{member.bio}</p>
+                  
+                  {/* Expertise tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {member.expertise && member.expertise.map((skill, index) => (
+                      <span 
+                        key={index} 
+                        className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-purple-300 border border-purple-500/20"
+                      >
+                        <Award className="h-3 w-3 mr-1" />
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Contact links */}
+                  <div className="flex space-x-3 mt-4">
+                    {member.email && (
+                      <a 
+                        href={`mailto:${member.email}`} 
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
+                        title="Email"
+                      >
+                        <Mail className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.website && (
+                      <a 
+                        href={member.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
+                        title="Website"
+                      >
+                        <Globe className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.github && (
+                      <a 
+                        href={member.github} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
+                        title="GitHub"
+                      >
+                        <Github className="h-5 w-5" />
+                      </a>
+                    )}
+                    {member.linkedin && (
+                      <a 
+                        href={member.linkedin} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-purple-400 hover:text-purple-300 transition-colors"
+                        title="LinkedIn"
+                      >
+                        <Linkedin className="h-5 w-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'institutions' && (
+          <div className="space-y-8">
+            <p className="text-center text-lg text-indigo-200 mb-10">
+              The MSPSRπ project is a collaboration between researchers from leading institutions around the world.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {institutions.map((institution, index) => (
+                <div 
+                  key={index}
+                  className="bg-slate-900/60 backdrop-blur-sm border border-slate-700/50 rounded-lg p-6 text-center flex flex-col items-center justify-center shadow-lg hover:shadow-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300"
+                >
+                  <div className="mb-4 h-16 flex items-center justify-center">
+                    <Radio className="h-12 w-12 text-cyan-400/50" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-1">{institution.name}</h3>
+                  <p className="text-indigo-300 text-sm">{institution.country}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        )}
 
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-800 py-10 text-center text-white">
-        <div className="max-w-2xl mx-auto px-4">
-          <h2 className="text-2xl font-bold mb-3">
-            🌌 Curious about the science? Explore our discoveries.
-          </h2>
-          <p className="text-indigo-200 mb-4">
-            Learn more about the pulsars, data, and publications shaping our understanding of the universe.
+        {/* Join Our Team Section */}
+        <div className="mt-16 bg-gradient-to-br from-indigo-900/30 via-slate-900/50 to-indigo-900/30 backdrop-blur-sm border border-indigo-500/30 rounded-lg p-8 shadow-lg">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-4">Interested in Collaborating?</h2>
+            <p className="text-indigo-200 mb-6">
+              We welcome collaborations with researchers and institutions around the world. 
+              If you're interested in contributing to MSPSRπ or related pulsar astrometry research, 
+              please reach out to our team.
+            </p>
+            <a 
+              href="mailto:adeller@astro.swin.edu.au" 
+              className="inline-flex items-center px-5 py-3 border border-indigo-500/40 rounded-md text-indigo-200 bg-indigo-900/50 hover:bg-indigo-800/50 transition duration-300 shadow-lg"
+            >
+              Contact the Principal Investigator
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="py-6 border-t border-slate-800/50 bg-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-gray-500 text-sm">
+            © 2025 Pulsar Astrometry Research Initiative. All rights reserved.
           </p>
-          <Link
-            to="/publications"
-            className="inline-block bg-white text-indigo-800 px-5 py-2.5 rounded-full font-semibold shadow-md hover:scale-105 transition"
-          >
-            📄 View Publications
-          </Link>
         </div>
-      </section>
-
-      {/* Footer 區塊 */}
-      <footer className="py-6 text-center border-t border-gray-800">
-        <div className="max-w-6xl mx-auto px-4">
-          <p className="text-gray-500 text-sm">© 2025 MSPSRπ Collaboration. All rights reserved.</p>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
