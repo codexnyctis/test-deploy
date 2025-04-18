@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, Book, ChevronRight, Users, ExternalLink, Search, Download } from 'lucide-react';
 import PulsarVisualizations from './PulsarVisualizations'; // Import the PulsarVisualizations component
-import homepageData from '../data/HomePage.json';
-import observationData from '../data/observationData.json';
 
 
 
@@ -26,41 +24,59 @@ const Homepage = () => {
   });  
   const [researchQuestions, setResearchQuestions] = useState([]);
 
+
   useEffect(() => {
-    const uniqueSources = new Set();
-    const completedSources = new Set();
-    let earliestDate = new Date();
+    const fetchData = async () => {
+      try {
+        const [homepageRes, observationRes] = await Promise.all([
+          fetch('/data/HomePage.json'),
+          fetch('/data/observationData.json')
+        ]);
   
-    observationData.forEach(obs => {
-      uniqueSources.add(obs.srcname);
-      const obsDate = new Date(obs.obsDate);
-      if (obsDate < earliestDate) earliestDate = obsDate;
+        const homepageData = await homepageRes.json();
+        const observationData = await observationRes.json();
   
-      if (obs.status === 'complete') {
-        completedSources.add(obs.srcname);
+        // Compute dynamic stats
+        const uniqueSources = new Set();
+        const completedSources = new Set();
+        let earliestDate = new Date();
+  
+        observationData.forEach(obs => {
+          uniqueSources.add(obs.srcname);
+          const obsDate = new Date(obs.obsDate);
+          if (obsDate < earliestDate) earliestDate = obsDate;
+          if (obs.status === 'complete') {
+            completedSources.add(obs.srcname);
+          }
+        });
+  
+        const total = uniqueSources.size;
+        const completed = completedSources.size;
+        const percent = total ? Math.round((completed / total) * 100) : 0;
+        const yearsOfResearch = new Date().getFullYear() - earliestDate.getFullYear();
+  
+        setProjectStats([
+          { value: total.toString(), label: "Pulsars Observed" },
+          { ...homepageData.projectStats.find(stat => stat.label === "Parallax Precision") },
+          { value: `${completed}+`, label: "Precise Distances" },
+          { value: yearsOfResearch.toString(), label: "Years of Research" }
+        ]);
+  
+        setPhase2Progress({
+          totalPulsars: total,
+          observedPulsars: completed,
+          percentComplete: percent
+        });
+  
+        setResearchQuestions(homepageData.researchQuestions);
+      } catch (err) {
+        console.error('Failed to load homepage or observation data:', err);
       }
-    });
+    };
   
-    const total = uniqueSources.size;
-    const completed = completedSources.size;
-    const percent = total ? Math.round((completed / total) * 100) : 0;
-    const yearsOfResearch = new Date().getFullYear() - earliestDate.getFullYear();
-  
-    setProjectStats([
-      { value: total.toString(), label: "Pulsars Observed" },
-      { ...homepageData.projectStats.find(stat => stat.label === "Parallax Precision") },
-      { value: `${completed}+`, label: "Precise Distances" },
-      { value: yearsOfResearch.toString(), label: "Years of Research" }
-    ]);
-  
-    setPhase2Progress({
-      totalPulsars: total,
-      observedPulsars: completed,
-      percentComplete: percent
-    });
-  
-    setResearchQuestions(homepageData.researchQuestions);
+    fetchData();
   }, []);
+  
   
   const teamMembers = [
     {
