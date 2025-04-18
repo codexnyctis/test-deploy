@@ -1,0 +1,32 @@
+{
+    "projectStats": [
+      { "label": "Pulsars Observed", "value": "45" },
+      { "label": "Parallax Precision", "value": "10 μas" },
+      { "label": "Precise Distances", "value": "57+" },
+      { "label": "Years of Research", "value": "15" }
+    ],
+    "phase2Progress": {
+      "totalPulsars": 45,
+      "observedPulsars": 27,
+      "percentComplete": 62
+    },
+    "researchQuestions": [
+      {
+        "title": "Precise Pulsar Distances",
+        "description": "What are the precise distances to the 44 millisecond pulsars being observed in the MSPSRPI2 program?"
+      },
+      {
+        "title": "Gravitational Wave Detection",
+        "description": "How can accurate astrometric measurements of millisecond pulsars improve the sensitivity of pulsar timing arrays for gravitational wave detection?"
+      },
+      {
+        "title": "Testing Relativity",
+        "description": "How can precise distance measurements to millisecond pulsars in binary systems improve tests of general relativity and alternative theories of gravity?"
+      },
+      {
+        "title": "Galactic Distribution",
+        "description": "How do millisecond pulsars distribute throughout the Galaxy, and what does this reveal about their formation and evolution?"
+      }
+    ]
+  }
+  

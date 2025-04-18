@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, Book, ChevronRight, Users, ExternalLink, Search, Download } from 'lucide-react';
 import PulsarVisualizations from './PulsarVisualizations'; // Import the PulsarVisualizations component
+import homepageData from '../data/HomePage.json';
+import observationData from '../data/observationData.json';
+
+
 
 /*Hi Kavindu! Pulsar visualizations component is the one in that what are milisecond pulsars section.
 It is a separate component that you can find in the components folder. 
@@ -12,42 +16,52 @@ const Homepage = () => {
   const [questionSlide, setQuestionSlide] = useState(0);
   const [teamMemberSlide, setTeamMemberSlide] = useState(0);
 
-  // Project stats 
-  const projectStats = [
-    { value: "122", label: "Pulsars Observed" },
-    { value: "10 μas", label: "Parallax Precision" },
-    { value: "57+", label: "Precise Distances" },
-    { value: "15", label: "Years of Research" }
-  ];
 
-  // Phase 2 Progress
-  const phase2Progress = {
-    totalPulsars: 44,
-    observedPulsars: 27,
-    percentComplete: 62
-  };
+  const [projectStats, setProjectStats] = useState([]);
+  
+  const [phase2Progress, setPhase2Progress] = useState({
+    totalPulsars: 0,
+    observedPulsars: 0,
+    percentComplete: 0
+  });  
+  const [researchQuestions, setResearchQuestions] = useState([]);
 
-  // Research Questions - All made up, we need to get this from Adam and Bailey
-  const researchQuestions = [
-    {
-      title: "Precise Pulsar Distances",
-      description: "What are the precise distances to the 44 millisecond pulsars being observed in the MSPSRPI2 program?"
-    },
-    {
-      title: "Gravitational Wave Detection",
-      description: "How can accurate astrometric measurements of millisecond pulsars improve the sensitivity of pulsar timing arrays for gravitational wave detection?"
-    },
-    {
-      title: "Testing Relativity",
-      description: "How can precise distance measurements to millisecond pulsars in binary systems improve tests of general relativity and alternative theories of gravity?"
-    },
-    {
-      title: "Galactic Distribution",
-      description: "How do millisecond pulsars distribute throughout the Galaxy, and what does this reveal about their formation and evolution?"
-    }
-  ];
-
-  // Team Members data with actual team of PSRPI but I am not sure if it is still the same
+  useEffect(() => {
+    const uniqueSources = new Set();
+    const completedSources = new Set();
+    let earliestDate = new Date();
+  
+    observationData.forEach(obs => {
+      uniqueSources.add(obs.srcname);
+      const obsDate = new Date(obs.obsDate);
+      if (obsDate < earliestDate) earliestDate = obsDate;
+  
+      if (obs.status === 'complete') {
+        completedSources.add(obs.srcname);
+      }
+    });
+  
+    const total = uniqueSources.size;
+    const completed = completedSources.size;
+    const percent = total ? Math.round((completed / total) * 100) : 0;
+    const yearsOfResearch = new Date().getFullYear() - earliestDate.getFullYear();
+  
+    setProjectStats([
+      { value: total.toString(), label: "Pulsars Observed" },
+      { ...homepageData.projectStats.find(stat => stat.label === "Parallax Precision") },
+      { value: `${completed}+`, label: "Precise Distances" },
+      { value: yearsOfResearch.toString(), label: "Years of Research" }
+    ]);
+  
+    setPhase2Progress({
+      totalPulsars: total,
+      observedPulsars: completed,
+      percentComplete: percent
+    });
+  
+    setResearchQuestions(homepageData.researchQuestions);
+  }, []);
+  
   const teamMembers = [
     {
       name: "Adam Deller",
