@@ -1,27 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ChevronRight,
   ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 
-// Import data from JSON files
-import projectDataJson from '../data/projectData.json'; // Updated to include all data
-import observationDataFromJson from '../data/observationData.json';
+// Remove direct imports
+// import projectDataJson from '../data/projectData.json';
+// import observationDataFromJson from '../data/observationData.json';
 
 const ProjectPage = () => {
   const [activePhase, setActivePhase] = useState('mspsrpi2');
   
-  // Variables to store the data
-  const siteInfo = projectDataJson.siteInfo;
-  const projectPhases = {
-    psrpi: projectDataJson.psrpi,
-    mspsrpi: projectDataJson.mspsrpi,
-    mspsrpi2: projectDataJson.mspsrpi2
+  // Add state for data, loading, refreshing, and lastUpdated
+  const [projectData, setProjectData] = useState(null);
+  const [observationData, setObservationData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [error, setError] = useState(null);
+  
+  // Function to fetch data
+  const fetchData = async () => {
+    // If refreshing, set refreshing state, otherwise set loading state
+    if (projectData && observationData) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    
+    try {
+      // Fetch both JSON files in parallel
+      const [projectResponse, observationResponse] = await Promise.all([
+        fetch(`/data/projectData.json?t=${Date.now()}`),
+        fetch(`/data/observationData.json?t=${Date.now()}`)
+      ]);
+      
+      // Check if both responses are ok
+      if (!projectResponse.ok) {
+        throw new Error(`HTTP error fetching project data! Status: ${projectResponse.status}`);
+      }
+      
+      if (!observationResponse.ok) {
+        throw new Error(`HTTP error fetching observation data! Status: ${observationResponse.status}`);
+      }
+      
+      // Parse both JSON responses
+      const projectDataJson = await projectResponse.json();
+      const observationDataJson = await observationResponse.json();
+      
+      // Update state with the fetched data
+      setProjectData(projectDataJson);
+      setObservationData(observationDataJson);
+      setLastUpdated(new Date());
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
-  const observationData = observationDataFromJson;
-
-  // Calculate simplified progress statistics
+  
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
+  // Calculate simplified progress statistics - now using the state data
   const progressStats = React.useMemo(() => {
+    // If no observation data yet, return empty stats
+    if (!observationData) {
+      return {
+        total: 0,
+        scheduled: 0,
+        inProgress: 0,
+        complete: 0,
+        issue: 0,
+        percentComplete: 0
+      };
+    }
+    
     // We'll track unique pulsars by their status
     const pulsarStatusMap = new Map();
     
@@ -64,6 +124,62 @@ const ProjectPage = () => {
     };
   }, [observationData]);
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-400 border-r-transparent"></div>
+          <p className="mt-4 text-xl">Loading project data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-red-400 text-6xl mb-4">!</div>
+          <h2 className="text-2xl mb-4">Something went wrong</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <button 
+            onClick={fetchData}
+            className="px-4 py-2 bg-indigo-800 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have no data even though we're not loading
+  if (!projectData || !observationData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl">No data available. Please refresh the page.</p>
+          <button 
+            onClick={fetchData}
+            className="mt-4 px-4 py-2 bg-indigo-800 text-white rounded-md hover:bg-indigo-700 transition-colors"
+          >
+            Refresh Data
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Extract data from projectData now that we know it exists
+  const siteInfo = projectData.siteInfo;
+  const projectPhases = {
+    psrpi: projectData.psrpi,
+    mspsrpi: projectData.mspsrpi,
+    mspsrpi2: projectData.mspsrpi2
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100">
       {/* Navigation - Same as homepage */}
@@ -79,6 +195,17 @@ const ProjectPage = () => {
               <a href="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</a>
               <a href="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</a>
               <a href="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</a>
+              
+              {/* Add refresh button */}
+              <button 
+                onClick={fetchData}
+                disabled={refreshing}
+                className={`flex items-center text-indigo-300 hover:text-indigo-400 px-3 py-2 font-medium ${refreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                aria-label="Refresh data"
+              >
+                <RefreshCw className={`w-5 h-5 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
             </div>
           </div>
         </div>
@@ -361,6 +488,16 @@ const ProjectPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Last updated indicator */}
+      {lastUpdated && (
+        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-indigo-900/30">
+          <div className="flex items-center">
+            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-indigo-400 animate-pulse' : 'bg-green-400'}`}></span>
+            Last updated: {lastUpdated.toLocaleTimeString()}
+          </div>
+        </div>
+      )}
       
       {/* Footer */}
       <div className="py-6 border-t border-slate-800/50 bg-black">

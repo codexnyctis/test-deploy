@@ -6,28 +6,75 @@ import {
   FileText,
   Radio,
   ChevronUp,
-  ArrowRight
+  ArrowRight,
+  RefreshCw  // Added RefreshCw icon for refresh button
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Import MSPSRPI-specific data
-import mspsrpiDataJson from '../data/mspsrpiDetails.json';
+// Remove the direct import
+// import mspsrpiDataJson from '../data/mspsrpiDetails.json';
 
 const MSPSRPIDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showScrollTop, setShowScrollTop] = useState(false);
   
-  const data = mspsrpiDataJson;
-
+  // Add state for data, loading, refreshing, and lastUpdated
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [error, setError] = useState(null);
+  
   // For pulsar list pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pulsarsPerPage = 8;
   
+  // Function to fetch data
+  const fetchData = async () => {
+    // If refreshing, set refreshing state, otherwise set loading state
+    if (data) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    
+    try {
+      // Use cache-busting query parameter
+      const response = await fetch(`/data/mspsrpiDetails.json?t=${Date.now()}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const jsonData = await response.json();
+      setData(jsonData);
+      setLastUpdated(new Date());
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+  
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   // Calculate pulsars to display based on pagination
-  const indexOfLastPulsar = currentPage * pulsarsPerPage;
-  const indexOfFirstPulsar = indexOfLastPulsar - pulsarsPerPage;
-  const currentPulsars = data.pulsars.slice(indexOfFirstPulsar, indexOfLastPulsar);
-  const totalPages = Math.ceil(data.pulsars.length / pulsarsPerPage);
+  const currentPulsars = data?.pulsars 
+    ? data.pulsars.slice(
+        (currentPage - 1) * pulsarsPerPage, 
+        currentPage * pulsarsPerPage
+      ) 
+    : [];
+  
+  const totalPages = data?.pulsars 
+    ? Math.ceil(data.pulsars.length / pulsarsPerPage) 
+    : 0;
 
   // Scroll to top function
   const scrollToTop = () => {
@@ -54,6 +101,54 @@ const MSPSRPIDetailsPage = () => {
     };
   }, []);
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-purple-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-400 border-r-transparent"></div>
+          <p className="mt-4 text-xl">Loading MSPSRπ data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-purple-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-red-400 text-6xl mb-4">!</div>
+          <h2 className="text-2xl mb-4">Something went wrong</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <button 
+            onClick={fetchData}
+            className="px-4 py-2 bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have no data even though we're not loading
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-purple-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl">No data available. Please refresh the page.</p>
+          <button 
+            onClick={fetchData}
+            className="mt-4 px-4 py-2 bg-purple-800 text-white rounded-md hover:bg-purple-700 transition-colors"
+          >
+            Refresh Data
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-950 via-slate-900 to-black text-gray-100">
       {/* Navigation - Same as homepage */}
@@ -69,6 +164,17 @@ const MSPSRPIDetailsPage = () => {
               <a href="/data-release" className="text-gray-300 hover:text-purple-400 px-3 py-2 font-medium">Data Release</a>
               <a href="/publications" className="text-gray-300 hover:text-purple-400 px-3 py-2 font-medium">Publications</a>
               <a href="/team" className="text-gray-300 hover:text-purple-400 px-3 py-2 font-medium">Team</a>
+              
+              {/* Add refresh button */}
+              <button 
+                onClick={fetchData}
+                disabled={refreshing}
+                className={`flex items-center text-purple-300 hover:text-purple-400 px-3 py-2 font-medium ${refreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                aria-label="Refresh data"
+              >
+                <RefreshCw className={`w-5 h-5 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
             </div>
           </div>
         </div>
@@ -470,6 +576,16 @@ const MSPSRPIDetailsPage = () => {
           </p>
         </div>
       </div>
+
+      {/* Last updated indicator */}
+      {lastUpdated && (
+        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-purple-900/30">
+          <div className="flex items-center">
+            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-blue-400 animate-pulse' : 'bg-green-400'}`}></span>
+            Last updated: {lastUpdated.toLocaleTimeString()}
+          </div>
+        </div>
+      )}
 
       {/* Scroll to top button */}
       {showScrollTop && (

@@ -7,20 +7,26 @@ import {
   Radio,
   Filter,
   ChevronUp,
-  ArrowRight
+  ArrowRight,
+  RefreshCw  // Added RefreshCw icon for refresh button
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Import MSPSRPI2-specific data
-import mspsrpi2DataJson from '../data/mspsrpi2Details.json';
-import mspsrpi2PulsarsJson from '../data/mspsrpi2Pulsars.json';
+// Remove the direct imports
+// import mspsrpi2DataJson from '../data/mspsrpi2Details.json';
+// import mspsrpi2PulsarsJson from '../data/mspsrpi2Pulsars.json';
 
 const MSPSRPI2DetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showScrollTop, setShowScrollTop] = useState(false);
   
-  const data = mspsrpi2DataJson;
-  const pulsars = mspsrpi2PulsarsJson;
+  // Add state for the data, loading, refreshing, and lastUpdated
+  const [data, setData] = useState(null);
+  const [pulsars, setPulsars] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [error, setError] = useState(null);
 
   // For pulsar list pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,15 +36,65 @@ const MSPSRPI2DetailsPage = () => {
   const [fluxFilter, setFluxFilter] = useState('all');
   const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
+  // Function to fetch data
+  const fetchData = async () => {
+    // If refreshing, set refreshing state, otherwise set loading state
+    if (data && pulsars) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    
+    try {
+      // Fetch both JSON files in parallel
+      const [detailsResponse, pulsarsResponse] = await Promise.all([
+        fetch(`/data/mspsrpi2Details.json?t=${Date.now()}`),
+        fetch(`/data/mspsrpi2Pulsars.json?t=${Date.now()}`)
+      ]);
+      
+      // Check if both responses are ok
+      if (!detailsResponse.ok) {
+        throw new Error(`HTTP error fetching details! Status: ${detailsResponse.status}`);
+      }
+      
+      if (!pulsarsResponse.ok) {
+        throw new Error(`HTTP error fetching pulsars! Status: ${pulsarsResponse.status}`);
+      }
+      
+      // Parse both JSON responses
+      const detailsData = await detailsResponse.json();
+      const pulsarsData = await pulsarsResponse.json();
+      
+      // Update state with the fetched data
+      setData(detailsData);
+      setPulsars(pulsarsData);
+      setLastUpdated(new Date());
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data. Please try again.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+  
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   // Filter pulsars based on selected flux category
-  const filteredPulsars = fluxFilter === 'all' 
+  const filteredPulsars = pulsars && fluxFilter === 'all' 
     ? pulsars 
-    : pulsars.filter(pulsar => pulsar.fluxCategory === fluxFilter);
+    : pulsars?.filter(pulsar => pulsar.fluxCategory === fluxFilter) || [];
   
   // Calculate pulsars to display based on pagination
-  const indexOfLastPulsar = currentPage * pulsarsPerPage;
-  const indexOfFirstPulsar = indexOfLastPulsar - pulsarsPerPage;
-  const currentPulsars = filteredPulsars.slice(indexOfFirstPulsar, indexOfLastPulsar);
+  const currentPulsars = filteredPulsars.slice(
+    (currentPage - 1) * pulsarsPerPage, 
+    currentPage * pulsarsPerPage
+  );
+  
   const totalPages = Math.ceil(filteredPulsars.length / pulsarsPerPage);
 
   // Reset to first page when filter changes
@@ -72,6 +128,54 @@ const MSPSRPI2DetailsPage = () => {
     };
   }, []);
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-400 border-r-transparent"></div>
+          <p className="mt-4 text-xl">Loading MSPSRπ2 data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-red-400 text-6xl mb-4">!</div>
+          <h2 className="text-2xl mb-4">Something went wrong</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <button 
+            onClick={fetchData}
+            className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have no data even though we're not loading
+  if (!data || !pulsars) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl">No data available. Please refresh the page.</p>
+          <button 
+            onClick={fetchData}
+            className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Refresh Data
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100">
       {/* Navigation - Same as homepage */}
@@ -87,6 +191,17 @@ const MSPSRPI2DetailsPage = () => {
               <a href="/data-release" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Data Release</a>
               <a href="/publications" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Publications</a>
               <a href="/team" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Team</a>
+              
+              {/* Add refresh button */}
+              <button 
+                onClick={fetchData}
+                disabled={refreshing}
+                className={`flex items-center text-blue-300 hover:text-blue-400 px-3 py-2 font-medium ${refreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                aria-label="Refresh data"
+              >
+                <RefreshCw className={`w-5 h-5 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+                {refreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
             </div>
           </div>
         </div>
@@ -526,6 +641,16 @@ const MSPSRPI2DetailsPage = () => {
           </p>
         </div>
       </div>
+
+      {/* Last updated indicator */}
+      {lastUpdated && (
+        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-blue-900/30">
+          <div className="flex items-center">
+            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-blue-400 animate-pulse' : 'bg-green-400'}`}></span>
+            Last updated: {lastUpdated.toLocaleTimeString()}
+          </div>
+        </div>
+      )}
 
       {/* Scroll to top button */}
       {showScrollTop && (
