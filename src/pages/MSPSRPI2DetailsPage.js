@@ -7,8 +7,7 @@ import {
   Radio,
   Filter,
   ChevronUp,
-  ArrowRight,
-  RefreshCw  // Added RefreshCw icon for refresh button
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -79,9 +78,18 @@ const MSPSRPI2DetailsPage = () => {
     }
   };
   
-  // Fetch data on component mount
+  // Initial data load and set up auto-refresh
   useEffect(() => {
+    // Initial fetch
     fetchData();
+    
+    // Set up auto-refresh every 60 seconds (adjust as needed)
+    const refreshInterval = setInterval(() => {
+      fetchData();
+    }, 60000); // 60 seconds
+    
+    // Clean up interval on component unmount
+    return () => clearInterval(refreshInterval);
   }, []);
   
   // Filter pulsars based on selected flux category
@@ -178,7 +186,7 @@ const MSPSRPI2DetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100">
-      {/* Navigation - Same as homepage */}
+      {/* Navigation - Same as homepage, but without refresh button */}
       <nav className="bg-slate-900/90 backdrop-blur-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -191,17 +199,6 @@ const MSPSRPI2DetailsPage = () => {
               <a href="/data-release" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Data Release</a>
               <a href="/publications" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Publications</a>
               <a href="/team" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Team</a>
-              
-              {/* Add refresh button */}
-              <button 
-                onClick={fetchData}
-                disabled={refreshing}
-                className={`flex items-center text-blue-300 hover:text-blue-400 px-3 py-2 font-medium ${refreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
-                aria-label="Refresh data"
-              >
-                <RefreshCw className={`w-5 h-5 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? 'Refreshing...' : 'Refresh'}
-              </button>
             </div>
           </div>
         </div>
@@ -647,7 +644,7 @@ const MSPSRPI2DetailsPage = () => {
         <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-blue-900/30">
           <div className="flex items-center">
             <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-blue-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Last updated: {lastUpdated.toLocaleTimeString()}
+            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
           </div>
         </div>
       )}

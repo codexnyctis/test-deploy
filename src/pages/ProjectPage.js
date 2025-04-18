@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ChevronRight,
-  ExternalLink,
-  RefreshCw
+  ExternalLink
 } from 'lucide-react';
 
 // Remove direct imports
@@ -12,7 +11,7 @@ import {
 const ProjectPage = () => {
   const [activePhase, setActivePhase] = useState('mspsrpi2');
   
-  // Add state for data, loading, refreshing, and lastUpdated
+  // Add state for data, loading, and lastUpdated
   const [projectData, setProjectData] = useState(null);
   const [observationData, setObservationData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,9 +62,18 @@ const ProjectPage = () => {
     }
   };
   
-  // Fetch data on component mount
+  // Initial data load and set up auto-refresh
   useEffect(() => {
+    // Initial fetch
     fetchData();
+    
+    // Set up auto-refresh every 60 seconds (adjust as needed)
+    const refreshInterval = setInterval(() => {
+      fetchData();
+    }, 60000); // 60 seconds
+    
+    // Clean up interval on component unmount
+    return () => clearInterval(refreshInterval);
   }, []);
   
   // Calculate simplified progress statistics - now using the state data
@@ -195,17 +203,6 @@ const ProjectPage = () => {
               <a href="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</a>
               <a href="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</a>
               <a href="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</a>
-              
-              {/* Add refresh button */}
-              <button 
-                onClick={fetchData}
-                disabled={refreshing}
-                className={`flex items-center text-indigo-300 hover:text-indigo-400 px-3 py-2 font-medium ${refreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
-                aria-label="Refresh data"
-              >
-                <RefreshCw className={`w-5 h-5 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? 'Refreshing...' : 'Refresh'}
-              </button>
             </div>
           </div>
         </div>
@@ -494,7 +491,7 @@ const ProjectPage = () => {
         <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-indigo-900/30">
           <div className="flex items-center">
             <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-indigo-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Last updated: {lastUpdated.toLocaleTimeString()}
+            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
           </div>
         </div>
       )}
