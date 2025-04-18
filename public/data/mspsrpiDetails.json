@@ -104,23 +104,19 @@
     "keyResults": [
       {
         "title": "Double Neutron Star System Distance",
-        "description": "Achieved the most significant model-independent distance measurement ever made for a double neutron star system (PSR J1518+4904), with a precision of 0.81 ± 0.02 kpc.",
-        "link": "/publications/dnsDistance"
+        "description": "Achieved the most significant model-independent distance measurement ever made for a double neutron star system (PSR J1518+4904), with a precision of 0.81 ± 0.02 kpc."
       },
       {
         "title": "Refined Orbital Decay Tests",
-        "description": "Enhanced tests of orbital decay in binary systems PSR J1012+5307 and PSR J1738+0333, placing new constraints on dipole gravitational radiation and the time derivative of Newton's gravitational constant.",
-        "link": "/publications/orbitalDecay"
+        "description": "Enhanced tests of orbital decay in binary systems PSR J1012+5307 and PSR J1738+0333, placing new constraints on dipole gravitational radiation and the time derivative of Newton's gravitational constant."
       },
       {
         "title": "Interstellar Medium Characterization",
-        "description": "Detected significant angular broadening for PSR J1643-1224, allowing independent verification of the association between the HII region Sh 2-27 and the main scattering screen of this pulsar.",
-        "link": "/publications/scatteringScreen"
+        "description": "Detected significant angular broadening for PSR J1643-1224, allowing independent verification of the association between the HII region Sh 2-27 and the main scattering screen of this pulsar."
       },
       {
         "title": "Gamma-ray Pulsar Death Line",
-        "description": "Refined the upper limit of the death line of γ-ray-emitting pulsars using the intrinsic spin-down power of PSR J1730-2304, the least energetic γ-ray pulsar known.",
-        "link": "/publications/gammaRayDeathLine"
+        "description": "Refined the upper limit of the death line of γ-ray-emitting pulsars using the intrinsic spin-down power of PSR J1730-2304, the least energetic γ-ray pulsar known."
       }
     ],
   
