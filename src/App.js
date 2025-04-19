@@ -6,7 +6,8 @@ import DataReleasePage from './pages/DataReleasePage';
 import PublicationsPage from './pages/PublicationsPage';
 import TeamPage from './pages/TeamPage';
 import RestrictedArea from './pages/RestrictedArea';
-
+import MSPSRPIDetailsPage from './pages/MSPSRPIDetailsPage';
+import MSPSRPI2DetailsPage from './pages/MSPSRPI2DetailsPage';
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
         <Route path="/publications" element={<PublicationsPage />} />
         <Route path="/restricted-area" element={<RestrictedArea />} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/projects/mspsrpi-details" element={<MSPSRPIDetailsPage />} />
+        <Route path="/projects/mspsrpi2-details" element={<MSPSRPI2DetailsPage />} />
         {/* Other routes */}
       </Routes>
     </Router>

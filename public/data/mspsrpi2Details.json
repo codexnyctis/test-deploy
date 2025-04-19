@@ -1,0 +1,167 @@
+{
+  "heroSubtitle": "Turbocharging the most precisely timed pulsars with VLBI astrometry",
+  "heroDescription": "MSPSRπ2 is an extension of the original MSPSRπ program, aiming to nearly triple the number of millisecond pulsars (MSPs) with VLBI astrometric measurements to enhance pulsar timing array sensitivity.",
+  "dataReleaseUrl": "/data-release",
+  "publicationsUrl": "/publications",
+  "overview": [
+    "Millisecond pulsars (MSPs) are the most precise celestial timekeepers, providing unparalleled tests of gravitational phenomena, including the direct detection of the stochastic gravitational-wave background (GWB). Pulsar timing arrays (PTAs) - arrays of precisely timed MSPs - are key tools for these studies.",
+    "MSPSRπ2 is an extension of the original MSPSRπ program that ran from 2014-2018. While the original program astrometrically studied 18 MSP systems and achieved 15 significant parallaxes, this new campaign targets 44 additional PTA MSPs that currently lack VLBI constraints.",
+    "By applying Very Long Baseline Interferometry (VLBI) techniques to these pulsars, we can measure their positions, proper motions, and parallaxes with unprecedented precision. These measurements will significantly enhance PTA sensitivity and accelerate the study of the gravitational wave background.",
+    "The project follows a staged approach with a pilot program to establish the calibrator environment and determine reference positions, followed by a precision program for full astrometric measurements. When complete, MSPSRπ2 will nearly triple the number of MSPs with VLBI astrometric measurements."
+  ],
+  "statistics": [
+    {
+      "label": "Target Pulsars",
+      "value": "44",
+      "description": "New PTA MSPs to be observed"
+    },
+    {
+      "label": "Observation Hours",
+      "value": "286",
+      "description": "For the pilot program"
+    },
+    {
+      "label": "Array Stations",
+      "value": "10",
+      "description": "VLBA stations used"
+    },
+    {
+      "label": "Session Duration",
+      "value": "1-4 hrs",
+      "description": "Depending on pulsar brightness"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2023",
+      "title": "Project Proposal",
+      "description": "MSPSRπ2 proposal submitted to VLBA for observing time allocation."
+    },
+    {
+      "date": "2024A",
+      "title": "Calibrator Search",
+      "description": "One-hour calibrator search sessions for each target pulsar."
+    },
+    {
+      "date": "2024A/B",
+      "title": "First Astrometry",
+      "description": "First astrometry sessions of the pilot program conducted."
+    },
+    {
+      "date": "2025A/B",
+      "title": "Second Astrometry",
+      "description": "Second astrometry sessions conducted approximately 1 year after the first sessions."
+    },
+    {
+      "date": "2025B+",
+      "title": "Precision Program",
+      "description": "Anticipated start of the precision program for full astrometric measurements of selected sources."
+    }
+  ],
+  "objectives": [
+    {
+      "title": "Enhance PTA Sensitivity",
+      "description": "Accelerate pulsar timing array sensitivity improvement by probing solar system ephemerides, establishing reference frame links, and applying improved astrometric parameters to timing models."
+    },
+    {
+      "title": "Study MSP Formation",
+      "description": "Investigate the formation channels of millisecond pulsars by measuring their peculiar velocities with high precision, allowing for statistical analysis of their velocity distribution."
+    },
+    {
+      "title": "Test Gravitational Theories",
+      "description": "Enhance tests of General Relativity and its alternatives by providing precise proper motion and distance measurements to correct for the Shklovskii effect in binary pulsar systems."
+    },
+    {
+      "title": "Map Galactic Potential",
+      "description": "Contribute to mapping the Galactic potential and dark matter distribution by precisely measuring the positions of MSPs across the Galaxy."
+    },
+    {
+      "title": "Improve Electron Density Models",
+      "description": "Provide valuable inputs to Galactic electron density distribution models by measuring precise distances to MSPs located far from the Galactic plane."
+    },
+    {
+      "title": "Characterize Propagation Effects",
+      "description": "Improve understanding of interstellar medium propagation effects by removing degeneracies in scintillation models and constraining the properties of scattering screens."
+    }
+  ],
+  "technicalApproach": [
+    "MSPSRπ2 employs a staged approach to efficiently allocate observing time. The program begins with a pilot phase to establish the calibrator environment, detect the candidates, and determine reference positions and preliminary proper motion with two sessions per target.",
+    "For each target, one 1-hour in-beam calibrator search session is conducted to identify suitable calibration sources within 30 arcminutes of the target pulsar. Following this, two astrometry sessions are performed, with session durations adjusted based on the target's flux density: 4 hours for fainter sources (0.2-0.76 mJy), 2 hours for medium brightness sources (0.76-1.2 mJy), and 1 hour for brighter sources (>1.2 mJy).",
+    "The astrometry sessions are arranged around parallax maxima, with the second session occurring approximately 1 year after the first to optimize proper motion determination while minimizing parallax effects. The VLBA with all 10 stations is used, with a minimum of 8 stations required for adequate sensitivity.",
+    "The project utilizes the psrvlbireduce pipeline, developed and optimized during previous projects, for consistent and efficient data reduction. All data products and results will be made publicly available through the gDMCP platform to enable reproducibility of the astrometric measurements."
+  ],
+  "keyResults": [
+    {
+      "title": "Tripled MSP Sample",
+      "description": "By the end of the pilot program, the number of PTA MSPs with astrometric VLBI measurements will nearly triple from 24 to 68, significantly enhancing statistical studies."
+    },
+    {
+      "title": "Improved Frame Tie",
+      "description": "The increased sample of MSPs with VLBI astrometry will enhance the tie between pulsar timing and VLBI reference frames, approaching the 0.1 mas level."
+    },
+    {
+      "title": "Enhanced PTA Sensitivity",
+      "description": "Independent astrometric measurements will improve timing models for MSPs, particularly newly added ones, enhancing overall PTA sensitivity to gravitational waves."
+    },
+    {
+      "title": "MSP Formation Insights",
+      "description": "The expanded sample will allow for rigorous testing of whether the MSP peculiar velocity distribution is multimodal, providing insights into their formation channels."
+    }
+  ],
+  "scientificImpact": [
+    "MSPSRπ2 will have a profound impact on gravitational wave astronomy through pulsar timing arrays. The direct detection of the stochastic gravitational wave background by PTAs in 2023 opened a new window for studying the astrophysical history of the universe. MSPSRπ2 will enhance and accelerate these studies by providing independent, high-precision astrometric measurements for a substantially expanded set of PTA pulsars.",
+    "Beyond gravitational wave detection, the project will contribute to multiple areas of astrophysics, including tests of relativistic gravity, studies of MSP formation and evolution, mapping of the Galactic gravitational potential, and improved models of the interstellar medium. The comprehensive dataset will serve as a valuable resource for the broader astronomical community for years to come."
+  ],
+  "publications": [
+    {
+      "citation": "Ding, H., et al. (2023). \"MSPSRπ: VLBI astrometry of 18 millisecond pulsars.\" Monthly Notices of the Royal Astronomical Society, 519, 4982",
+      "doi": "https://doi.org/10.1093/mnras/stac3672",
+      "arxiv": "https://arxiv.org/abs/2211.09112"
+    },
+    {
+      "citation": "Ding, H., et al. (2021). \"A Precise Mass Measurement of PSR J2045+3633 with a Highly Eccentric Orbit.\" The Astrophysical Journal Letters, 921, L19",
+      "doi": "https://doi.org/10.3847/2041-8213/ac32d6",
+      "arxiv": "https://arxiv.org/abs/2110.15368"
+    },
+    {
+      "citation": "Ding, H., et al. (2020). \"VLBI Astrometry of PSR J1012+5307: A Pulsar-White Dwarf Binary.\" The Astrophysical Journal, 896, 85",
+      "doi": "https://doi.org/10.3847/1538-4357/ab8f29",
+      "arxiv": "https://arxiv.org/abs/2005.01717"
+    }
+  ],
+  "pulsarsStudied": {
+    "overview": "MSPSRπ2 targets 44 millisecond pulsars from various pulsar timing arrays (PTAs) including NANOGrav, EPTA, PPTA, CPTA, and MPTA.",
+    "catalogueInfo": "The targets are divided into three groups based on their 1.4 GHz flux density, which determines the observing time required for each pulsar.",
+    "catalogueTitle": "MSPSRπ2: Turbocharging the most precisely timed pulsars with VLBI astrometry",
+    "catalogueUrl": "/publications/mspsrpi2-catalogue"
+  },
+  "dataPipeline": {
+    "description": "MSPSRπ2 uses the psrvlbireduce pipeline developed during the original PSRπ and MSPSRπ projects. This pipeline provides consistent and efficient data reduction for high-precision pulsar astrometry.",
+    "steps": [
+      {
+        "title": "Calibrator Searches",
+        "description": "Multi-field correlation targeting known sources within 30 arcminutes of the target pulsar to identify suitable in-beam calibrators."
+      },
+      {
+        "title": "Phase Referencing",
+        "description": "Observations alternating between the target pulsar and calibrator to achieve high-precision relative position measurements."
+      },
+      {
+        "title": "Pulsar Gating",
+        "description": "Special correlation techniques that improve sensitivity by only including data when the pulsar's emission is 'on'."
+      },
+      {
+        "title": "Parallax & Proper Motion Fitting",
+        "description": "Multiple epochs of observations are combined to fit for the pulsar's parallax and proper motion."
+      },
+      {
+        "title": "Error Analysis",
+        "description": "Rigorous assessment of measurement uncertainties, including systematic effects from ionospheric variations."
+      },
+      {
+        "title": "Timing Integration",
+        "description": "VLBI astrometric measurements are incorporated into pulsar timing models to improve overall precision."
+      }
+    ]
+  }
+}
