@@ -522,10 +522,10 @@ const Homepage = () => {
               
               {/* Meet the team button */}
               <div className="flex justify-center mt-8">
-                <Link to="/team" className="inline-flex items-center px-5 py-2.5 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
-                  <Users className="mr-2 h-5 w-5" />
-                  Meet the Team
-                </Link>
+              <Link to="/team#top" className="inline-flex items-center px-5 py-2.5 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
+  <Users className="mr-2 h-5 w-5" />
+  Meet the Team
+</Link>
               </div>
             </div>
           </div>
