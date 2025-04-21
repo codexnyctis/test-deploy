@@ -43,18 +43,18 @@
   "keyDiscoveriesVisible": true,
   "keyFindings": [
     {
-      "title": "Electron Density Model Flaws",
-      "description": "We've identified significant shortcomings in widely-used Galactic electron density models, particularly at high Galactic latitudes.",
+      "title": "Unprecedented Parallax Precision",
+      "description": "Using VLBA, the project achieves sub-100 microarcsecond parallax precision, enabling accurate distance measurements to dozens of millisecond pulsars—critical for mapping the Galaxy and improving gravitational wave detection models.",
       "theme": "cyan"
     },
     {
-      "title": "Pulsar Velocity Distribution",
-      "description": "Our measurements reveal that millisecond pulsars have lower velocities than young pulsars, providing insights into pulsar evolution.",
+      "title": "Refinement of Galactic Electron Density Models",
+      "description": "Our measurements provide key data to calibrate Galactic electron density models like NE2001 and YMW16, correcting systemic biases and improving distance estimates derived from dispersion measures.",
       "theme": "purple"
     },
     {
-      "title": "Gravitational Theory Tests",
-      "description": "Our precise distance measurements for binary pulsars have enabled more stringent tests of gravitational radiation.",
+      "title": "Astrometric Contributions to Pulsar Timing Arrays",
+      "description": "By delivering precise 3D positions and motions for pulsars, this project reduces errors in pulsar timing arrays, enhancing their sensitivity to gravitational waves from supermassive black hole binaries.",
       "theme": "teal"
     }
   ],
