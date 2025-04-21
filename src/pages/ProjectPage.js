@@ -205,10 +205,10 @@ const ProjectPage = () => {
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
-              <Link to="/test-deploy/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
-              <Link to="/test-deploy/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
-              <Link to="/test-deploy/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
-              <Link to="/test-deploy/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
+              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
+              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
+              <Link to="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
+              <Link to="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
             </div>
           </div>
         </div>
