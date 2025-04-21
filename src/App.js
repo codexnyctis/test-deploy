@@ -12,7 +12,7 @@ function App() {
   return (
     <Routes>
       {/* Redirect root path to /test-deploy */}
-      <Route path="/" element={<Navigate to="/test-deploy" replace />} />
+      <Route path="/" element={<Homepage />} />
       <Route path="/test-deploy" element={<Homepage />} />
       <Route path="/project" element={<ProjectPage />} />
       <Route path="/data-release" element={<DataReleasePage />} />
