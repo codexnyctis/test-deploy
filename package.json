@@ -1,6 +1,7 @@
 {
   "name": "mspsrpi-website",
   "version": "0.1.0",
+  "homepage": "https://codexnyctis.github.io/test-deploy",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
