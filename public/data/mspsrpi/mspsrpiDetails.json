@@ -1,8 +1,8 @@
 {
     "heroSubtitle": "VLBA Astrometry of Millisecond Pulsars",
     "heroDescription": "The MSPSRπ project was the second phase of our pulsar astrometry program, focusing exclusively on millisecond pulsars (MSPs) from 2014 to 2018. This phase targeted 18 MSPs with the Very Long Baseline Array (VLBA), achieving sub-milliarcsecond precision for parallax and proper motion measurements.",
-    "dataReleaseUrl": "/data-release",
-    "publicationsUrl": "/publications",
+    "dataReleaseUrl": "/test-deploy/#/data-release",
+    "publicationsUrl": "/test-deploy/#/publications",
     
     "overview": [
       "The MSPSRπ project was designed as a dedicated follow-up to the original PSRπ project, with a targeted focus on millisecond pulsars (MSPs) that are critical for tests of gravity and gravitational wave detection through pulsar timing arrays (PTAs).",
