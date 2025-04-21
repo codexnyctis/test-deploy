@@ -468,7 +468,7 @@ const MSPSRPIDetailsPage = () => {
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Parallax (mas)</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Distance (kpc)</th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Proper Motion</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of Epochs</th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -483,17 +483,7 @@ const MSPSRPIDetailsPage = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.parallax}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.distance}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.properMotion}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              pulsar.status === 'Complete' 
-                                ? 'bg-green-900/40 text-green-300' 
-                                : pulsar.status === 'In Progress' 
-                                ? 'bg-amber-900/40 text-amber-300' 
-                                : 'bg-gray-800 text-gray-300'
-                            }`}>
-                              {pulsar.status}
-                            </span>
-                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">{pulsar.epochs}</td>
                         </tr>
                       ))}
                     </tbody>

@@ -162,126 +162,126 @@
         "parallax": "3.02 ± 0.07",
         "distance": "0.329 ± 0.006",
         "properMotion": "-6.13 ± 0.07, 0.34 ± 0.15",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J0610-2100",
         "parallax": "0.73 ± 0.10",
         "distance": "1.5 ± 0.3",
         "properMotion": "9.1 ± 0.1, 16.0 ± 0.2",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J0621+1002",
         "parallax": "0.86 ± 0.15",
         "distance": "1.6 ± 0.4",
         "properMotion": "3.5 ± 0.2, -1.4 ± 0.4",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1012+5307",
         "parallax": "1.17 ± 0.05",
         "distance": "0.88 ± 0.04",
         "properMotion": "2.67 ± 0.05, -25.39 ± 0.15",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1024-0719",
         "parallax": "0.94 ± 0.06",
         "distance": "1.08 ± 0.06",
         "properMotion": "-35.32 ± 0.07, -48.1 ± 0.2",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1518+4904",
         "parallax": "1.24 ± 0.03",
         "distance": "0.81 ± 0.02",
         "properMotion": "-0.69 ± 0.03, -8.52 ± 0.07",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1537+1155",
         "parallax": "1.06 ± 0.10",
         "distance": "0.94 ± 0.07",
         "properMotion": "1.51 ± 0.03, -25.30 ± 0.06",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1640+2224",
         "parallax": "0.68 ± 0.08",
         "distance": "1.39 ± 0.12",
         "properMotion": "2.19 ± 0.09, -11.30 ± 0.14",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1643-1224",
         "parallax": "1.31 ± 0.18",
         "distance": "0.95 ± 0.13",
         "properMotion": "6.2 ± 0.2, 3.3 ± 0.6",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1721-2457",
         "parallax": "0.0 ± 0.2",
         "distance": "> 1.5",
         "properMotion": "2.5 ± 0.3, -1.9 ± 0.9",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1730-2304",
         "parallax": "1.57 ± 0.18",
         "distance": "0.51 ± 0.03",
         "properMotion": "20.3 ± 0.2, -4.8 ± 0.5",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1738+0333",
         "parallax": "0.50 ± 0.06",
         "distance": "1.74 ± 0.14",
         "properMotion": "6.98 ± 0.08, 5.18 ± 0.16",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1824-2452A",
         "parallax": "0.1 ± 0.5",
         "distance": "5.4 ± 0.1",
         "properMotion": "0.3 ± 0.6, -3.9 ± 1.3",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1853+1303",
         "parallax": "0.49 ± 0.07",
         "distance": "2.0 ± 0.3",
         "properMotion": "-1.4 ± 0.1, -2.8 ± 0.2",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1910-1256",
         "parallax": "0.25 ± 0.04",
         "distance": "3.4 ± 0.8",
         "properMotion": "0.50 ± 0.04, -6.85 ± 0.09",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1911+1347",
         "parallax": "0.38 ± 0.14",
         "distance": "< 1.3",
         "properMotion": "-13.8 ± 0.2, -10.3 ± 0.4",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1918-0642",
         "parallax": "0.60 ± 0.12",
         "distance": "1.48 ± 0.17",
         "properMotion": "-7.1 ± 0.1, -5.7 ± 0.3",
-        "status": "Complete"
+        "epochs": "3/3"
       },
       {
         "name": "PSR J1939+2134",
         "parallax": "0.38 ± 0.05",
         "distance": "2.9 ± 0.3",
         "properMotion": "0.08 ± 0.07, -0.43 ± 0.11",
-        "status": "Complete"
+        "epochs": "3/3"
       }
     ],
   
