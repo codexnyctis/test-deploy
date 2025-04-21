@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Search, 
-  Download, 
-  Book, 
-  BookOpen, 
-  Calendar, 
-  Users, 
-  FileText, 
+import {
+  Search,
+  Download,
+  Book,
+  BookOpen,
+  Calendar,
+  Users,
+  FileText,
   ExternalLink,
   ChevronDown,
   ChevronUp,
@@ -143,19 +143,19 @@ const PublicationsPage = () => {
   const filteredPublications = Object.entries(publications).flatMap(([phase, papers]) => {
     return papers.filter(paper => {
       // Apply search filter
-      const matchesSearch = 
-        searchQuery === '' || 
+      const matchesSearch =
+        searchQuery === '' ||
         paper.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         paper.authors.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (paper.abstract && paper.abstract.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (paper.keywords && paper.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase())));
-      
+
       // Apply phase filter
       const matchesPhase = filterPhase === 'all' || paper.phase.toLowerCase() === filterPhase.toLowerCase();
-      
+
       // Apply year filter
       const matchesYear = filterYear === 'all' || paper.year === filterYear;
-      
+
       return matchesSearch && matchesPhase && matchesYear;
     });
   });
@@ -184,14 +184,14 @@ const PublicationsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
+              <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Home</Link>
-              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
-              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
-              <Link to="/publications" className="text-indigo-400 px-3 py-2 font-medium">Publications</Link>
-              <Link to="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
+              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
+              <Link to="/test-deploy/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
+              <Link to="/test-deploy/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
+              <Link to="/test-deploy/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
+              <Link to="/test-deploy/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
             </div>
           </div>
         </div>
@@ -204,13 +204,13 @@ const PublicationsPage = () => {
           <div className="w-full h-full bg-slate-950">
             {/* Large stars layer */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-50"></div>
-            
+
             {/* Small stars layer */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-60"></div>
-            
+
             {/* Subtle blue glow effect for nebula-like impression */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/10 to-transparent"></div>
-            
+
             {/* Darker gradient overlay at the edges */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 opacity-40"></div>
           </div>
@@ -223,7 +223,7 @@ const PublicationsPage = () => {
               Research papers from the MSPSRπ project and related studies
             </p>
             <p className="text-gray-300 mb-2">
-              Browse our collection of publications related to millisecond pulsar astrometry, 
+              Browse our collection of publications related to millisecond pulsar astrometry,
               including comprehensive catalogs, individual pulsar studies, and methodology papers.
             </p>
           </div>
@@ -265,7 +265,7 @@ const PublicationsPage = () => {
                   <Filter className="h-4 w-4 text-indigo-400" />
                 </div>
               </div>
-              
+
               {/* Year Filter */}
               <div className="relative inline-block text-left">
                 <select
@@ -294,12 +294,12 @@ const PublicationsPage = () => {
               <BookOpen className="mr-2 h-6 w-6 text-indigo-400" />
               Featured Publications
             </h2>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               {filteredPublications
                 .filter(paper => paper.highlight)
                 .map((paper) => (
-                  <div 
+                  <div
                     key={paper.id}
                     className="bg-gradient-to-br from-slate-900/90 via-indigo-950/50 to-slate-900/90 backdrop-blur-sm border border-indigo-500/30 rounded-lg p-6 shadow-xl hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-300"
                   >
@@ -321,7 +321,7 @@ const PublicationsPage = () => {
                         </span>
                       )}
                     </div>
-                    
+
                     <p className="text-indigo-100 text-sm mb-3">{paper.authors}</p>
                     <p className="text-gray-400 text-sm mb-4">
                       {paper.journal && `${paper.journal}`}
@@ -330,13 +330,13 @@ const PublicationsPage = () => {
                       {paper.year && ` (${paper.year})`}
                       {paper.status && ` - ${paper.status}`}
                     </p>
-                    
+
                     <p className="text-gray-300 text-sm line-clamp-3 mb-4">{paper.abstract}</p>
-                    
+
                     <div className="flex flex-wrap gap-2 mb-4">
                       {paper.keywords && paper.keywords.map((keyword, index) => (
-                        <span 
-                          key={index} 
+                        <span
+                          key={index}
                           className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-indigo-300 border border-indigo-500/20"
                         >
                           <Tag className="h-3 w-3 mr-1" />
@@ -344,7 +344,7 @@ const PublicationsPage = () => {
                         </span>
                       ))}
                     </div>
-                    
+
                     <div className="flex space-x-3">
                       {paper.arxiv && (
                         <a
@@ -386,11 +386,11 @@ const PublicationsPage = () => {
                 filteredPublications
                   .sort((a, b) => parseInt(b.year) - parseInt(a.year))
                   .map((paper) => (
-                    <div 
+                    <div
                       key={paper.id}
                       className={`bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-lg overflow-hidden transition-all duration-300 ${expandedPaper === paper.id ? 'shadow-lg shadow-indigo-500/10' : 'shadow'}`}
                     >
-                      <div 
+                      <div
                         className="p-4 cursor-pointer"
                         onClick={() => toggleExpanded(paper.id)}
                       >
@@ -414,8 +414,8 @@ const PublicationsPage = () => {
                                     MSPSRπ2
                                   </span>
                                 )}
-                                {expandedPaper === paper.id ? 
-                                  <ChevronUp className="h-5 w-5 text-indigo-400" /> : 
+                                {expandedPaper === paper.id ?
+                                  <ChevronUp className="h-5 w-5 text-indigo-400" /> :
                                   <ChevronDown className="h-5 w-5 text-indigo-400" />
                                 }
                               </div>
@@ -445,8 +445,8 @@ const PublicationsPage = () => {
                               <h4 className="text-sm font-medium text-indigo-300 mb-2">Keywords</h4>
                               <div className="flex flex-wrap gap-2">
                                 {paper.keywords.map((keyword, index) => (
-                                  <span 
-                                    key={index} 
+                                  <span
+                                    key={index}
                                     className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-indigo-300 border border-indigo-500/20"
                                   >
                                     <Tag className="h-3 w-3 mr-1" />
@@ -489,7 +489,7 @@ const PublicationsPage = () => {
                 <div className="text-center py-10 bg-slate-900/30 backdrop-blur-sm border border-slate-800/30 rounded-lg">
                   <Book className="h-10 w-10 text-indigo-500/50 mx-auto mb-4" />
                   <p className="text-gray-400">No publications match your search criteria.</p>
-                  <button 
+                  <button
                     className="mt-4 inline-flex items-center px-4 py-2 border border-indigo-500/30 rounded-md text-indigo-300 bg-slate-900/60 hover:bg-slate-800/80 transition duration-300"
                     onClick={() => {
                       setSearchQuery('');
@@ -511,16 +511,16 @@ const PublicationsPage = () => {
             <p className="text-gray-300 mb-4">
               When using data from our publications in your research, please cite the appropriate paper:
             </p>
-            
+
             <div className="bg-slate-800/50 p-4 rounded-md mb-4">
               <p className="text-indigo-200 text-sm italic">
                 "The MSPSRπ catalogue: VLBA astrometry of 18 millisecond pulsars"<br />
                 Ding et al., 2023, MNRAS, 519, 4982-5007
               </p>
               <div className="mt-2">
-                <a 
-                  href="https://ui.adsabs.harvard.edu/abs/2022MNRAS.519.4982D/abstract" 
-                  target="_blank" 
+                <a
+                  href="https://ui.adsabs.harvard.edu/abs/2022MNRAS.519.4982D/abstract"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-cyan-300 text-sm hover:text-cyan-200 transition"
                 >
@@ -529,16 +529,16 @@ const PublicationsPage = () => {
                 </a>
               </div>
             </div>
-            
+
             <div className="bg-slate-800/50 p-4 rounded-md">
               <p className="text-indigo-200 text-sm italic">
                 "The PSRπ Pulsar Astrometry Project: Final Results"<br />
                 Deller et al., 2019, ApJ, 875, 100
               </p>
               <div className="mt-2">
-                <a 
-                  href="https://ui.adsabs.harvard.edu/abs/2019ApJ...875..100D/abstract" 
-                  target="_blank" 
+                <a
+                  href="https://ui.adsabs.harvard.edu/abs/2019ApJ...875..100D/abstract"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-cyan-300 text-sm hover:text-cyan-200 transition"
                 >
