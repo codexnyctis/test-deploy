@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronLeft,
   ExternalLink,
@@ -10,10 +10,6 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-// Remove the direct imports
-// import mspsrpi2DataJson from '../data/mspsrpi2Details.json';
-// import mspsrpi2PulsarsJson from '../data/mspsrpi2Pulsars.json';
 
 const MSPSRPI2DetailsPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -35,8 +31,14 @@ const MSPSRPI2DetailsPage = () => {
   const [fluxFilter, setFluxFilter] = useState('all');
   const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
-  // Function to fetch data
-  const fetchData = async () => {
+  // Function to fetch data - with timestamp check added
+  const fetchData = useCallback(async () => {
+    // Check if it's been less than 24 hours since the last update
+    // If we have a lastUpdated time and it's been less than 24 hours, skip fetch
+    if (lastUpdated && (new Date() - lastUpdated < 86400000)) {
+      return; // Skip the fetch if less than a day has passed
+    }
+    
     // If refreshing, set refreshing state, otherwise set loading state
     if (data && pulsars) {
       setRefreshing(true);
@@ -47,8 +49,8 @@ const MSPSRPI2DetailsPage = () => {
     try {
       // Fetch both JSON files in parallel
       const [detailsResponse, pulsarsResponse] = await Promise.all([
-        fetch(`/data/mspsrpi2Details.json?t=${Date.now()}`),
-        fetch(`/data/mspsrpi2Pulsars.json?t=${Date.now()}`)
+        fetch(`/data/mspsrpi2/mspsrpi2Details.json?t=${Date.now()}`),
+        fetch(`/data/mspsrpi2/mspsrpi2Pulsars.json?t=${Date.now()}`)
       ]);
       
       // Check if both responses are ok
@@ -67,7 +69,10 @@ const MSPSRPI2DetailsPage = () => {
       // Update state with the fetched data
       setData(detailsData);
       setPulsars(pulsarsData);
-      setLastUpdated(new Date());
+      const now = new Date();
+      setLastUpdated(now);
+      // Single console log here when data is actually updated
+      console.log(`Data refreshed at: ${now.toLocaleTimeString()}`);
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -76,21 +81,21 @@ const MSPSRPI2DetailsPage = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [data, pulsars, lastUpdated]); // Added lastUpdated as dependency
   
   // Initial data load and set up auto-refresh
   useEffect(() => {
     // Initial fetch
     fetchData();
     
-    // Set up auto-refresh every 60 seconds (adjust as needed)
+    // Set up auto-refresh daily
     const refreshInterval = setInterval(() => {
       fetchData();
-    }, 60000); // 60 seconds
+    }, 86400000); // 24 hours = 86,400,000 milliseconds
     
     // Clean up interval on component unmount
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, []); // Removed fetchData dependency to prevent unnecessary interval resets
   
   // Filter pulsars based on selected flux category
   const filteredPulsars = pulsars && fluxFilter === 'all' 
@@ -191,7 +196,7 @@ const MSPSRPI2DetailsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold">MSPSR<span className="text-blue-400">π</span>2</span>
+              <span className="text-xl font-bold">MSPSR<span className="text-blue-400">π</span></span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a href="/" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Home</a>
@@ -250,6 +255,8 @@ const MSPSRPI2DetailsPage = () => {
             <div className="flex flex-wrap gap-4">
               <a 
                 href={data.dataReleaseUrl} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300 shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
@@ -257,6 +264,8 @@ const MSPSRPI2DetailsPage = () => {
               </a>
               <a 
                 href={data.publicationsUrl} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
@@ -309,7 +318,7 @@ const MSPSRPI2DetailsPage = () => {
                   : 'text-gray-400 hover:text-blue-300'
               }`}
             >
-              Pulsar List
+              Target Pulsars
             </button>
           </div>
         </div>
@@ -402,26 +411,94 @@ const MSPSRPI2DetailsPage = () => {
             <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Expected Results & Impact</h2>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                {data.keyResults.map((result, index) => (
-                  <div key={index} className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-5 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300">
-                    <h3 className="text-xl font-bold text-blue-300 mb-3">{result.title}</h3>
-                    <p className="text-gray-300 mb-4">{result.description}</p>
+              {/* ============================================================ */}
+              {/* TEMPORARY OVERLAY - REMOVE THIS SECTION WHEN RESULTS ARE READY */}
+              {/* ============================================================ */}
+              <div className="relative overflow-hidden rounded-xl mb-8">
+                {/* Starry background for the temporary overlay */}
+                <div className="absolute inset-0 bg-blue-950/90 overflow-hidden">
+                  {/* Multiple star layers for depth */}
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-70"></div>
+                  
+                  {/* Blue cosmic glow */}
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/20 via-blue-900/10 to-transparent"></div>
+                  
+                  {/* Animated stars effect */}
+                  <div className="absolute inset-0">
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[10%] left-[15%] opacity-70 animate-pulse"></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[20%] left-[25%] opacity-80 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[15%] left-[65%] opacity-60 animate-pulse" style={{animationDelay: '1.2s'}}></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[40%] left-[80%] opacity-70 animate-pulse" style={{animationDelay: '0.7s'}}></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[70%] left-[35%] opacity-80 animate-pulse" style={{animationDelay: '1.5s'}}></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[60%] left-[15%] opacity-60 animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                    <div className="absolute h-1 w-1 bg-white rounded-full top-[80%] left-[75%] opacity-70 animate-pulse" style={{animationDelay: '1s'}}></div>
                   </div>
-                ))}
-              </div>
-              
-              <h3 className="text-xl font-bold text-white mb-4">Scientific Impact</h3>
-              <div className="prose prose-invert prose-blue max-w-none mb-6">
-                {data.scientificImpact.map((paragraph, index) => (
-                  <p key={index} className="mb-4 text-gray-300">
-                    {paragraph}
+                </div>
+                
+                {/* Content of the overlay */}
+                <div className="relative py-16 px-8 text-center">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-900/60 mb-6 backdrop-blur-md border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                    <span className="text-3xl">🔭</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">Results Coming Soon</h3>
+                  <p className="text-xl text-blue-200 max-w-2xl mx-auto mb-6">
+                    The key results will be available shortly after the observations are complete
                   </p>
-                ))}
+                  <p className="text-gray-300 max-w-2xl mx-auto">
+                    Our team is currently conducting observations and analyzing data. Check back later to see the groundbreaking discoveries from the MSPSRπ2 project.
+                  </p>
+                </div>
+              </div>
+              {/* ============================================================ */}
+              {/* END OF TEMPORARY OVERLAY - REMOVE SECTION ABOVE WHEN RESULTS ARE READY */}
+              {/* ============================================================ */}
+              
+              {/* Keep the content below for when results are ready */}
+              {/* Just hidden for now due to the overlay - UNCOMMENT WHEN REMOVING OVERLAY */}
+              <div className="hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                  {data.keyResults.map((result, index) => (
+                    <div key={index} className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-5 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300">
+                      <h3 className="text-xl font-bold text-blue-300 mb-3">{result.title}</h3>
+                      <p className="text-gray-300 mb-4">{result.description}</p>
+                    </div>
+                  ))}
+                </div>
+                
+                <h3 className="text-xl font-bold text-white mb-4">Scientific Impact</h3>
+                <div className="prose prose-invert prose-blue max-w-none mb-6">
+                  {data.scientificImpact.map((paragraph, index) => (
+                    <p key={index} className="mb-4 text-gray-300">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
               
-              {/* Publications List */}
+              {/* ============================================================ */}
+              {/* TEMPORARY PUBLICATIONS PLACEHOLDER - REMOVE THIS SECTION WHEN PUBLICATIONS ARE READY */}
+              {/* ============================================================ */}
               <div className="mt-8">
+                <h3 className="text-2xl font-bold text-white mb-4">Related Publications</h3>
+                <div className="bg-slate-800/40 backdrop-blur-sm rounded-lg p-6 border border-blue-700/20">
+                  <div className="flex flex-col items-center justify-center text-center py-6">
+                    <div className="w-16 h-16 bg-blue-900/60 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-blue-500/50">
+                      <FileText className="h-8 w-8 text-blue-300" />
+                    </div>
+                    <h4 className="text-xl font-semibold text-blue-300 mb-3">Publications Coming Soon</h4>
+                    <p className="text-gray-300 max-w-2xl">
+                      Publications related to the MSPSRπ2 project will be listed here once research papers have been published. Please check back later.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              {/* ============================================================ */}
+              {/* END OF TEMPORARY PUBLICATIONS PLACEHOLDER - REMOVE SECTION ABOVE WHEN PUBLICATIONS ARE READY */}
+              {/* ============================================================ */}
+              
+              {/* Keep the publications content below for when they are ready */}
+              {/* Just hidden for now - UNCOMMENT WHEN REMOVING PLACEHOLDER */}
+              <div className="hidden mt-8">
                 <h3 className="text-xl font-bold text-white mb-4">Related Publications</h3>
                 <div className="space-y-4">
                   {data.publications.map((pub, index) => (
@@ -430,6 +507,8 @@ const MSPSRPI2DetailsPage = () => {
                       <div className="flex items-center space-x-4">
                         <a 
                           href={pub.doi} 
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                         >
                           DOI <ExternalLink className="ml-1 h-3 w-3" />
@@ -437,6 +516,8 @@ const MSPSRPI2DetailsPage = () => {
                         {pub.arxiv && (
                           <a 
                             href={pub.arxiv} 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                           >
                             arXiv <ExternalLink className="ml-1 h-3 w-3" />
@@ -449,6 +530,8 @@ const MSPSRPI2DetailsPage = () => {
                 <div className="mt-4 text-center">
                   <a 
                     href={data.publicationsUrl} 
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300"
                   >
                     View All Publications <ExternalLink className="ml-2 h-4 w-4" />
@@ -516,11 +599,11 @@ const MSPSRPI2DetailsPage = () => {
                     <thead className="bg-slate-800/50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Pulsar</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Flux Density (mJy)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Distance (kpc)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Session Duration</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">PTAs</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Notes</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">RA</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Dec</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">1.4 GHz Flux Density (mJy)</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Inbeam Calibrators</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Epochs Observed</th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -533,25 +616,11 @@ const MSPSRPI2DetailsPage = () => {
                                 <span>{pulsar.name}</span>
                               </div>
                             </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.ra}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.dec}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.fluxDensity}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.distance}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.sessionDuration}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                              <div className="flex flex-wrap gap-1">
-                                {pulsar.memberships.map((pta, i) => (
-                                  <span key={i} className="inline-block px-1.5 py-0.5 text-xs rounded bg-blue-900/40 text-blue-300">
-                                    {pta}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                              {pulsar.notes && (
-                                <span className="text-blue-400">
-                                  {pulsar.notes}
-                                </span>
-                              )}
-                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.inbeam_calibrators}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.epochs_observed}</td>
                           </tr>
                         ))
                       ) : (
@@ -639,21 +708,11 @@ const MSPSRPI2DetailsPage = () => {
         </div>
       </div>
 
-      {/* Last updated indicator */}
-      {lastUpdated && (
-        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-blue-900/30">
-          <div className="flex items-center">
-            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-blue-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
-          </div>
-        </div>
-      )}
-
       {/* Scroll to top button */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-900/80 text-white shadow-lg hover:bg-blue-800 transition-all duration-300 backdrop-blur-sm border border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.4)]"
+          className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-900/80 text-white shadow-lg hover:bg-blue-800 transition-all duration-300 backdrop-blur-sm border border-blue-500/50"
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-6 w-6" />
