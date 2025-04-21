@@ -31,21 +31,19 @@ const DataReleasePage = () => {
       .then((data) => {
         // Transform the data if needed to match the expected format
         const formattedData = selectedObsPhase === 'MSPSRPI'
-          ? data.pulsars.map((pulsar, index) => ({
+          ? data.map((pulsar, index) => ({
             id: index.toString(),
-            name: pulsar.name || pulsar.display_name,
-            display_name: pulsar.display_name,
+            name: pulsar.name,
             phase: 'MSPSRPI',
             status: 'Complete',
-            parallax: pulsar.distance?.value ? (1 / parseFloat(pulsar.distance.value.replace(/[^\d.-]/g, ''))) : null,
-            properMotionRA: pulsar.binary_properties?.orbital_period || "N/A",
-            properMotionDec: pulsar.period || "N/A",
+            parallax: pulsar.parallax,
+            properMotionRA: pulsar.properMotion?.split(',')[0] || "N/A",
+            properMotionDec: pulsar.properMotion?.split(',')[1] || "N/A",
             coordinates: {
-              ra: pulsar.recommended_visualizations?.[0] || 'N/A',
-              dec: pulsar.recommended_visualizations?.[1] || 'N/A'
+              ra: 'N/A',
+              dec: 'N/A'
             },
-            description: pulsar.description,
-            // Store the original pulsar data for full display
+            description: '',
             originalData: pulsar
           }))
           : selectedObsPhase === 'MSPSRPI2'
