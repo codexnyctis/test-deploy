@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import ProjectPage from './pages/ProjectPage';
 import DataReleasePage from './pages/DataReleasePage';
@@ -11,6 +11,8 @@ import MSPSRPI2DetailsPage from './pages/MSPSRPI2DetailsPage';
 function App() {
   return (
     <Routes>
+      {/* Redirect root path to /test-deploy */}
+      <Route path="/" element={<Navigate to="/test-deploy" replace />} />
       <Route path="/test-deploy" element={<Homepage />} />
       <Route path="/project" element={<ProjectPage />} />
       <Route path="/data-release" element={<DataReleasePage />} />
