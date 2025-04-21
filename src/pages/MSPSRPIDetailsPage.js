@@ -399,6 +399,8 @@ const MSPSRPIDetailsPage = () => {
                       <div className="flex items-center space-x-4">
                         <a
                           href={pub.doi}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-sm text-purple-400 hover:text-purple-300 transition flex items-center"
                         >
                           DOI <ExternalLink className="ml-1 h-3 w-3" />
@@ -406,6 +408,8 @@ const MSPSRPIDetailsPage = () => {
                         {pub.arxiv && (
                           <a
                             href={pub.arxiv}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-sm text-purple-400 hover:text-purple-300 transition flex items-center"
                           >
                             arXiv <ExternalLink className="ml-1 h-3 w-3" />
@@ -418,6 +422,8 @@ const MSPSRPIDetailsPage = () => {
                 <div className="mt-4 text-center">
                   <a
                     href={data.publicationsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-purple-500/40 rounded-md text-purple-300 bg-purple-900/30 hover:bg-purple-800/50 transition duration-300"
                   >
                     View All Publications <ExternalLink className="ml-2 h-4 w-4" />
