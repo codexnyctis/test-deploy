@@ -382,7 +382,7 @@ const ProjectPage = () => {
 
             <div className="text-center mt-6">
               {activePhase !== 'psrpi' && (
-                <Link to={`/test-deploy/projects/${activePhase}-details`}>View Detailed Project Information</Link>
+                <Link to={`/projects/${activePhase}-details`}>View Detailed Project Information</Link>
               )}
               {activePhase === 'psrpi' && (
                 <a
