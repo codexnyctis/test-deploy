@@ -19,8 +19,8 @@ function App() {
       <Route path="/publications" element={<PublicationsPage />} />
       <Route path="/restricted-area" element={<RestrictedArea />} />
       <Route path="/team" element={<TeamPage />} />
-      <Route path="/projects/mspsrpi-details" element={<MSPSRPIDetailsPage />} />
-      <Route path="/projects/mspsrpi2-details" element={<MSPSRPI2DetailsPage />} />
+      <Route path="/test-deploy/#/projects/mspsrpi-details" element={<MSPSRPIDetailsPage />} />
+      <Route path="/test-deploy/#/projects/mspsrpi2-details" element={<MSPSRPI2DetailsPage />} />
       {/* Other routes */}
     </Routes>
   );
