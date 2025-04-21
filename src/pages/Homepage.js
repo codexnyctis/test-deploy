@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, Book, ChevronRight, Users, ExternalLink, Search, Download } from 'lucide-react';
-import { Rocket, Telescope, MapPinned, BookOpenText, Stars } from "lucide-react";
+import { Rocket, Telescope, MapPinned, BookOpenText, Stars, Ruler, BookOpen, Sparkles } from "lucide-react";
 import PulsarVisualizations from './PulsarVisualizations'; // Import the PulsarVisualizations component
 
 
@@ -23,36 +23,17 @@ const Homepage = () => {
     observedPulsars: 0,
     percentComplete: 0
   });  
+  const [phase1Progress, setPhase1Progress] = useState([]); 
   const [researchQuestions, setResearchQuestions] = useState([]);
+  const [researchQuestionsVisible, setResearchQuestionsVisible] = useState(true);
+  const [keyDiscoveriesVisible, setKeyDiscoveriesVisible] = useState(true);
   const [keyFindings, setKeyFindings] = useState([]); // new
   const [headings, setHeadings] = useState({}); // for section headers
-  const steps = [
-    {
-      icon: <Telescope className="h-8 w-8 text-indigo-300" />,
-      title: "Target Identification",
-      description: "We identify millisecond pulsars suitable for astrometric study based on timing precision and prior knowledge gaps."
-    },
-    {
-      icon: <Rocket className="h-8 w-8 text-indigo-300" />,
-      title: "Observation Execution",
-      description: "Using the VLBA, we schedule multiple epochs to track pulsar movement and parallaxes over time."
-    },
-    {
-      icon: <MapPinned className="h-8 w-8 text-indigo-300" />,
-      title: "Astrometric Calibration",
-      description: "Data is calibrated against reference quasars to refine position estimates and reduce systematic error."
-    },
-    {
-      icon: <BookOpenText className="h-8 w-8 text-indigo-300" />,
-      title: "Analysis & Modeling",
-      description: "We derive parallax distances and proper motions to update Galactic models and test gravitational theories."
-    },
-    {
-      icon: <Stars className="h-8 w-8 text-indigo-300" />,
-      title: "Scientific Discovery",
-      description: "Results feed into broader astrophysical insights, including dark matter constraints and gravitational wave science."
-    }
-  ];
+  const [pulsarJourney, setPulsarJourney] = useState({ title: "", subtitle: "", steps: [] });
+  const [pulsarJourneyVisible, setPulsarJourneyVisible] = useState(true);
+  const [pulsarInfoVisible, setPulsarInfoVisible] = useState(true);
+  const journeyIcons = [<Telescope />, <Rocket />, <Ruler />, <BookOpen />, <Sparkles />];
+
   
 
 
@@ -90,7 +71,7 @@ const Homepage = () => {
           { value: total.toString(), label: "Pulsars Observed" },
           { ...homepageData.projectStats.find(stat => stat.label === "Parallax Precision") },
           { value: `${completed}+`, label: "Precise Distances" },
-          { value: yearsOfResearch.toString(), label: "Years of Research" }
+          { ...homepageData.projectStats.find(stat => stat.label === "Years of Research") }
         ]);
   
         setPhase2Progress({
@@ -98,9 +79,15 @@ const Homepage = () => {
           observedPulsars: completed,
           percentComplete: percent
         });
-  
+
+        setPhase1Progress(homepageData.phase1Progress);
+        setPulsarJourney(homepageData.pulsarJourney);
         setHeadings(homepageData.sectionHeaders);
         setResearchQuestions(homepageData.researchQuestions);
+        setResearchQuestionsVisible(homepageData.researchQuestionsVisible !== false);
+        setPulsarJourneyVisible(homepageData.pulsarJourneyVisible !== false);
+        setKeyDiscoveriesVisible(homepageData.keyDiscoveriesVisible !== false);
+        setPulsarInfoVisible(homepageData.pulsarInfoVisible !== false);
         setKeyFindings(homepageData.keyFindings);
       } catch (err) {
         console.error('Failed to load homepage or observation data:', err);
@@ -254,7 +241,7 @@ const Homepage = () => {
               </div>
               
               <div className="flex justify-between text-sm text-indigo-300 mb-3">
-                <span>Phase 1: 18 Milisecond Pulsars observed ✓</span>
+                <span>Phase 1: {phase1Progress.observedPulsars}/{phase1Progress.totalPulsars} Pulsars observed ✓</span>
                 <span>Phase 2: {phase2Progress.observedPulsars}/{phase2Progress.totalPulsars} Pulsars observed</span>
               </div>
               
@@ -287,22 +274,21 @@ const Homepage = () => {
           </div>
         </div>
 
+      {pulsarJourneyVisible && (
         <div className="py-16 bg-slate-900/50 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Journey of a Pulsar</h2>
-              <p className="text-indigo-300 text-lg">
-                From telescope to theory, explore how pulsar astrometry unfolds through the VLBA project.
-              </p>
+              <h2 className="text-3xl font-bold text-white mb-4">{pulsarJourney.title}</h2>
+              <p className="text-indigo-300 text-lg">{pulsarJourney.subtitle}</p>
             </div>
 
             <div className="grid md:grid-cols-5 gap-6">
-              {steps.map((step, index) => (
+              {pulsarJourney.steps.map((step, index) => (
                 <div
                   key={index}
                   className="rounded-xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 border border-indigo-700/30 shadow-lg flex flex-col items-center text-center transition hover:scale-105"
                 >
-                  <div className="mb-4">{step.icon}</div>
+                  <div className="mb-4 text-white">{journeyIcons[index]}</div>
                   <h3 className="text-white font-semibold mb-2">{step.title}</h3>
                   <p className="text-indigo-200 text-sm">{step.description}</p>
                 </div>
@@ -310,185 +296,192 @@ const Homepage = () => {
             </div>
           </div>
         </div>
+      )}
 
         {/* Research Questions Section */}
-        <div id="research" className="py-8 pt-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">{headings.researchTitle}</h2>
-              <p className="text-xl text-indigo-300">{headings.researchSubtitle}</p>
-            </div>
-
-            <div className="w-full">
-              <div className="mb-8">
-                <p className="text-gray-300 mb-6 text-center max-w-3xl mx-auto">
-                  Our research explores fundamental questions about our universe through precise pulsar position measurements. Below are some of the key research questions driving our work.
-                </p>
+        {researchQuestionsVisible && (
+          <div id="research" className="py-8 pt-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-white mb-4">{headings.researchTitle}</h2>
+                <p className="text-xl text-indigo-300">{headings.researchSubtitle}</p>
               </div>
 
-              {/* Questions container - with stars and consistent styling */}
-              <div className="w-full pt-10 pb-16 mb-0 rounded-xl relative overflow-hidden bg-slate-950/70 backdrop-blur-md shadow-xl">
-                {/* Added starry background */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-30"></div>
-                
-                {/* Small stars layer */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-20"></div>
-                
-                {/* Cosmic nebula glow effect */}
-                <div className="absolute inset-0 bg-gradient-radial from-blue-950/20 via-slate-950/5 to-transparent opacity-70"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
-                
-                {/* Navigation arrows */}
-                <button 
-                  onClick={() => setQuestionSlide(prev => Math.max(0, prev - 1))}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
-                  disabled={questionSlide === 0}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                
-                {/* Updated card container to better center relative to arrows */}
-                <div className="relative w-full h-full flex items-center justify-center z-20">
-                  <div className="flex justify-center items-stretch px-20 mx-auto w-full max-w-5xl">
-                    {/* Show only 3 questions at a time based on current slide - with consistent sizing */}
-                    {researchQuestions.slice(questionSlide, questionSlide + 3).map((question, index) => {
-                      // Single consistent gradient for all cards
-                      const cardGradient = "bg-gradient-to-br from-slate-900/95 via-indigo-950/50 to-slate-900/95";
-                      
-                      return (
-                        <div
-                          key={index + questionSlide}
-                          className={`${cardGradient} backdrop-blur-sm border border-indigo-800/30 rounded-lg p-6 mx-3 w-full transition duration-300 hover:transform hover:scale-105 shadow-xl flex flex-col`}
-                          style={{ minHeight: "220px" }}
-                        >
-                          <div className="mb-4">
-                            <h3 className="text-lg font-bold text-indigo-100">{question.title}</h3>
-                          </div>
-                          <p className="text-base text-indigo-200 leading-relaxed opacity-90 flex-grow">{question.description}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                
-                <button 
-                  onClick={() => setQuestionSlide(prev => Math.min(researchQuestions.length - 3, prev + 1))}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
-                  disabled={questionSlide >= researchQuestions.length - 3}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-                
-                {/* Explore button - ethereal design */}
-                <div className="relative mt-10 text-center z-20">
-                  <Link to="/project" className="inline-flex items-center px-6 py-3 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
-                    Explore The Project
-                    <ChevronRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Millisecond Pulsars Explainer Section - the visualisation content goes here */}
-        <div className="py-16 bg-transparent">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">What Are Millisecond Pulsars?</h2>
-              <p className="text-xl text-indigo-300">Cosmic Lighthouses Spinning Hundreds of Times Per Second</p>
-            </div>
-
-            {/* PulsarVisualizations component */}
-            <div className="mb-12">
-              <PulsarVisualizations />
-            </div>
-          </div>
-        </div>
-
-        {/* Key Findings Section */}
-        <div className="py-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">Key Discoveries</h2>
-              <p className="text-xl text-indigo-300">Our research has led to several important scientific insights</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {keyFindings.map((finding, index) => (
-                <div
-                  key={index}
-                  className={`bg-gradient-to-b ${
-                    index === 0
-                      ? "from-slate-900/95 via-blue-950/30 to-slate-900/95"
-                      : index === 1
-                      ? "from-slate-900/95 via-purple-950/30 to-slate-900/95"
-                      : "from-slate-900/95 via-emerald-950/20 to-slate-900/95"
-                  } backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group`}
-                >
-                  {/* Background effects */}
-                  <div
-                    className={`absolute inset-0 bg-[radial-gradient(ellipse_at_${
-                      index === 0
-                        ? "top_right"
-                        : index === 1
-                        ? "top_left"
-                        : "bottom_right"
-                    },_var(--tw-gradient-stops))] ${
-                      index === 0
-                        ? "from-cyan-900/20"
-                        : index === 1
-                        ? "from-purple-900/20"
-                        : "from-teal-900/20"
-                    } via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700`}
-                  ></div>
-
-                  <div
-                    className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMzAwIiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjEwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjM1MCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"
-                  ></div>
-
-                  {/* Icon placeholder */}
-                  <div className="flex justify-center items-center mb-6">
-                    <div
-                      className={`w-16 h-16 ${
-                        index === 0
-                          ? "bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-blue-700/30 shadow-cyan-800/20"
-                          : index === 1
-                          ? "bg-gradient-to-br from-purple-900/40 to-violet-900/40 border-purple-700/30 shadow-purple-800/20"
-                          : "bg-gradient-to-br from-teal-900/40 to-emerald-900/40 border-teal-700/30 shadow-teal-800/20"
-                      } backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg relative z-10 overflow-hidden`}
-                    >
-                      <div
-                        className={`absolute inset-0 ${
-                          index === 0
-                            ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-blue-600/10 to-transparent"
-                            : index === 1
-                            ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-400/20 via-purple-600/10 to-transparent"
-                            : "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-400/20 via-teal-600/10 to-transparent"
-                        }`}
-                      ></div>
-                      {/* You can add different icons based on index here if needed */}
-                      <MapPin className="h-8 w-8 text-cyan-300" />
-                    </div>
-                  </div>
-
-                  {/* Dynamic content */}
-                  <h3 className="text-xl font-semibold text-blue-100 mb-4 relative z-10 text-center">
-                    {finding.title}
-                  </h3>
-                  <p className="text-slate-300 relative z-10 leading-relaxed text-center">
-                    {finding.description}
+              <div className="w-full">
+                <div className="mb-8">
+                  <p className="text-gray-300 mb-6 text-center max-w-3xl mx-auto">
+                    Our research explores fundamental questions about our universe through precise pulsar position measurements. Below are some of the key research questions driving our work.
                   </p>
                 </div>
-              ))}
+
+                {/* Questions container - with stars and consistent styling */}
+                <div className="w-full pt-10 pb-16 mb-0 rounded-xl relative overflow-hidden bg-slate-950/70 backdrop-blur-md shadow-xl">
+                  {/* Added starry background */}
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-30"></div>
+                  
+                  {/* Small stars layer */}
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-20"></div>
+                  
+                  {/* Cosmic nebula glow effect */}
+                  <div className="absolute inset-0 bg-gradient-radial from-blue-950/20 via-slate-950/5 to-transparent opacity-70"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
+                  
+                  {/* Navigation arrows */}
+                  <button 
+                    onClick={() => setQuestionSlide(prev => Math.max(0, prev - 1))}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
+                    disabled={questionSlide === 0}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* Updated card container to better center relative to arrows */}
+                  <div className="relative w-full h-full flex items-center justify-center z-20">
+                    <div className="flex justify-center items-stretch px-20 mx-auto w-full max-w-5xl">
+                      {/* Show only 3 questions at a time based on current slide - with consistent sizing */}
+                      {researchQuestions.slice(questionSlide, questionSlide + 3).map((question, index) => {
+                        // Single consistent gradient for all cards
+                        const cardGradient = "bg-gradient-to-br from-slate-900/95 via-indigo-950/50 to-slate-900/95";
+                        
+                        return (
+                          <div
+                            key={index + questionSlide}
+                            className={`${cardGradient} backdrop-blur-sm border border-indigo-800/30 rounded-lg p-6 mx-3 w-full transition duration-300 hover:transform hover:scale-105 shadow-xl flex flex-col`}
+                            style={{ minHeight: "220px" }}
+                          >
+                            <div className="mb-4">
+                              <h3 className="text-lg font-bold text-indigo-100">{question.title}</h3>
+                            </div>
+                            <p className="text-base text-indigo-200 leading-relaxed opacity-90 flex-grow">{question.description}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  
+                  <button 
+                    onClick={() => setQuestionSlide(prev => Math.min(researchQuestions.length - 3, prev + 1))}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
+                    disabled={questionSlide >= researchQuestions.length - 3}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  
+                  {/* Explore button - ethereal design */}
+                  <div className="relative mt-10 text-center z-20">
+                    <Link to="/project" className="inline-flex items-center px-6 py-3 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
+                      Explore The Project
+                      <ChevronRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Millisecond Pulsars Explainer Section - the visualisation content goes here */}
+        {pulsarJourneyVisible && (
+          <div className="py-16 bg-transparent">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-white mb-4">What Are Millisecond Pulsars?</h2>
+                <p className="text-xl text-indigo-300">Cosmic Lighthouses Spinning Hundreds of Times Per Second</p>
+              </div>
+
+              {/* PulsarVisualizations component */}
+              <div className="mb-12">
+                <PulsarVisualizations />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Key Findings Section */}
+        {keyDiscoveriesVisible && (
+          <div className="py-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-white mb-4">Key Discoveries</h2>
+                <p className="text-xl text-indigo-300">Our research has led to several important scientific insights</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                {keyFindings.map((finding, index) => (
+                  <div
+                    key={index}
+                    className={`bg-gradient-to-b ${
+                      index === 0
+                        ? "from-slate-900/95 via-blue-950/30 to-slate-900/95"
+                        : index === 1
+                        ? "from-slate-900/95 via-purple-950/30 to-slate-900/95"
+                        : "from-slate-900/95 via-emerald-950/20 to-slate-900/95"
+                    } backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group`}
+                  >
+                    {/* Background effects */}
+                    <div
+                      className={`absolute inset-0 bg-[radial-gradient(ellipse_at_${
+                        index === 0
+                          ? "top_right"
+                          : index === 1
+                          ? "top_left"
+                          : "bottom_right"
+                      },_var(--tw-gradient-stops))] ${
+                        index === 0
+                          ? "from-cyan-900/20"
+                          : index === 1
+                          ? "from-purple-900/20"
+                          : "from-teal-900/20"
+                      } via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700`}
+                    ></div>
+
+                    <div
+                      className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMzAwIiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjEwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjM1MCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"
+                    ></div>
+
+                    {/* Icon placeholder */}
+                    <div className="flex justify-center items-center mb-6">
+                      <div
+                        className={`w-16 h-16 ${
+                          index === 0
+                            ? "bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-blue-700/30 shadow-cyan-800/20"
+                            : index === 1
+                            ? "bg-gradient-to-br from-purple-900/40 to-violet-900/40 border-purple-700/30 shadow-purple-800/20"
+                            : "bg-gradient-to-br from-teal-900/40 to-emerald-900/40 border-teal-700/30 shadow-teal-800/20"
+                        } backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg relative z-10 overflow-hidden`}
+                      >
+                        <div
+                          className={`absolute inset-0 ${
+                            index === 0
+                              ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-blue-600/10 to-transparent"
+                              : index === 1
+                              ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-400/20 via-purple-600/10 to-transparent"
+                              : "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-400/20 via-teal-600/10 to-transparent"
+                          }`}
+                        ></div>
+                        {/* You can add different icons based on index here if needed */}
+                        <MapPin className="h-8 w-8 text-cyan-300" />
+                      </div>
+                    </div>
+
+                    {/* Dynamic content */}
+                    <h3 className="text-xl font-semibold text-blue-100 mb-4 relative z-10 text-center">
+                      {finding.title}
+                    </h3>
+                    <p className="text-slate-300 relative z-10 leading-relaxed text-center">
+                      {finding.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Team Member Carousel Section */}
         <div className="py-16 bg-transparent">

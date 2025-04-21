@@ -13,29 +13,34 @@
     { "label": "Precise Distances", "value": "57+" },
     { "label": "Years of Research", "value": "15" }
   ],
+  "phase1Progress": {
+    "totalPulsars": 33,
+    "observedPulsars": 1
+  },
   "phase2Progress": {
     "totalPulsars": 44,
-    "observedPulsars": 21,
-    "percentComplete": 62
+    "observedPulsars": 21
   },
+  "researchQuestionsVisible": true,
   "researchQuestions": [
     {
-      "title": "Precise Pulsar Distances",
-      "description": "What are the precise distances to the 44 millisecond pulsars being observed in the MSPSRPI2 program?"
+      "title": "Improving Ephemeris and Frame Tie",
+      "description": "How can astrometric measurements enhance the Solar System ephemeris and tighten the frame tie between VLBI and pulsar timing arrays for more accurate gravitational wave detection?"
     },
     {
-      "title": "Gravitational Wave Detection",
-      "description": "How can accurate astrometric measurements of millisecond pulsars improve the sensitivity of pulsar timing arrays for gravitational wave detection?"
+      "title": "MSP Velocity and Formation Channels",
+      "description": "What does the peculiar velocity distribution of millisecond pulsars tell us about their formation mechanisms, including possible differences between isolated and binary MSPs?"
     },
     {
-      "title": "Testing Relativity",
-      "description": "How can precise distance measurements to millisecond pulsars in binary systems improve tests of general relativity and alternative theories of gravity?"
+      "title": "Correcting the Shklovskii Effect",
+      "description": "How can precise astrometric distances help correct for the Shklovskii effect in binary systems and enable more accurate tests of General Relativity through pulsar orbital decay?"
     },
     {
-      "title": "Galactic Distribution",
-      "description": "How do millisecond pulsars distribute throughout the Galaxy, and what does this reveal about their formation and evolution?"
+      "title": "Tracing the Galactic Potential with MSPs",
+      "description": "Can newly measured MSP binaries be used to trace the Galactic gravitational potential and better constrain the distribution of dark matter in the Milky Way?"
     }
   ],
+  "keyDiscoveriesVisible": false,
   "keyFindings": [
     {
       "title": "Electron Density Model Flaws",
@@ -52,5 +57,34 @@
       "description": "Our precise distance measurements for binary pulsars have enabled more stringent tests of gravitational radiation.",
       "theme": "teal"
     }
-  ]
+  ],
+  "pulsarJourneyVisible": true,
+  "pulsarJourney": {
+    "title": "Journey of a Pulsar",
+    "subtitle": "From telescope to theory, explore how pulsar astrometry unfolds through the VLBA project",
+    "steps": [
+      {
+        "title": "Pulsar Discovery",
+        "description": "Our journey begins with the detection of radio pulses from distant neutron stars."
+      },
+      {
+        "title": "Timing and Analysis",
+        "description": "Pulsar timing models help refine celestial coordinates and enable scheduling of precise VLBI observations."
+      },
+      {
+        "title": "Astrometric Observation",
+        "description": "Using VLBA, we track the pulsar’s position across epochs to extract parallax and proper motion."
+      },
+      {
+        "title": "Distance and Impact",
+        "description": "With accurate distances, we advance studies in gravitational waves, pulsar velocities, and Galactic structure."
+      },
+      {
+        "title": "Scientific Discovery",
+        "description": "Results feed into broader astrophysical insights, including dark matter constraints and gravitational wave science."
+      }
+
+    ]
+  },
+  "pulsarInfoVisible": true
 }
