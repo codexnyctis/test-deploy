@@ -36,9 +36,13 @@ const Homepage = () => {
         const data = await response.json();
 
         const [homepageRes, observationRes] = await Promise.all([
-          fetch('/data/homepage/HomePage.json'),
-          fetch('/data/mspsrpi2/observationData.json')
+          fetch(`${process.env.PUBLIC_URL}/data/homepage/HomePage.json`),
+          fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/observationData.json`)
         ]);
+
+        if (!homepageRes.ok || !observationRes.ok) {
+          throw new Error(`Failed to fetch: ${!homepageRes.ok ? homepageRes.status : observationRes.status}`);
+        }
 
         const homepageData = await homepageRes.json();
         const observationData = await observationRes.json();
