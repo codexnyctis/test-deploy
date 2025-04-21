@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ChevronLeft,
   ExternalLink,
@@ -9,18 +9,17 @@ import {
   ChevronUp,
   ArrowRight
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const MSPSRPI2DetailsPage = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [showScrollTop, setShowScrollTop] = useState(false);
   
-  // Add state for the data, loading, refreshing, and lastUpdated
+  // Simplified state - removed refreshing and lastUpdated
   const [data, setData] = useState(null);
   const [pulsars, setPulsars] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [error, setError] = useState(null);
 
   // For pulsar list pagination
@@ -31,71 +30,44 @@ const MSPSRPI2DetailsPage = () => {
   const [fluxFilter, setFluxFilter] = useState('all');
   const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
-  // Function to fetch data - with timestamp check added
-  const fetchData = useCallback(async () => {
-    // Check if it's been less than 24 hours since the last update
-    // If we have a lastUpdated time and it's been less than 24 hours, skip fetch
-    if (lastUpdated && (new Date() - lastUpdated < 86400000)) {
-      return; // Skip the fetch if less than a day has passed
-    }
-    
-    // If refreshing, set refreshing state, otherwise set loading state
-    if (data && pulsars) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
-    
-    try {
-      // Fetch both JSON files in parallel
-      const [detailsResponse, pulsarsResponse] = await Promise.all([
-        fetch(`/data/mspsrpi2/mspsrpi2Details.json?t=${Date.now()}`),
-        fetch(`/data/mspsrpi2/mspsrpi2Pulsars.json?t=${Date.now()}`)
-      ]);
-      
-      // Check if both responses are ok
-      if (!detailsResponse.ok) {
-        throw new Error(`HTTP error fetching details! Status: ${detailsResponse.status}`);
-      }
-      
-      if (!pulsarsResponse.ok) {
-        throw new Error(`HTTP error fetching pulsars! Status: ${pulsarsResponse.status}`);
-      }
-      
-      // Parse both JSON responses
-      const detailsData = await detailsResponse.json();
-      const pulsarsData = await pulsarsResponse.json();
-      
-      // Update state with the fetched data
-      setData(detailsData);
-      setPulsars(pulsarsData);
-      const now = new Date();
-      setLastUpdated(now);
-      // Single console log here when data is actually updated
-      console.log(`Data refreshed at: ${now.toLocaleTimeString()}`);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to load data. Please try again.');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [data, pulsars, lastUpdated]); // Added lastUpdated as dependency
-  
-  // Initial data load and set up auto-refresh
+  // Simplified data loading - no caching or refresh tracking
   useEffect(() => {
-    // Initial fetch
-    fetchData();
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        // Fetch both JSON files in parallel without cache-busting
+        const [detailsResponse, pulsarsResponse] = await Promise.all([
+          fetch(`/data/mspsrpi2/mspsrpi2Details.json`),
+          fetch(`/data/mspsrpi2/mspsrpi2Pulsars.json`)
+        ]);
+        
+        // Check if both responses are ok
+        if (!detailsResponse.ok) {
+          throw new Error(`HTTP error fetching details! Status: ${detailsResponse.status}`);
+        }
+        
+        if (!pulsarsResponse.ok) {
+          throw new Error(`HTTP error fetching pulsars! Status: ${pulsarsResponse.status}`);
+        }
+        
+        // Parse both JSON responses
+        const detailsData = await detailsResponse.json();
+        const pulsarsData = await pulsarsResponse.json();
+        
+        // Update state with the fetched data
+        setData(detailsData);
+        setPulsars(pulsarsData);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    // Set up auto-refresh daily
-    const refreshInterval = setInterval(() => {
-      fetchData();
-    }, 86400000); // 24 hours = 86,400,000 milliseconds
-    
-    // Clean up interval on component unmount
-    return () => clearInterval(refreshInterval);
-  }, []); // Removed fetchData dependency to prevent unnecessary interval resets
+    loadData();
+  }, []); // Only runs once on component mount
   
   // Filter pulsars based on selected flux category
   const filteredPulsars = pulsars && fluxFilter === 'all' 
@@ -162,7 +134,7 @@ const MSPSRPI2DetailsPage = () => {
           <h2 className="text-2xl mb-4">Something went wrong</h2>
           <p className="text-gray-300 mb-6">{error}</p>
           <button 
-            onClick={fetchData}
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Try Again
@@ -179,7 +151,7 @@ const MSPSRPI2DetailsPage = () => {
         <div className="text-center">
           <p className="text-xl">No data available. Please refresh the page.</p>
           <button 
-            onClick={fetchData}
+            onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Refresh Data
@@ -199,11 +171,11 @@ const MSPSRPI2DetailsPage = () => {
               <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
-              <Link to="/test-deploy/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
-              <Link to="/test-deploy/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
-              <Link to="/test-deploy/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
-              <Link to="/test-deploy/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
+              <Link to="/test-deploy" className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Home</Link>
+              <Link to="/test-deploy/project" className={`${location.pathname === '/test-deploy/project' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Project</Link>
+              <Link to="/test-deploy/data-release" className={`${location.pathname === '/test-deploy/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Data Release</Link>
+              <Link to="/test-deploy/publications" className={`${location.pathname === '/test-deploy/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Publications</Link>
+              <Link to="/test-deploy/team" className={`${location.pathname === '/test-deploy/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Team</Link>
             </div>
           </div>
         </div>
@@ -629,8 +601,6 @@ const MSPSRPI2DetailsPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Removed the in-render console.log that was causing multiple logs */}
 
       {/* Scroll to top button */}
       {showScrollTop && (
