@@ -77,14 +77,7 @@ const Homepage = () => {
 
         setResearchQuestions(homepageData.researchQuestions);
       } catch (err) {
-        console.error("Error loading data:", error);
-        // 设置默认数据或错误状态
-        setProjectStats([
-          { value: "N/A", label: "Pulsars Observed" },
-          { value: "N/A", label: "Parallax Precision" },
-          { value: "N/A", label: "Precise Distances" },
-          { value: "N/A", label: "Years of Research" }
-        ]);
+        console.error('Failed to load homepage or observation data:', err);
       }
     };
 
