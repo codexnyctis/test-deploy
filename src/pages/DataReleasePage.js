@@ -21,7 +21,7 @@ const DataReleasePage = () => {
     // Determine which file to load based on the selected phase
     const file =
       selectedObsPhase === 'MSPSRPI'
-        ? `${process.env.PUBLIC_URL}/data/nishatest/mspsrpi.json`
+        ? `${process.env.PUBLIC_URL}/data/nishatest/pulsars.json`
         : selectedObsPhase === 'MSPSRPI2'
           ? `${process.env.PUBLIC_URL}/data/nishatest/mspsrpi2Pulsars.json`
           : `${process.env.PUBLIC_URL}/data/nishatest/pulsars.json`;
@@ -31,9 +31,10 @@ const DataReleasePage = () => {
       .then((data) => {
         // Transform the data if needed to match the expected format
         const formattedData = selectedObsPhase === 'MSPSRPI'
-          ? data.map((pulsar, index) => ({
+          ? data.pulsars.map((pulsar, index) => ({
             id: index.toString(),
-            name: pulsar.name,
+            name: pulsar.name || pulsar.display_name,
+            display_name: pulsar.display_name,
             phase: 'MSPSRPI',
             status: 'Complete',
             parallax: pulsar.distance?.value ? (1 / parseFloat(pulsar.distance.value.replace(/[^\d.-]/g, ''))) : null,
@@ -43,7 +44,8 @@ const DataReleasePage = () => {
               ra: pulsar.recommended_visualizations?.[0] || 'N/A',
               dec: pulsar.recommended_visualizations?.[1] || 'N/A'
             },
-            description: '',
+            description: pulsar.description,
+            // Store the original pulsar data for full display
             originalData: pulsar
           }))
           : selectedObsPhase === 'MSPSRPI2'
