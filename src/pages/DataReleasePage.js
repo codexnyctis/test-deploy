@@ -21,7 +21,7 @@ const DataReleasePage = () => {
     // Determine which file to load based on the selected phase
     const file =
       selectedObsPhase === 'MSPSRPI'
-        ? `${process.env.PUBLIC_URL}/data/mspsrpi.json`
+        ? `${process.env.PUBLIC_URL}/data/nishatest/mspsrpi.json`
         : selectedObsPhase === 'MSPSRPI2'
           ? `${process.env.PUBLIC_URL}/data/nishatest/mspsrpi2Pulsars.json`
           : `${process.env.PUBLIC_URL}/data/nishatest/pulsars.json`;
