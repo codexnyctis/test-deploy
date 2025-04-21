@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronRight,
   ExternalLink
@@ -11,7 +11,7 @@ import {
 const ProjectPage = () => {
   const [activePhase, setActivePhase] = useState('mspsrpi2');
   
-  // Add state for data, loading, and lastUpdated
+  // Add state for data, loading, and refresh tracking 
   const [projectData, setProjectData] = useState(null);
   const [observationData, setObservationData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,8 +19,8 @@ const ProjectPage = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [error, setError] = useState(null);
   
-  // Function to fetch data
-  const fetchData = async () => {
+  // Function to fetch data - now using useCallback
+  const fetchData = useCallback(async () => {
     // If refreshing, set refreshing state, otherwise set loading state
     if (projectData && observationData) {
       setRefreshing(true);
@@ -60,21 +60,21 @@ const ProjectPage = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [projectData, observationData]);
   
   // Initial data load and set up auto-refresh
   useEffect(() => {
     // Initial fetch
     fetchData();
     
-    // Set up auto-refresh every 60 seconds (adjust as needed)
+    // Set up auto-refresh daily instead of every 60 seconds
     const refreshInterval = setInterval(() => {
       fetchData();
-    }, 60000); // 60 seconds
+    }, 86400000); // 24 hours = 86,400,000 milliseconds
     
     // Clean up interval on component unmount
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [fetchData]); // Added fetchData as a dependency
   
   // Calculate simplified progress statistics - now using the state data
   const progressStats = React.useMemo(() => {
@@ -253,8 +253,6 @@ const ProjectPage = () => {
         {/* Timeline section - Now using data from siteInfo.timeline */}
         <div className="relative py-6 mb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Project Timeline</h2>
-            
             <div className="relative">
               {/* Timeline line */}
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-900/50 via-indigo-500/50 to-indigo-900/50"></div>
@@ -464,7 +462,6 @@ const ProjectPage = () => {
               <p className="text-sm text-amber-200 relative z-10">Currently being observed</p>
             </div>
             
-            
             {/* Completed */}
             <div className="bg-slate-900/60 backdrop-blur-sm border-2 border-emerald-500/30 rounded-lg p-4 text-center relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]">
               <h3 className="text-lg font-semibold text-emerald-300 mb-2 relative z-10">Completed</h3>
@@ -486,15 +483,9 @@ const ProjectPage = () => {
         </div>
       </div>
       
-      {/* Last updated indicator */}
-      {lastUpdated && (
-        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-indigo-900/30">
-          <div className="flex items-center">
-            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-indigo-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
-          </div>
-        </div>
-      )}
+      {/* We track lastUpdated state but don't display the indicator to avoid confusion */}
+      {/* Console logs for debugging - these will show in browser dev tools */}
+      {lastUpdated && refreshing === false && console.log(`Data refreshed at: ${lastUpdated.toLocaleTimeString()}`)}
       
       {/* Footer */}
       <div className="py-6 border-t border-slate-800/50 bg-black">

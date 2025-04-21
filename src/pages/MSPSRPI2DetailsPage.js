@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronLeft,
   ExternalLink,
@@ -35,8 +35,8 @@ const MSPSRPI2DetailsPage = () => {
   const [fluxFilter, setFluxFilter] = useState('all');
   const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
-  // Function to fetch data
-  const fetchData = async () => {
+  // Function to fetch data - now using useCallback
+  const fetchData = useCallback(async () => {
     // If refreshing, set refreshing state, otherwise set loading state
     if (data && pulsars) {
       setRefreshing(true);
@@ -76,21 +76,21 @@ const MSPSRPI2DetailsPage = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [data, pulsars]);
   
   // Initial data load and set up auto-refresh
   useEffect(() => {
     // Initial fetch
     fetchData();
     
-    // Set up auto-refresh every 60 seconds (adjust as needed)
+    // Set up auto-refresh daily instead of every 60 seconds
     const refreshInterval = setInterval(() => {
       fetchData();
-    }, 60000); // 60 seconds
+    }, 86400000); // 24 hours = 86,400,000 milliseconds
     
     // Clean up interval on component unmount
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [fetchData]); // Added fetchData as a dependency
   
   // Filter pulsars based on selected flux category
   const filteredPulsars = pulsars && fluxFilter === 'all' 
@@ -191,7 +191,7 @@ const MSPSRPI2DetailsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold">MSPSR<span className="text-blue-400">π</span>2</span>
+              <span className="text-xl font-bold">MSPSR<span className="text-blue-400">π</span></span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a href="/" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Home</a>
@@ -639,15 +639,9 @@ const MSPSRPI2DetailsPage = () => {
         </div>
       </div>
 
-      {/* Last updated indicator */}
-      {lastUpdated && (
-        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-blue-900/30">
-          <div className="flex items-center">
-            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-blue-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
-          </div>
-        </div>
-      )}
+      {/* We track lastUpdated state but don't display the indicator to avoid confusion */}
+      {/* Console logs for debugging - these will show in browser dev tools */}
+      {lastUpdated && refreshing === false && console.log(`Data refreshed at: ${lastUpdated.toLocaleTimeString()}`)}
 
       {/* Scroll to top button */}
       {showScrollTop && (

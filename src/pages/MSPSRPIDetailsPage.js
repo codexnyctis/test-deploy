@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ChevronLeft,
   ExternalLink,
@@ -28,8 +28,8 @@ const MSPSRPIDetailsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pulsarsPerPage = 8;
   
-  // Function to fetch data
-  const fetchData = async () => {
+  // Function to fetch data - now with useCallback
+  const fetchData = useCallback(async () => {
     // If refreshing, set refreshing state, otherwise set loading state
     if (data) {
       setRefreshing(true);
@@ -56,21 +56,21 @@ const MSPSRPIDetailsPage = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [data]);
   
   // Initial data load and set up auto-refresh
   useEffect(() => {
     // Initial fetch
     fetchData();
     
-    // Set up auto-refresh every 60 seconds (adjust as needed)
+    // Set up auto-refresh daily instead of every 60 seconds
     const refreshInterval = setInterval(() => {
       fetchData();
-    }, 60000); // 60 seconds
+    }, 86400000); // 24 hours = 86,400,000 milliseconds
     
     // Clean up interval on component unmount
     return () => clearInterval(refreshInterval);
-  }, []);
+  }, [fetchData]); // Added fetchData as a dependency
   
   // Calculate pulsars to display based on pagination
   const currentPulsars = data?.pulsars 
@@ -574,15 +574,9 @@ const MSPSRPIDetailsPage = () => {
         </div>
       </div>
 
-      {/* Last updated indicator */}
-      {lastUpdated && (
-        <div className="fixed bottom-6 left-6 bg-slate-900/70 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-300 border border-purple-900/30">
-          <div className="flex items-center">
-            <span className={`h-2 w-2 rounded-full mr-2 ${refreshing ? 'bg-purple-400 animate-pulse' : 'bg-green-400'}`}></span>
-            Auto-updating · Last updated: {lastUpdated.toLocaleTimeString()}
-          </div>
-        </div>
-      )}
+      {/* We track lastUpdated state but don't display the indicator to avoid confusion */}
+      {/* Console logs for debugging - these will show in browser dev tools */}
+      {lastUpdated && refreshing === false && console.log(`Data refreshed at: ${lastUpdated.toLocaleTimeString()}`)}
 
       {/* Scroll to top button */}
       {showScrollTop && (
