@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   ChevronLeft,
   ExternalLink,
   Download,
@@ -15,7 +15,7 @@ const MSPSRPI2DetailsPage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [showScrollTop, setShowScrollTop] = useState(false);
-  
+
   // Simplified state - removed refreshing and lastUpdated
   const [data, setData] = useState(null);
   const [pulsars, setPulsars] = useState(null);
@@ -25,7 +25,7 @@ const MSPSRPI2DetailsPage = () => {
   // For pulsar list pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pulsarsPerPage = 8;
-  
+
   // For filtering pulsars by flux density category
   const [fluxFilter, setFluxFilter] = useState('all');
   const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
@@ -37,23 +37,23 @@ const MSPSRPI2DetailsPage = () => {
       try {
         // Fetch both JSON files in parallel without cache-busting
         const [detailsResponse, pulsarsResponse] = await Promise.all([
-          fetch(`/data/mspsrpi2/mspsrpi2Details.json`),
-          fetch(`/data/mspsrpi2/mspsrpi2Pulsars.json`)
+          fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/mspsrpi2Details.json`),
+          fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/mspsrpi2Pulsars.json`)
         ]);
-        
+
         // Check if both responses are ok
         if (!detailsResponse.ok) {
           throw new Error(`HTTP error fetching details! Status: ${detailsResponse.status}`);
         }
-        
+
         if (!pulsarsResponse.ok) {
           throw new Error(`HTTP error fetching pulsars! Status: ${pulsarsResponse.status}`);
         }
-        
+
         // Parse both JSON responses
         const detailsData = await detailsResponse.json();
         const pulsarsData = await pulsarsResponse.json();
-        
+
         // Update state with the fetched data
         setData(detailsData);
         setPulsars(pulsarsData);
@@ -65,21 +65,21 @@ const MSPSRPI2DetailsPage = () => {
         setLoading(false);
       }
     };
-    
+
     loadData();
   }, []); // Only runs once on component mount
-  
+
   // Filter pulsars based on selected flux category
-  const filteredPulsars = pulsars && fluxFilter === 'all' 
-    ? pulsars 
+  const filteredPulsars = pulsars && fluxFilter === 'all'
+    ? pulsars
     : pulsars?.filter(pulsar => pulsar.fluxCategory === fluxFilter) || [];
-  
+
   // Calculate pulsars to display based on pagination
   const currentPulsars = filteredPulsars.slice(
-    (currentPage - 1) * pulsarsPerPage, 
+    (currentPage - 1) * pulsarsPerPage,
     currentPage * pulsarsPerPage
   );
-  
+
   const totalPages = Math.ceil(filteredPulsars.length / pulsarsPerPage);
 
   // Reset to first page when filter changes
@@ -107,7 +107,7 @@ const MSPSRPI2DetailsPage = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -133,7 +133,7 @@ const MSPSRPI2DetailsPage = () => {
           <div className="text-red-400 text-6xl mb-4">!</div>
           <h2 className="text-2xl mb-4">Something went wrong</h2>
           <p className="text-gray-300 mb-6">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
@@ -150,7 +150,7 @@ const MSPSRPI2DetailsPage = () => {
       <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
         <div className="text-center">
           <p className="text-xl">No data available. Please refresh the page.</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
@@ -200,10 +200,10 @@ const MSPSRPI2DetailsPage = () => {
           <div className="w-full h-full bg-slate-950">
             {/* Same background elements as the main page for consistency but with blue theme*/}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-50"></div>
-            
+
             {/* Small stars layer */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-60"></div>
-            
+
             {/* Blue glow effect for MSPSRPI2 theme */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-900/10 to-transparent"></div>
           </div>
@@ -225,15 +225,15 @@ const MSPSRPI2DetailsPage = () => {
               {data.heroDescription}
             </p>
             <div className="flex flex-wrap gap-4">
-              <a 
-                href={data.dataReleaseUrl} 
+              <a
+                href={data.dataReleaseUrl}
                 className="inline-flex items-center px-5 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300 shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
                 Access Data Release
               </a>
-              <a 
-                href={data.publicationsUrl} 
+              <a
+                href={data.publicationsUrl}
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
@@ -250,41 +250,37 @@ const MSPSRPI2DetailsPage = () => {
           <div className="flex space-x-1 overflow-x-auto py-2 scrollbar-hide">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                activeTab === 'overview'
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'overview'
                   ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
                   : 'text-gray-400 hover:text-blue-300'
-              }`}
+                }`}
             >
               Overview
             </button>
             <button
               onClick={() => setActiveTab('objectives')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                activeTab === 'objectives'
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'objectives'
                   ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
                   : 'text-gray-400 hover:text-blue-300'
-              }`}
+                }`}
             >
               Details
             </button>
             <button
               onClick={() => setActiveTab('results')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                activeTab === 'results'
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'results'
                   ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
                   : 'text-gray-400 hover:text-blue-300'
-              }`}
+                }`}
             >
               Key Results
             </button>
             <button
               onClick={() => setActiveTab('pulsars')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${
-                activeTab === 'pulsars'
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'pulsars'
                   ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
                   : 'text-gray-400 hover:text-blue-300'
-              }`}
+                }`}
             >
               Target Pulsars
             </button>
@@ -295,7 +291,7 @@ const MSPSRPI2DetailsPage = () => {
       {/* Main Content Area - Conditionally display content based on active tab */}
       <div className="py-12 bg-gradient-to-b from-slate-900 to-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Overview Tab Content */}
           {activeTab === 'overview' && (
             <div>
@@ -327,7 +323,7 @@ const MSPSRPI2DetailsPage = () => {
                 <div className="relative">
                   {/* Timeline line */}
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-700/50 ml-6 md:ml-8"></div>
-                  
+
                   {/* Timeline events */}
                   <div className="space-y-8">
                     {data.timeline.map((event, index) => (
@@ -346,12 +342,12 @@ const MSPSRPI2DetailsPage = () => {
               </div>
             </div>
           )}
-          
+
           {/* Objectives Tab Content */}
           {activeTab === 'objectives' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Project Objectives</h2>
-              
+
               <div className="space-y-6">
                 {data.objectives.map((objective, index) => (
                   <div key={index} className="border-l-4 border-blue-500 pl-4 py-1">
@@ -360,7 +356,7 @@ const MSPSRPI2DetailsPage = () => {
                   </div>
                 ))}
               </div>
-              
+
               <div className="mt-10">
                 <h3 className="text-xl font-bold text-white mb-4">Technical Approach</h3>
                 <div className="prose prose-invert prose-blue max-w-none">
@@ -373,12 +369,12 @@ const MSPSRPI2DetailsPage = () => {
               </div>
             </div>
           )}
-          
+
           {/* Key Results Tab Content */}
           {activeTab === 'results' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Expected Results & Impact</h2>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
                 {data.keyResults.map((result, index) => (
                   <div key={index} className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-5 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300">
@@ -387,7 +383,7 @@ const MSPSRPI2DetailsPage = () => {
                   </div>
                 ))}
               </div>
-              
+
               <h3 className="text-xl font-bold text-white mb-4">Scientific Impact</h3>
               <div className="prose prose-invert prose-blue max-w-none mb-6">
                 {data.scientificImpact.map((paragraph, index) => (
@@ -396,7 +392,7 @@ const MSPSRPI2DetailsPage = () => {
                   </p>
                 ))}
               </div>
-              
+
               {/* Publications List */}
               <div className="mt-8">
                 <h3 className="text-xl font-bold text-white mb-4">Related Publications</h3>
@@ -405,15 +401,15 @@ const MSPSRPI2DetailsPage = () => {
                     <div key={index} className="bg-slate-800/30 p-4 rounded-lg border border-blue-700/20">
                       <p className="text-gray-300 mb-2">{pub.citation}</p>
                       <div className="flex items-center space-x-4">
-                        <a 
-                          href={pub.doi} 
+                        <a
+                          href={pub.doi}
                           className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                         >
                           DOI <ExternalLink className="ml-1 h-3 w-3" />
                         </a>
                         {pub.arxiv && (
-                          <a 
-                            href={pub.arxiv} 
+                          <a
+                            href={pub.arxiv}
                             className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                           >
                             arXiv <ExternalLink className="ml-1 h-3 w-3" />
@@ -424,8 +420,8 @@ const MSPSRPI2DetailsPage = () => {
                   ))}
                 </div>
                 <div className="mt-4 text-center">
-                  <a 
-                    href={data.publicationsUrl} 
+                  <a
+                    href={data.publicationsUrl}
                     className="inline-flex items-center px-4 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300"
                   >
                     View All Publications <ExternalLink className="ml-2 h-4 w-4" />
@@ -434,7 +430,7 @@ const MSPSRPI2DetailsPage = () => {
               </div>
             </div>
           )}
-          
+
           {/* Pulsars Studied Tab Content */}
           {activeTab === 'pulsars' && (
             <div>
@@ -447,14 +443,14 @@ const MSPSRPI2DetailsPage = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Information about catalogue paper */}
                 <div className="bg-slate-800/50 rounded-lg p-4 mb-6 border border-blue-500/30">
                   <p className="text-gray-300">
                     {data.pulsarsStudied.catalogueInfo}
                   </p>
                 </div>
-                
+
                 {/* Flux Density Filter */}
                 <div className="mb-6">
                   <div className="flex items-center mb-3">
@@ -466,11 +462,10 @@ const MSPSRPI2DetailsPage = () => {
                       <button
                         key={category}
                         onClick={() => handleFilterChange(category)}
-                        className={`px-3 py-1 text-sm rounded-full transition-all duration-300 ${
-                          fluxFilter === category
+                        className={`px-3 py-1 text-sm rounded-full transition-all duration-300 ${fluxFilter === category
                             ? 'bg-blue-900 text-blue-200 shadow-[0_0_8px_rgba(59,130,246,0.4)] border border-blue-400/50'
                             : 'bg-slate-800/50 text-gray-400 hover:text-blue-300 border border-blue-900/20'
-                        }`}
+                          }`}
                       >
                         {category === 'all' ? 'All Pulsars' : category}
                       </button>
@@ -486,7 +481,7 @@ const MSPSRPI2DetailsPage = () => {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Pulsars Table */}
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-blue-900/50">
@@ -527,18 +522,17 @@ const MSPSRPI2DetailsPage = () => {
                     </tbody>
                   </table>
                 </div>
-                
+
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
                   <div className="flex justify-between items-center mt-4 px-2">
                     <button
                       onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
-                      className={`px-3 py-1 rounded-md ${
-                        currentPage === 1 
-                          ? 'text-gray-500 cursor-not-allowed' 
+                      className={`px-3 py-1 rounded-md ${currentPage === 1
+                          ? 'text-gray-500 cursor-not-allowed'
                           : 'text-blue-300 hover:bg-blue-900/30'
-                      }`}
+                        }`}
                     >
                       Previous
                     </button>
@@ -548,30 +542,29 @@ const MSPSRPI2DetailsPage = () => {
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
-                      className={`px-3 py-1 rounded-md ${
-                        currentPage === totalPages 
-                          ? 'text-gray-500 cursor-not-allowed' 
+                      className={`px-3 py-1 rounded-md ${currentPage === totalPages
+                          ? 'text-gray-500 cursor-not-allowed'
                           : 'text-blue-300 hover:bg-blue-900/30'
-                      }`}
+                        }`}
                     >
                       Next
                     </button>
                   </div>
                 )}
               </div>
-              
+
               {/* Data Processing Pipeline */}
               <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
                 <h3 className="text-xl font-bold text-white mb-4">Data Processing Pipeline</h3>
                 <p className="text-gray-300 mb-6">
                   {data.dataPipeline.description}
                 </p>
-                
+
                 {/* Pipeline Steps */}
                 <div className="relative">
                   {/* Vertical line */}
                   <div className="absolute left-8 top-0 h-full w-0.5 bg-blue-700/30"></div>
-                  
+
                   <div className="space-y-8">
                     {data.dataPipeline.steps.map((step, index) => (
                       <div key={index} className="relative flex">
@@ -589,7 +582,7 @@ const MSPSRPI2DetailsPage = () => {
               </div>
             </div>
           )}
-          
+
         </div>
       </div>
 
