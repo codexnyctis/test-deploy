@@ -40,7 +40,7 @@
       "description": "Can newly measured MSP binaries be used to trace the Galactic gravitational potential and better constrain the distribution of dark matter in the Milky Way?"
     }
   ],
-  "keyDiscoveriesVisible": false,
+  "keyDiscoveriesVisible": true,
   "keyFindings": [
     {
       "title": "Electron Density Model Flaws",
