@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, Book, ChevronRight, Users, ExternalLink, Search, Download } from 'lucide-react';
+import { Rocket, Telescope, MapPinned, BookOpenText, Stars } from "lucide-react";
 import PulsarVisualizations from './PulsarVisualizations'; // Import the PulsarVisualizations component
 
 
@@ -23,6 +24,36 @@ const Homepage = () => {
     percentComplete: 0
   });  
   const [researchQuestions, setResearchQuestions] = useState([]);
+  const [keyFindings, setKeyFindings] = useState([]); // new
+  const [headings, setHeadings] = useState({}); // for section headers
+  const steps = [
+    {
+      icon: <Telescope className="h-8 w-8 text-indigo-300" />,
+      title: "Target Identification",
+      description: "We identify millisecond pulsars suitable for astrometric study based on timing precision and prior knowledge gaps."
+    },
+    {
+      icon: <Rocket className="h-8 w-8 text-indigo-300" />,
+      title: "Observation Execution",
+      description: "Using the VLBA, we schedule multiple epochs to track pulsar movement and parallaxes over time."
+    },
+    {
+      icon: <MapPinned className="h-8 w-8 text-indigo-300" />,
+      title: "Astrometric Calibration",
+      description: "Data is calibrated against reference quasars to refine position estimates and reduce systematic error."
+    },
+    {
+      icon: <BookOpenText className="h-8 w-8 text-indigo-300" />,
+      title: "Analysis & Modeling",
+      description: "We derive parallax distances and proper motions to update Galactic models and test gravitational theories."
+    },
+    {
+      icon: <Stars className="h-8 w-8 text-indigo-300" />,
+      title: "Scientific Discovery",
+      description: "Results feed into broader astrophysical insights, including dark matter constraints and gravitational wave science."
+    }
+  ];
+  
 
 
   useEffect(() => {
@@ -68,7 +99,9 @@ const Homepage = () => {
           percentComplete: percent
         });
   
+        setHeadings(homepageData.sectionHeaders);
         setResearchQuestions(homepageData.researchQuestions);
+        setKeyFindings(homepageData.keyFindings);
       } catch (err) {
         console.error('Failed to load homepage or observation data:', err);
       }
@@ -254,12 +287,36 @@ const Homepage = () => {
           </div>
         </div>
 
+        <div className="py-16 bg-slate-900/50 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-white mb-4">Journey of a Pulsar</h2>
+              <p className="text-indigo-300 text-lg">
+                From telescope to theory, explore how pulsar astrometry unfolds through the VLBA project.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-5 gap-6">
+              {steps.map((step, index) => (
+                <div
+                  key={index}
+                  className="rounded-xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 border border-indigo-700/30 shadow-lg flex flex-col items-center text-center transition hover:scale-105"
+                >
+                  <div className="mb-4">{step.icon}</div>
+                  <h3 className="text-white font-semibold mb-2">{step.title}</h3>
+                  <p className="text-indigo-200 text-sm">{step.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Research Questions Section */}
         <div id="research" className="py-8 pt-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">We're in Search Of...</h2>
-              <p className="text-xl text-indigo-300">Exploring the cosmos through pulsar astrometry</p>
+              <h2 className="text-3xl font-bold text-white mb-4">{headings.researchTitle}</h2>
+              <p className="text-xl text-indigo-300">{headings.researchSubtitle}</p>
             </div>
 
             <div className="w-full">
@@ -363,80 +420,72 @@ const Homepage = () => {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-gradient-to-b from-slate-900/95 via-blue-950/30 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
-                {/* Cosmic glow effect */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
-                {/* Star particles */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMzAwIiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjEwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjM1MCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
-                {/* Centered cosmic icon with nebula effect */}
-                <div className="flex justify-center items-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-cyan-800/20 border border-blue-700/30 relative z-10 overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-blue-600/10 to-transparent"></div>
-                    <MapPin className="h-8 w-8 text-cyan-300" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-blue-100 mb-4 relative z-10 text-center">Electron Density Model Flaws</h3>
-                <p className="text-slate-300 relative z-10 leading-relaxed text-center">
-                  We've identified significant shortcomings in widely-used Galactic electron density models, particularly at high Galactic latitudes.
-                </p>
-              </div>
+              {keyFindings.map((finding, index) => (
+                <div
+                  key={index}
+                  className={`bg-gradient-to-b ${
+                    index === 0
+                      ? "from-slate-900/95 via-blue-950/30 to-slate-900/95"
+                      : index === 1
+                      ? "from-slate-900/95 via-purple-950/30 to-slate-900/95"
+                      : "from-slate-900/95 via-emerald-950/20 to-slate-900/95"
+                  } backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group`}
+                >
+                  {/* Background effects */}
+                  <div
+                    className={`absolute inset-0 bg-[radial-gradient(ellipse_at_${
+                      index === 0
+                        ? "top_right"
+                        : index === 1
+                        ? "top_left"
+                        : "bottom_right"
+                    },_var(--tw-gradient-stops))] ${
+                      index === 0
+                        ? "from-cyan-900/20"
+                        : index === 1
+                        ? "from-purple-900/20"
+                        : "from-teal-900/20"
+                    } via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700`}
+                  ></div>
 
-              <div className="bg-gradient-to-b from-slate-900/95 via-purple-950/30 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
-                {/* Cosmic glow effect */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
-                {/* Star particles */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMTAwIiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjE1MCIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyNTAiIHI9IjAuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMzAwIiBjeT0iMjAwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjMwMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
-                {/* Centered cosmic icon with galaxy effect */}
-                <div className="flex justify-center items-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-900/40 to-violet-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-purple-800/20 border border-purple-700/30 relative z-10 overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-400/20 via-purple-600/10 to-transparent"></div>
-                    <svg className="h-8 w-8 text-purple-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 3C12.5523 3 13 3.44772 13 4V5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5V4C11 3.44772 11.4477 3 12 3Z" fill="currentColor"/>
-                      <path d="M12 18C12.5523 18 13 18.4477 13 19V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V19C11 18.4477 11.4477 18 12 18Z" fill="currentColor"/>
-                      <path d="M20 12C20 12.5523 19.5523 13 19 13H18C17.4477 13 17 12.5523 17 12C17 11.4477 17.4477 11 18 11H19C19.5523 11 20 11.4477 20 12Z" fill="currentColor"/>
-                      <path d="M5 12C5 12.5523 4.55228 13 4 13H3C2.44772 13 2 12.5523 2 12C2 11.4477 2.44772 11 3 11H4C4.55228 11 5 11.4477 5 12Z" fill="currentColor"/>
-                      <path d="M17.6569 6.34315C18.0474 6.73367 18.0474 7.36684 17.6569 7.75736L16.9497 8.46447C16.5592 8.85499 15.9261 8.85499 15.5355 8.46447C15.145 8.07394 15.145 7.44078 15.5355 7.05025L16.2426 6.34315C16.6332 5.95262 17.2663 5.95262 17.6569 6.34315Z" fill="currentColor"/>
-                      <path d="M8.46447 15.5355C8.85499 15.9261 8.85499 16.5592 8.46447 16.9497L7.75736 17.6569C7.36684 18.0474 6.73367 18.0474 6.34315 17.6569C5.95262 17.2663 5.95262 16.6332 6.34315 16.2426L7.05025 15.5355C7.44078 15.145 8.07394 15.145 8.46447 15.5355Z" fill="currentColor"/>
-                      <path d="M17.6569 17.6569C17.2663 18.0474 16.6332 18.0474 16.2426 17.6569L15.5355 16.9497C15.145 16.5592 15.145 15.9261 15.5355 15.5355C15.9261 15.145 16.5592 15.145 16.9497 15.5355L17.6569 16.2426C18.0474 16.6332 18.0474 17.2663 17.6569 17.6569Z" fill="currentColor"/>
-                      <path d="M8.46447 8.46447C8.07394 8.85499 7.44078 8.85499 7.05025 8.46447L6.34315 7.75736C5.95262 7.36684 5.95262 6.73367 6.34315 6.34315C6.73367 5.95262 7.36684 5.95262 7.75736 6.34315L8.46447 7.05025C8.85499 7.44078 8.85499 8.07394 8.46447 8.46447Z" fill="currentColor"/>
-                      <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-purple-100 mb-4 relative z-10 text-center">Pulsar Velocity Distribution</h3>
-                <p className="text-slate-300 relative z-10 leading-relaxed text-center">
-                  Our measurements reveal that millisecond pulsars have lower velocities than young pulsars, providing insights into pulsar evolution.
-                </p>
-              </div>
+                  <div
+                    className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMzAwIiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjEwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjM1MCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"
+                  ></div>
 
-              <div className="bg-gradient-to-b from-slate-900/95 via-emerald-950/20 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
-                {/* Cosmic glow effect */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-teal-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
-                {/* Star particles */}
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjUwIiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE3NSIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxNTAiIHI9IjAuNiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSIwLjUiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjMwMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIxMDAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
-                {/* Centered cosmic icon with orbit effect */}
-                <div className="flex justify-center items-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-teal-900/40 to-emerald-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-teal-800/20 border border-teal-700/30 relative z-10 overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-400/20 via-teal-600/10 to-transparent"></div>
-                    <svg className="h-8 w-8 text-teal-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" stroke="currentColor" strokeWidth="2"/>
-                      <path d="M12 4C14.5 4 19 5.2 19 8.5C19 11.8 14.5 20 12 20" stroke="currentColor" strokeWidth="2"/>
-                      <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                      <circle cx="17" cy="7" r="1" fill="currentColor"/>
-                    </svg>
+                  {/* Icon placeholder */}
+                  <div className="flex justify-center items-center mb-6">
+                    <div
+                      className={`w-16 h-16 ${
+                        index === 0
+                          ? "bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border-blue-700/30 shadow-cyan-800/20"
+                          : index === 1
+                          ? "bg-gradient-to-br from-purple-900/40 to-violet-900/40 border-purple-700/30 shadow-purple-800/20"
+                          : "bg-gradient-to-br from-teal-900/40 to-emerald-900/40 border-teal-700/30 shadow-teal-800/20"
+                      } backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg relative z-10 overflow-hidden`}
+                    >
+                      <div
+                        className={`absolute inset-0 ${
+                          index === 0
+                            ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-blue-600/10 to-transparent"
+                            : index === 1
+                            ? "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-400/20 via-purple-600/10 to-transparent"
+                            : "bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-400/20 via-teal-600/10 to-transparent"
+                        }`}
+                      ></div>
+                      {/* You can add different icons based on index here if needed */}
+                      <MapPin className="h-8 w-8 text-cyan-300" />
+                    </div>
                   </div>
+
+                  {/* Dynamic content */}
+                  <h3 className="text-xl font-semibold text-blue-100 mb-4 relative z-10 text-center">
+                    {finding.title}
+                  </h3>
+                  <p className="text-slate-300 relative z-10 leading-relaxed text-center">
+                    {finding.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-teal-100 mb-4 relative z-10 text-center">Gravitational Theory Tests</h3>
-                <p className="text-slate-300 relative z-10 leading-relaxed text-center">
-                  Our precise distance measurements for binary pulsars have enabled more stringent tests of gravitational radiation.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
