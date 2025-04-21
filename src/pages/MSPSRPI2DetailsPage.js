@@ -171,11 +171,11 @@ const MSPSRPI2DetailsPage = () => {
               <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/test-deploy" className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Home</Link>
-              <Link to="/test-deploy/project" className={`${location.pathname === '/test-deploy/project' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Project</Link>
-              <Link to="/test-deploy/data-release" className={`${location.pathname === '/test-deploy/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Data Release</Link>
-              <Link to="/test-deploy/publications" className={`${location.pathname === '/test-deploy/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Publications</Link>
-              <Link to="/test-deploy/team" className={`${location.pathname === '/test-deploy/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}>Team</Link>
+              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
+              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
+              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
+              <Link to="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
+              <Link to="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
             </div>
           </div>
         </div>
@@ -251,8 +251,8 @@ const MSPSRPI2DetailsPage = () => {
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'overview'
-                  ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
-                  : 'text-gray-400 hover:text-blue-300'
+                ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
+                : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
               Overview
@@ -260,8 +260,8 @@ const MSPSRPI2DetailsPage = () => {
             <button
               onClick={() => setActiveTab('objectives')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'objectives'
-                  ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
-                  : 'text-gray-400 hover:text-blue-300'
+                ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
+                : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
               Details
@@ -269,8 +269,8 @@ const MSPSRPI2DetailsPage = () => {
             <button
               onClick={() => setActiveTab('results')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'results'
-                  ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
-                  : 'text-gray-400 hover:text-blue-300'
+                ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
+                : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
               Key Results
@@ -278,8 +278,8 @@ const MSPSRPI2DetailsPage = () => {
             <button
               onClick={() => setActiveTab('pulsars')}
               className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-300 ${activeTab === 'pulsars'
-                  ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
-                  : 'text-gray-400 hover:text-blue-300'
+                ? 'text-blue-300 bg-blue-900/40 shadow-[0_0_8px_rgba(59,130,246,0.4)]'
+                : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
               Target Pulsars
@@ -463,8 +463,8 @@ const MSPSRPI2DetailsPage = () => {
                         key={category}
                         onClick={() => handleFilterChange(category)}
                         className={`px-3 py-1 text-sm rounded-full transition-all duration-300 ${fluxFilter === category
-                            ? 'bg-blue-900 text-blue-200 shadow-[0_0_8px_rgba(59,130,246,0.4)] border border-blue-400/50'
-                            : 'bg-slate-800/50 text-gray-400 hover:text-blue-300 border border-blue-900/20'
+                          ? 'bg-blue-900 text-blue-200 shadow-[0_0_8px_rgba(59,130,246,0.4)] border border-blue-400/50'
+                          : 'bg-slate-800/50 text-gray-400 hover:text-blue-300 border border-blue-900/20'
                           }`}
                       >
                         {category === 'all' ? 'All Pulsars' : category}
@@ -530,8 +530,8 @@ const MSPSRPI2DetailsPage = () => {
                       onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
                       className={`px-3 py-1 rounded-md ${currentPage === 1
-                          ? 'text-gray-500 cursor-not-allowed'
-                          : 'text-blue-300 hover:bg-blue-900/30'
+                        ? 'text-gray-500 cursor-not-allowed'
+                        : 'text-blue-300 hover:bg-blue-900/30'
                         }`}
                     >
                       Previous
@@ -543,8 +543,8 @@ const MSPSRPI2DetailsPage = () => {
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
                       className={`px-3 py-1 rounded-md ${currentPage === totalPages
-                          ? 'text-gray-500 cursor-not-allowed'
-                          : 'text-blue-300 hover:bg-blue-900/30'
+                        ? 'text-gray-500 cursor-not-allowed'
+                        : 'text-blue-300 hover:bg-blue-900/30'
                         }`}
                     >
                       Next
