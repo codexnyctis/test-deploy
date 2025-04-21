@@ -6,7 +6,8 @@ import {
   FileText,
   Radio,
   ChevronUp,
-  ArrowRight
+  ArrowRight,
+  Filter
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -24,6 +25,9 @@ const MSPSRPIDetailsPage = () => {
   // For pulsar list pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pulsarsPerPage = 8;
+  
+  // For flux density filtering
+  const [fluxFilter, setFluxFilter] = useState('all');
   
   // Function to fetch data - with timestamp check added
   const fetchData = useCallback(async () => {
@@ -78,16 +82,34 @@ const MSPSRPIDetailsPage = () => {
     return () => clearInterval(refreshInterval);
   }, []); // Removed fetchData dependency to prevent unnecessary interval resets
   
+  // Filter pulsars based on flux density
+  const filteredPulsars = data?.pulsars 
+    ? data.pulsars.filter(pulsar => {
+        const flux = parseFloat(pulsar.flux_density_1_4GHz);
+        
+        switch(fluxFilter) {
+          case 'low':
+            return flux >= 0.2 && flux < 0.76;
+          case 'medium':
+            return flux >= 0.76 && flux < 1.2;
+          case 'high':
+            return flux >= 1.2;
+          default:
+            return true; // 'all' filter
+        }
+      })
+    : [];
+  
   // Calculate pulsars to display based on pagination
-  const currentPulsars = data?.pulsars 
-    ? data.pulsars.slice(
+  const currentPulsars = filteredPulsars
+    ? filteredPulsars.slice(
         (currentPage - 1) * pulsarsPerPage, 
         currentPage * pulsarsPerPage
       ) 
     : [];
   
-  const totalPages = data?.pulsars 
-    ? Math.ceil(data.pulsars.length / pulsarsPerPage) 
+  const totalPages = filteredPulsars 
+    ? Math.ceil(filteredPulsars.length / pulsarsPerPage) 
     : 0;
 
   // Scroll to top function
@@ -288,7 +310,7 @@ const MSPSRPIDetailsPage = () => {
                   : 'text-gray-400 hover:text-purple-300'
               }`}
             >
-              Pulsar List
+              Target Pulsars
             </button>
           </div>
         </div>
@@ -450,6 +472,57 @@ const MSPSRPIDetailsPage = () => {
                   </div>
                 </div>
                 
+                {/* Flux Density Filter */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    <span className="flex items-center">
+                      <Filter className="w-5 h-5 mr-2" /> Filter by Flux Density
+                    </span>
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <button 
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        fluxFilter === 'all' 
+                          ? 'bg-blue-900 text-blue-100' 
+                          : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                      }`}
+                      onClick={() => setFluxFilter('all')}
+                    >
+                      All Pulsars
+                    </button>
+                    <button 
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        fluxFilter === 'low' 
+                          ? 'bg-blue-900 text-blue-100' 
+                          : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                      }`}
+                      onClick={() => setFluxFilter('low')}
+                    >
+                      0.2-0.76 mJy
+                    </button>
+                    <button 
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        fluxFilter === 'medium' 
+                          ? 'bg-blue-900 text-blue-100' 
+                          : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                      }`}
+                      onClick={() => setFluxFilter('medium')}
+                    >
+                      0.76-1.2 mJy
+                    </button>
+                    <button 
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        fluxFilter === 'high' 
+                          ? 'bg-blue-900 text-blue-100' 
+                          : 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                      }`}
+                      onClick={() => setFluxFilter('high')}
+                    >
+                      &gt;1.2 mJy
+                    </button>
+                  </div>
+                </div>
+                
                 {/* Information about catalogue paper */}
                 <div className="bg-slate-800/50 rounded-lg p-4 mb-6 border border-purple-500/30">
                   <p className="text-gray-300">
@@ -471,10 +544,11 @@ const MSPSRPIDetailsPage = () => {
                     <thead className="bg-slate-800/50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Pulsar</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Parallax (mas)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Distance (kpc)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Proper Motion</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of Epochs</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">RA</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Dec</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">1.4 GHz flux density (mJy)</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of inbeam calibrators</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of epochs observed</th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -486,10 +560,11 @@ const MSPSRPIDetailsPage = () => {
                               <span>{pulsar.name}</span>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.parallax}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.distance}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.properMotion}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{pulsar.epochs}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.ra}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.dec}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.flux_density_1_4GHz}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.inbeam_calibrators}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.epochs_observed}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -569,8 +644,6 @@ const MSPSRPIDetailsPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Removed the in-render console.log that was causing multiple logs */}
 
       {/* Scroll to top button */}
       {showScrollTop && (
