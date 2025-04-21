@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { MapPin, Star, Book, ChevronRight, Users, ExternalLink, Search, Download } from 'lucide-react';
 import PulsarVisualizations from './PulsarVisualizations'; // Import the PulsarVisualizations component
 
@@ -10,6 +10,7 @@ It is a separate component that you can find in the components folder.
 You can see that all the data is currently hard coded, in the end we need to retrieve it from github */
 
 const Homepage = () => {
+  const location = useLocation(); // Add this line to get current location
   const [activeResearchQuestion, setActiveResearchQuestion] = useState(null);
   const [questionSlide, setQuestionSlide] = useState(0);
   const [teamMemberSlide, setTeamMemberSlide] = useState(0);
@@ -175,11 +176,36 @@ const Homepage = () => {
               <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
-              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
-              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
-              <Link to="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
-              <Link to="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
+              <Link 
+                to="/test-deploy" 
+                className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/project" 
+                className={`${location.pathname === '/project' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Project
+              </Link>
+              <Link 
+                to="/data-release" 
+                className={`${location.pathname === '/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Data Release
+              </Link>
+              <Link 
+                to="/publications" 
+                className={`${location.pathname === '/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Publications
+              </Link>
+              <Link 
+                to="/team" 
+                className={`${location.pathname === '/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Team
+              </Link>
             </div>
           </div>
         </div>
