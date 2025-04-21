@@ -3,9 +3,10 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const ProjectPage = () => {
+  const location = useLocation();
   const [activePhase, setActivePhase] = useState('mspsrpi2');
 
   // Simplified state - removed refreshing and lastUpdated
