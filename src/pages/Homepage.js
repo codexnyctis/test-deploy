@@ -16,31 +16,38 @@ const Homepage = () => {
 
 
   const [projectStats, setProjectStats] = useState([]);
-  
+
   const [phase2Progress, setPhase2Progress] = useState({
     totalPulsars: 0,
     observedPulsars: 0,
     percentComplete: 0
-  });  
+  });
   const [researchQuestions, setResearchQuestions] = useState([]);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // 添加错误检查
+        const response = await fetch(`${process.env.PUBLIC_URL}/data/homepage/HomePage.json`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+        const data = await response.json();
+
         const [homepageRes, observationRes] = await Promise.all([
           fetch('/data/homepage/HomePage.json'),
           fetch('/data/mspsrpi2/observationData.json')
         ]);
-  
+
         const homepageData = await homepageRes.json();
         const observationData = await observationRes.json();
-  
+
         // Compute dynamic stats
         const uniqueSources = new Set();
         const completedSources = new Set();
         let earliestDate = new Date();
-  
+
         observationData.forEach(obs => {
           uniqueSources.add(obs.srcname);
           const obsDate = new Date(obs.obsDate);
@@ -49,35 +56,43 @@ const Homepage = () => {
             completedSources.add(obs.srcname);
           }
         });
-  
+
         const total = uniqueSources.size;
         const completed = completedSources.size;
         const percent = total ? Math.round((completed / total) * 100) : 0;
         const yearsOfResearch = new Date().getFullYear() - earliestDate.getFullYear();
-  
+
         setProjectStats([
           { value: total.toString(), label: "Pulsars Observed" },
           { ...homepageData.projectStats.find(stat => stat.label === "Parallax Precision") },
           { value: `${completed}+`, label: "Precise Distances" },
           { value: yearsOfResearch.toString(), label: "Years of Research" }
         ]);
-  
+
         setPhase2Progress({
           totalPulsars: total,
           observedPulsars: completed,
           percentComplete: percent
         });
-  
+
         setResearchQuestions(homepageData.researchQuestions);
       } catch (err) {
         console.error('Failed to load homepage or observation data:', err);
+        console.error("Error loading data:", error);
+        // 设置默认数据或错误状态
+        setProjectStats([
+          { value: "N/A", label: "Pulsars Observed" },
+          { value: "N/A", label: "Parallax Precision" },
+          { value: "N/A", label: "Precise Distances" },
+          { value: "N/A", label: "Years of Research" }
+        ]);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
+
+
   const teamMembers = [
     {
       name: "Adam Deller",
@@ -181,13 +196,13 @@ const Homepage = () => {
           <div className="w-full h-full bg-slate-950">
             {/* Large stars layer - reduced density */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-50"></div>
-            
+
             {/* Small stars layer - reduced density */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-60"></div>
-            
+
             {/* Subtle blue glow effect for nebula-like impression */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/10 to-transparent"></div>
-            
+
             {/* Darker gradient overlay at the edges */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 opacity-40"></div>
           </div>
@@ -203,10 +218,10 @@ const Homepage = () => {
             {/* Progress Card for the project (the one you see first on the page) */}
             <div className="bg-indigo-950/60 backdrop-blur-sm border border-indigo-500/30 rounded-xl p-5 shadow-lg mb-8">
               <h3 className="text-lg font-semibold text-indigo-100 mb-3">MSPSRπ Phase 2 Progress: {phase2Progress.totalPulsars} pulsars targeted</h3>
-              
+
               <div className="mb-2">
                 <div className="h-2.5 bg-indigo-950/70 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full rounded-full relative overflow-hidden"
                     style={{ width: `${phase2Progress.percentComplete}%` }}
                   >
@@ -219,12 +234,12 @@ const Homepage = () => {
                   <span>{phase2Progress.percentComplete}% Complete</span>
                 </div>
               </div>
-              
+
               <div className="flex justify-between text-sm text-indigo-300 mb-3">
                 <span>Phase 1: 18 Milisecond Pulsars observed ✓</span>
                 <span>Phase 2: {phase2Progress.observedPulsars}/{phase2Progress.totalPulsars} Pulsars observed</span>
               </div>
-              
+
               <div className="text-center">
                 {/* Direct link to MSPSRPI2 Progress Tracker section */}
                 <Link to="/project#progress-tracker" className="inline-block text-sm bg-indigo-900/50 px-4 py-2 rounded-md border border-indigo-600/30 text-indigo-300 transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_10px_rgba(79,70,229,0.4)]">
@@ -273,17 +288,17 @@ const Homepage = () => {
               <div className="w-full pt-10 pb-16 mb-0 rounded-xl relative overflow-hidden bg-slate-950/70 backdrop-blur-md shadow-xl">
                 {/* Added starry background */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-30"></div>
-                
+
                 {/* Small stars layer */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-20"></div>
-                
+
                 {/* Cosmic nebula glow effect */}
                 <div className="absolute inset-0 bg-gradient-radial from-blue-950/20 via-slate-950/5 to-transparent opacity-70"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
-                
+
                 {/* Navigation arrows */}
-                <button 
+                <button
                   onClick={() => setQuestionSlide(prev => Math.max(0, prev - 1))}
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
                   disabled={questionSlide === 0}
@@ -292,7 +307,7 @@ const Homepage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
-                
+
                 {/* Updated card container to better center relative to arrows */}
                 <div className="relative w-full h-full flex items-center justify-center z-20">
                   <div className="flex justify-center items-stretch px-20 mx-auto w-full max-w-5xl">
@@ -300,7 +315,7 @@ const Homepage = () => {
                     {researchQuestions.slice(questionSlide, questionSlide + 3).map((question, index) => {
                       // Single consistent gradient for all cards
                       const cardGradient = "bg-gradient-to-br from-slate-900/95 via-indigo-950/50 to-slate-900/95";
-                      
+
                       return (
                         <div
                           key={index + questionSlide}
@@ -316,8 +331,8 @@ const Homepage = () => {
                     })}
                   </div>
                 </div>
-                
-                <button 
+
+                <button
                   onClick={() => setQuestionSlide(prev => Math.min(researchQuestions.length - 3, prev + 1))}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
                   disabled={questionSlide >= researchQuestions.length - 3}
@@ -326,7 +341,7 @@ const Homepage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-                
+
                 {/* Explore button - ethereal design */}
                 <div className="relative mt-10 text-center z-20">
                   <Link to="/project" className="inline-flex items-center px-6 py-3 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
@@ -366,10 +381,10 @@ const Homepage = () => {
               <div className="bg-gradient-to-b from-slate-900/95 via-blue-950/30 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
                 {/* Cosmic glow effect */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
+
                 {/* Star particles */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwMCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMDAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMzAwIiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjEwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjM1MCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
+
                 {/* Centered cosmic icon with nebula effect */}
                 <div className="flex justify-center items-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-cyan-800/20 border border-blue-700/30 relative z-10 overflow-hidden">
@@ -386,24 +401,24 @@ const Homepage = () => {
               <div className="bg-gradient-to-b from-slate-900/95 via-purple-950/30 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
                 {/* Cosmic glow effect */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
+
                 {/* Star particles */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iMTAwIiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjE1MCIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyNTAiIHI9IjAuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMzAwIiBjeT0iMjAwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjMwMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48L3N2Zz4=')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
+
                 {/* Centered cosmic icon with galaxy effect */}
                 <div className="flex justify-center items-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-purple-900/40 to-violet-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-purple-800/20 border border-purple-700/30 relative z-10 overflow-hidden">
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-400/20 via-purple-600/10 to-transparent"></div>
                     <svg className="h-8 w-8 text-purple-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 3C12.5523 3 13 3.44772 13 4V5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5V4C11 3.44772 11.4477 3 12 3Z" fill="currentColor"/>
-                      <path d="M12 18C12.5523 18 13 18.4477 13 19V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V19C11 18.4477 11.4477 18 12 18Z" fill="currentColor"/>
-                      <path d="M20 12C20 12.5523 19.5523 13 19 13H18C17.4477 13 17 12.5523 17 12C17 11.4477 17.4477 11 18 11H19C19.5523 11 20 11.4477 20 12Z" fill="currentColor"/>
-                      <path d="M5 12C5 12.5523 4.55228 13 4 13H3C2.44772 13 2 12.5523 2 12C2 11.4477 2.44772 11 3 11H4C4.55228 11 5 11.4477 5 12Z" fill="currentColor"/>
-                      <path d="M17.6569 6.34315C18.0474 6.73367 18.0474 7.36684 17.6569 7.75736L16.9497 8.46447C16.5592 8.85499 15.9261 8.85499 15.5355 8.46447C15.145 8.07394 15.145 7.44078 15.5355 7.05025L16.2426 6.34315C16.6332 5.95262 17.2663 5.95262 17.6569 6.34315Z" fill="currentColor"/>
-                      <path d="M8.46447 15.5355C8.85499 15.9261 8.85499 16.5592 8.46447 16.9497L7.75736 17.6569C7.36684 18.0474 6.73367 18.0474 6.34315 17.6569C5.95262 17.2663 5.95262 16.6332 6.34315 16.2426L7.05025 15.5355C7.44078 15.145 8.07394 15.145 8.46447 15.5355Z" fill="currentColor"/>
-                      <path d="M17.6569 17.6569C17.2663 18.0474 16.6332 18.0474 16.2426 17.6569L15.5355 16.9497C15.145 16.5592 15.145 15.9261 15.5355 15.5355C15.9261 15.145 16.5592 15.145 16.9497 15.5355L17.6569 16.2426C18.0474 16.6332 18.0474 17.2663 17.6569 17.6569Z" fill="currentColor"/>
-                      <path d="M8.46447 8.46447C8.07394 8.85499 7.44078 8.85499 7.05025 8.46447L6.34315 7.75736C5.95262 7.36684 5.95262 6.73367 6.34315 6.34315C6.73367 5.95262 7.36684 5.95262 7.75736 6.34315L8.46447 7.05025C8.85499 7.44078 8.85499 8.07394 8.46447 8.46447Z" fill="currentColor"/>
-                      <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="currentColor"/>
+                      <path d="M12 3C12.5523 3 13 3.44772 13 4V5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5V4C11 3.44772 11.4477 3 12 3Z" fill="currentColor" />
+                      <path d="M12 18C12.5523 18 13 18.4477 13 19V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V19C11 18.4477 11.4477 18 12 18Z" fill="currentColor" />
+                      <path d="M20 12C20 12.5523 19.5523 13 19 13H18C17.4477 13 17 12.5523 17 12C17 11.4477 17.4477 11 18 11H19C19.5523 11 20 11.4477 20 12Z" fill="currentColor" />
+                      <path d="M5 12C5 12.5523 4.55228 13 4 13H3C2.44772 13 2 12.5523 2 12C2 11.4477 2.44772 11 3 11H4C4.55228 11 5 11.4477 5 12Z" fill="currentColor" />
+                      <path d="M17.6569 6.34315C18.0474 6.73367 18.0474 7.36684 17.6569 7.75736L16.9497 8.46447C16.5592 8.85499 15.9261 8.85499 15.5355 8.46447C15.145 8.07394 15.145 7.44078 15.5355 7.05025L16.2426 6.34315C16.6332 5.95262 17.2663 5.95262 17.6569 6.34315Z" fill="currentColor" />
+                      <path d="M8.46447 15.5355C8.85499 15.9261 8.85499 16.5592 8.46447 16.9497L7.75736 17.6569C7.36684 18.0474 6.73367 18.0474 6.34315 17.6569C5.95262 17.2663 5.95262 16.6332 6.34315 16.2426L7.05025 15.5355C7.44078 15.145 8.07394 15.145 8.46447 15.5355Z" fill="currentColor" />
+                      <path d="M17.6569 17.6569C17.2663 18.0474 16.6332 18.0474 16.2426 17.6569L15.5355 16.9497C15.145 16.5592 15.145 15.9261 15.5355 15.5355C15.9261 15.145 16.5592 15.145 16.9497 15.5355L17.6569 16.2426C18.0474 16.6332 18.0474 17.2663 17.6569 17.6569Z" fill="currentColor" />
+                      <path d="M8.46447 8.46447C8.07394 8.85499 7.44078 8.85499 7.05025 8.46447L6.34315 7.75736C5.95262 7.36684 5.95262 6.73367 6.34315 6.34315C6.73367 5.95262 7.36684 5.95262 7.75736 6.34315L8.46447 7.05025C8.85499 7.44078 8.85499 8.07394 8.46447 8.46447Z" fill="currentColor" />
+                      <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="currentColor" />
                     </svg>
                   </div>
                 </div>
@@ -416,19 +431,19 @@ const Homepage = () => {
               <div className="bg-gradient-to-b from-slate-900/95 via-emerald-950/20 to-slate-900/95 backdrop-blur-sm border border-slate-700/30 rounded-lg p-8 transition hover:transform hover:-translate-y-1 shadow-lg relative overflow-hidden group">
                 {/* Cosmic glow effect */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-teal-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
-                
+
                 {/* Star particles */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjUwIiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE3NSIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxNTAiIHI9IjAuNiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSIwLjUiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjMwMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIxMDAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] opacity-10 group-hover:opacity-20 transition-opacity duration-700"></div>
-                
+
                 {/* Centered cosmic icon with orbit effect */}
                 <div className="flex justify-center items-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-teal-900/40 to-emerald-900/40 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg shadow-teal-800/20 border border-teal-700/30 relative z-10 overflow-hidden">
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-400/20 via-teal-600/10 to-transparent"></div>
                     <svg className="h-8 w-8 text-teal-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" stroke="currentColor" strokeWidth="2"/>
-                      <path d="M12 4C14.5 4 19 5.2 19 8.5C19 11.8 14.5 20 12 20" stroke="currentColor" strokeWidth="2"/>
-                      <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                      <circle cx="17" cy="7" r="1" fill="currentColor"/>
+                      <path d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" stroke="currentColor" strokeWidth="2" />
+                      <path d="M12 4C14.5 4 19 5.2 19 8.5C19 11.8 14.5 20 12 20" stroke="currentColor" strokeWidth="2" />
+                      <circle cx="12" cy="12" r="2" fill="currentColor" />
+                      <circle cx="17" cy="7" r="1" fill="currentColor" />
                     </svg>
                   </div>
                 </div>
@@ -453,17 +468,17 @@ const Homepage = () => {
             <div className="w-full rounded-xl relative overflow-hidden bg-slate-950/70 backdrop-blur-md shadow-xl py-12 mb-8">
               {/* Starry background for carousel */}
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-20"></div>
-              
+
               {/* Small stars layer */}
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-10"></div>
-              
+
               {/* Cosmic nebula glow effect */}
               <div className="absolute inset-0 bg-gradient-radial from-blue-950/20 via-slate-950/5 to-transparent opacity-70"></div>
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent opacity-50"></div>
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent opacity-50"></div>
-              
+
               {/* Navigation arrows for team carousel */}
-              <button 
+              <button
                 onClick={() => setTeamMemberSlide(prev => Math.max(0, prev - 1))}
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
                 disabled={teamMemberSlide === 0}
@@ -472,7 +487,7 @@ const Homepage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              
+
               {/* Team Member Cards - two at a time */}
               <div className="flex justify-center px-20">
                 <div className="w-full max-w-6xl flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
@@ -523,8 +538,8 @@ const Homepage = () => {
                   )}
                 </div>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => setTeamMemberSlide(prev => Math.min(maxTeamSlides, prev + 1))}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30 w-12 h-12 flex items-center justify-center bg-slate-800/40 backdrop-blur-sm rounded-full border border-indigo-600/30 text-indigo-300 transition-all duration-300 shadow-lg hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
                 disabled={teamMemberSlide >= maxTeamSlides}
@@ -533,23 +548,22 @@ const Homepage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
-              
+
               {/* Team indicator dots */}
               <div className="flex justify-center mt-6 space-x-2">
                 {Array.from({ length: Math.ceil(teamMembers.length / 2) }).map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setTeamMemberSlide(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === teamMemberSlide 
-                        ? "bg-indigo-400 shadow-lg shadow-indigo-400/50" 
-                        : "bg-slate-600 hover:bg-slate-500"
-                    }`}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${index === teamMemberSlide
+                      ? "bg-indigo-400 shadow-lg shadow-indigo-400/50"
+                      : "bg-slate-600 hover:bg-slate-500"
+                      }`}
                     aria-label={`Go to team members ${index * 2 + 1}-${index * 2 + 2}`}
                   />
                 ))}
               </div>
-              
+
               {/* Meet the team button */}
               <div className="flex justify-center mt-8">
                 <Link to="/team" className="inline-flex items-center px-5 py-2.5 border border-indigo-600/30 rounded-md shadow-xl text-base font-medium text-indigo-300 bg-slate-800/70 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-indigo-200 hover:shadow-indigo-500/40 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]">
@@ -561,7 +575,7 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Check the data section */}
       <div className="bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -569,7 +583,7 @@ const Homepage = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-white mb-2">Ready to explore the data?</h2>
               <p className="text-indigo-200 mb-6">Browse our comprehensive pulsar catalog with interactive visualizations</p>
-              
+
               <div className="flex justify-center">
                 <Link to="/data-release" className="inline-flex items-center justify-center px-5 py-3 border border-indigo-500/40 text-base font-medium rounded-md shadow-md text-indigo-200 bg-indigo-700/50 backdrop-blur-sm transition-all duration-300 hover:border-indigo-400/80 hover:text-white hover:shadow-indigo-500/50 hover:shadow-[0_0_15px_rgba(99,102,241,0.5)]">
                   <Search className="mr-2 h-5 w-5" />
@@ -580,7 +594,7 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Copyright Watermark - With black background */}
       <div className="relative py-6 border-t border-slate-800/50 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
