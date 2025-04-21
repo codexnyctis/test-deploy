@@ -77,7 +77,6 @@ const Homepage = () => {
 
         setResearchQuestions(homepageData.researchQuestions);
       } catch (err) {
-        console.error('Failed to load homepage or observation data:', err);
         console.error("Error loading data:", error);
         // 设置默认数据或错误状态
         setProjectStats([
