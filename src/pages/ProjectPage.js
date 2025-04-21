@@ -4,10 +4,6 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-// Remove direct imports
-// import projectDataJson from '../data/projectData.json';
-// import observationDataFromJson from '../data/observationData.json';
-
 const ProjectPage = () => {
   const [activePhase, setActivePhase] = useState('mspsrpi2');
   
@@ -19,8 +15,14 @@ const ProjectPage = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [error, setError] = useState(null);
   
-  // Function to fetch data - now using useCallback
+  // Function to fetch data - with timestamp check added
   const fetchData = useCallback(async () => {
+    // Check if it's been less than 24 hours since the last update
+    // If we have a lastUpdated time and it's been less than 24 hours, skip fetch
+    if (lastUpdated && (new Date() - lastUpdated < 86400000)) {
+      return; // Skip the fetch if less than a day has passed
+    }
+    
     // If refreshing, set refreshing state, otherwise set loading state
     if (projectData && observationData) {
       setRefreshing(true);
@@ -51,7 +53,10 @@ const ProjectPage = () => {
       // Update state with the fetched data
       setProjectData(projectDataJson);
       setObservationData(observationDataJson);
-      setLastUpdated(new Date());
+      const now = new Date();
+      setLastUpdated(now);
+      // Single console log here when data is actually updated
+      console.log(`Data refreshed at: ${now.toLocaleTimeString()}`);
       setError(null);
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -60,21 +65,21 @@ const ProjectPage = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [projectData, observationData]);
+  }, [projectData, observationData, lastUpdated]); // Added lastUpdated as dependency
   
   // Initial data load and set up auto-refresh
   useEffect(() => {
     // Initial fetch
     fetchData();
     
-    // Set up auto-refresh daily instead of every 60 seconds
+    // Set up auto-refresh daily
     const refreshInterval = setInterval(() => {
       fetchData();
     }, 86400000); // 24 hours = 86,400,000 milliseconds
     
     // Clean up interval on component unmount
     return () => clearInterval(refreshInterval);
-  }, [fetchData]); // Added fetchData as a dependency
+  }, []); // Removed fetchData dependency to prevent unnecessary interval resets
   
   // Calculate simplified progress statistics - now using the state data
   const progressStats = React.useMemo(() => {
@@ -483,9 +488,7 @@ const ProjectPage = () => {
         </div>
       </div>
       
-      {/* We track lastUpdated state but don't display the indicator to avoid confusion */}
-      {/* Console logs for debugging - these will show in browser dev tools */}
-      {lastUpdated && refreshing === false && console.log(`Data refreshed at: ${lastUpdated.toLocaleTimeString()}`)}
+      {/* Removed the in-render console.log that was causing multiple logs */}
       
       {/* Footer */}
       <div className="py-6 border-t border-slate-800/50 bg-black">
