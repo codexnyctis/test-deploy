@@ -3,6 +3,7 @@ import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ProjectPage = () => {
   const [activePhase, setActivePhase] = useState('mspsrpi2');
