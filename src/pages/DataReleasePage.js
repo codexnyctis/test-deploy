@@ -17,7 +17,7 @@ const DataReleasePage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/data/pulsars.json')
+    fetch('/data/nishatest/pulsars.json')
       .then((response) => response.json())
       .then((data) => {
         setPulsars(data);
