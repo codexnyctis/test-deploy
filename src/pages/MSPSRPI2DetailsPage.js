@@ -314,7 +314,7 @@ const MSPSRPI2DetailsPage = () => {
                   : 'text-gray-400 hover:text-blue-300'
               }`}
             >
-              Pulsar List
+              Target Pulsars
             </button>
           </div>
         </div>
@@ -521,11 +521,11 @@ const MSPSRPI2DetailsPage = () => {
                     <thead className="bg-slate-800/50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Pulsar</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Flux Density (mJy)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Distance (kpc)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Session Duration</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">PTAs</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Notes</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">RA</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Dec</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">1.4 GHz Flux Density (mJy)</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Inbeam Calibrators</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Epochs Observed</th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -538,25 +538,11 @@ const MSPSRPI2DetailsPage = () => {
                                 <span>{pulsar.name}</span>
                               </div>
                             </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.ra}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.dec}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.fluxDensity}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.distance}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.sessionDuration}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                              <div className="flex flex-wrap gap-1">
-                                {pulsar.memberships.map((pta, i) => (
-                                  <span key={i} className="inline-block px-1.5 py-0.5 text-xs rounded bg-blue-900/40 text-blue-300">
-                                    {pta}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                              {pulsar.notes && (
-                                <span className="text-blue-400">
-                                  {pulsar.notes}
-                                </span>
-                              )}
-                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.inbeam_calibrators}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{pulsar.epochs_observed}</td>
                           </tr>
                         ))
                       ) : (
@@ -650,7 +636,7 @@ const MSPSRPI2DetailsPage = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-900/80 text-white shadow-lg hover:bg-blue-800 transition-all duration-300 backdrop-blur-sm border border-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.4)]"
+          className="fixed bottom-6 right-6 p-3 rounded-full bg-blue-900/80 text-white shadow-lg hover:bg-blue-800 transition-all duration-300 backdrop-blur-sm border border-blue-500/50"
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-6 w-6" />
