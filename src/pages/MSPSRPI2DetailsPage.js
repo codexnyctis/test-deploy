@@ -227,6 +227,8 @@ const MSPSRPI2DetailsPage = () => {
             <div className="flex flex-wrap gap-4">
               <a
                 href={data.dataReleaseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300 shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
@@ -234,6 +236,8 @@ const MSPSRPI2DetailsPage = () => {
               </a>
               <a
                 href={data.publicationsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
@@ -523,6 +527,16 @@ const MSPSRPI2DetailsPage = () => {
                   <p className="text-gray-300">
                     {data.pulsarsStudied.catalogueInfo}
                   </p>
+                  {data.pulsarsStudied.catalogueUrl && (
+                    <a
+                      href={data.pulsarsStudied.catalogueUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center mt-2 text-blue-300 hover:text-blue-200 transition"
+                    >
+                      "{data.pulsarsStudied.catalogueTitle}" <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  )}
                 </div>
 
                 {/* Flux Density Filter */}
