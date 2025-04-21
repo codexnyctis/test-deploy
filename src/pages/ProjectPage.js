@@ -1,89 +1,61 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ChevronRight,
   ExternalLink
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const ProjectPage = () => {
+  const location = useLocation();
   const [activePhase, setActivePhase] = useState('mspsrpi2');
 
-  // Add state for data, loading, and refresh tracking 
+  // Simplified state - removed refreshing and lastUpdated
   const [projectData, setProjectData] = useState(null);
   const [observationData, setObservationData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [error, setError] = useState(null);
 
-  // Function to fetch data - with timestamp check added
-  const fetchData = useCallback(async () => {
-    // Check if it's been less than 24 hours since the last update
-    // If we have a lastUpdated time and it's been less than 24 hours, skip fetch
-    if (lastUpdated && (new Date() - lastUpdated < 86400000)) {
-      return; // Skip the fetch if less than a day has passed
-    }
-
-    // If refreshing, set refreshing state, otherwise set loading state
-    if (projectData && observationData) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
-
-    try {
-      // Fetch both JSON files in parallel
-      const [projectResponse, observationResponse] = await Promise.all([
-        fetch(`${process.env.PUBLIC_URL}/data/projectpage/projectData.json?t=${Date.now()}`),
-        fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/observationData.json?t=${Date.now()}`)
-      ]);
-
-      // Check if both responses are ok
-      if (!projectResponse.ok) {
-        throw new Error(`HTTP error fetching project data! Status: ${projectResponse.status}`);
-      }
-
-      if (!observationResponse.ok) {
-        throw new Error(`HTTP error fetching observation data! Status: ${observationResponse.status}`);
-      }
-
-      // Parse both JSON responses
-      const projectDataJson = await projectResponse.json();
-      const observationDataJson = await observationResponse.json();
-
-      // Update state with the fetched data
-      setProjectData(projectDataJson);
-      setObservationData(observationDataJson);
-      const now = new Date();
-      setLastUpdated(now);
-      // Single console log here when data is actually updated
-      console.log(`Data refreshed at: ${now.toLocaleTimeString()}`);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to load data. Please try again.');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [projectData, observationData, lastUpdated]); // Added lastUpdated as dependency
-
-  // Initial data load and set up auto-refresh
+  // Simplified data loading - no caching or refresh tracking
   useEffect(() => {
-    // Initial fetch
-    fetchData();
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        // Fetch both JSON files in parallel - removed timestamp parameter
+        const [projectResponse, observationResponse] = await Promise.all([
+          fetch(`${process.env.PUBLIC_URL}/data/projectpage/projectData.json`),
+          fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/observationData.json`)
+        ]);
 
-    // Set up auto-refresh daily
-    const refreshInterval = setInterval(() => {
-      fetchData();
-    }, 86400000); // 24 hours = 86,400,000 milliseconds
+        // Check if both responses are ok
+        if (!projectResponse.ok) {
+          throw new Error(`HTTP error fetching project data! Status: ${projectResponse.status}`);
+        }
 
-    // Clean up interval on component unmount
-    return () => clearInterval(refreshInterval);
-  }, []); // Removed fetchData dependency to prevent unnecessary interval resets
+        if (!observationResponse.ok) {
+          throw new Error(`HTTP error fetching observation data! Status: ${observationResponse.status}`);
+        }
 
-  // Calculate simplified progress statistics - now using the state data
-  const progressStats = React.useMemo(() => {
+        // Parse both JSON responses
+        const projectDataJson = await projectResponse.json();
+        const observationDataJson = await observationResponse.json();
+
+        // Update state with the fetched data
+        setProjectData(projectDataJson);
+        setObservationData(observationDataJson);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []); // Only runs once on component mount
+
+  // Calculate simplified progress statistics
+  const progressStats = useMemo(() => {
     // If no observation data yet, return empty stats
     if (!observationData) {
       return {
@@ -159,7 +131,7 @@ const ProjectPage = () => {
           <h2 className="text-2xl mb-4">Something went wrong</h2>
           <p className="text-gray-300 mb-6">{error}</p>
           <button
-            onClick={fetchData}
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-indigo-800 text-white rounded-md hover:bg-indigo-700 transition-colors"
           >
             Try Again
@@ -176,7 +148,7 @@ const ProjectPage = () => {
         <div className="text-center">
           <p className="text-xl">No data available. Please refresh the page.</p>
           <button
-            onClick={fetchData}
+            onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-indigo-800 text-white rounded-md hover:bg-indigo-700 transition-colors"
           >
             Refresh Data
@@ -485,8 +457,6 @@ const ProjectPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Removed the in-render console.log that was causing multiple logs */}
 
       {/* Footer */}
       <div className="py-6 border-t border-slate-800/50 bg-black">
