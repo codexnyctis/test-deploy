@@ -190,20 +190,20 @@ const MSPSRPI2DetailsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100">
-      {/* Navigation - Same as homepage, but without refresh button */}
+    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100">
+      {/* Navigation - Same as homepage */}
       <nav className="bg-slate-900/90 backdrop-blur-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold">MSPSR<span className="text-blue-400">π</span></span>
+              <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Home</a>
-              <a href="/project" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Project</a>
-              <a href="/data-release" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Data Release</a>
-              <a href="/publications" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Publications</a>
-              <a href="/team" className="text-gray-300 hover:text-blue-400 px-3 py-2 font-medium">Team</a>
+              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
+              <Link to="/test-deploy/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
+              <Link to="/test-deploy/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
+              <Link to="/test-deploy/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
+              <Link to="/test-deploy/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
             </div>
           </div>
         </div>
