@@ -11,7 +11,7 @@ import MSPSRPI2DetailsPage from './pages/MSPSRPI2DetailsPage';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Homepage />} />
+      <Route path="/test-deploy" element={<Homepage />} />
       <Route path="/project" element={<ProjectPage />} />
       <Route path="/data-release" element={<DataReleasePage />} />
       <Route path="/publications" element={<PublicationsPage />} />
