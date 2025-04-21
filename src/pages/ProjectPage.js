@@ -31,8 +31,8 @@ const ProjectPage = () => {
     try {
       // Fetch both JSON files in parallel
       const [projectResponse, observationResponse] = await Promise.all([
-        fetch(`/data/projectData.json?t=${Date.now()}`),
-        fetch(`/data/observationData.json?t=${Date.now()}`)
+        fetch(`/data/projectpage/projectData.json?t=${Date.now()}`),
+        fetch(`/data/mspsrpi2/observationData.json?t=${Date.now()}`)
       ]);
       
       // Check if both responses are ok

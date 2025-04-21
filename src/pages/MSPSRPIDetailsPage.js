@@ -39,7 +39,7 @@ const MSPSRPIDetailsPage = () => {
     
     try {
       // Use cache-busting query parameter
-      const response = await fetch(`/data/mspsrpiDetails.json?t=${Date.now()}`);
+      const response = await fetch(`/data/mspsrpi/mspsrpiDetails.json?t=${Date.now()}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
