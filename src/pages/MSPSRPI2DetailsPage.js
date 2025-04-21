@@ -255,6 +255,8 @@ const MSPSRPI2DetailsPage = () => {
             <div className="flex flex-wrap gap-4">
               <a 
                 href={data.dataReleaseUrl} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300 shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
@@ -262,6 +264,8 @@ const MSPSRPI2DetailsPage = () => {
               </a>
               <a 
                 href={data.publicationsUrl} 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
@@ -435,6 +439,8 @@ const MSPSRPI2DetailsPage = () => {
                       <div className="flex items-center space-x-4">
                         <a 
                           href={pub.doi} 
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                         >
                           DOI <ExternalLink className="ml-1 h-3 w-3" />
@@ -442,6 +448,8 @@ const MSPSRPI2DetailsPage = () => {
                         {pub.arxiv && (
                           <a 
                             href={pub.arxiv} 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center"
                           >
                             arXiv <ExternalLink className="ml-1 h-3 w-3" />
@@ -454,6 +462,8 @@ const MSPSRPI2DetailsPage = () => {
                 <div className="mt-4 text-center">
                   <a 
                     href={data.publicationsUrl} 
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300"
                   >
                     View All Publications <ExternalLink className="ml-2 h-4 w-4" />
@@ -629,8 +639,6 @@ const MSPSRPI2DetailsPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Removed the in-render console.log that was causing multiple logs */}
 
       {/* Scroll to top button */}
       {showScrollTop && (

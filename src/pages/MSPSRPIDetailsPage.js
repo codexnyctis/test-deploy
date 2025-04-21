@@ -431,6 +431,8 @@ const MSPSRPIDetailsPage = () => {
                       <div className="flex items-center space-x-4">
                         <a 
                           href={pub.doi} 
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-sm text-purple-400 hover:text-purple-300 transition flex items-center"
                         >
                           DOI <ExternalLink className="ml-1 h-3 w-3" />
@@ -438,6 +440,8 @@ const MSPSRPIDetailsPage = () => {
                         {pub.arxiv && (
                           <a 
                             href={pub.arxiv} 
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-sm text-purple-400 hover:text-purple-300 transition flex items-center"
                           >
                             arXiv <ExternalLink className="ml-1 h-3 w-3" />
@@ -450,6 +454,8 @@ const MSPSRPIDetailsPage = () => {
                 <div className="mt-4 text-center">
                   <a 
                     href={data.publicationsUrl} 
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-purple-500/40 rounded-md text-purple-300 bg-purple-900/30 hover:bg-purple-800/50 transition duration-300"
                   >
                     View All Publications <ExternalLink className="ml-2 h-4 w-4" />
@@ -649,7 +655,7 @@ const MSPSRPIDetailsPage = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 rounded-full bg-purple-900/80 text-white shadow-lg hover:bg-purple-800 transition-all duration-300 backdrop-blur-sm border border-purple-500/50 shadow-[0_0_10px_rgba(147,51,234,0.4)]"
+          className="fixed bottom-6 right-6 p-3 rounded-full bg-purple-900/80 text-white shadow-lg hover:bg-purple-800 transition-all duration-300 backdrop-blur-sm border border-purple-500/50"
           aria-label="Scroll to top"
         >
           <ChevronUp className="h-6 w-6" />
