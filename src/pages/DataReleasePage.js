@@ -36,12 +36,12 @@ const DataReleasePage = () => {
             name: pulsar.name,
             phase: 'MSPSRPI',
             status: 'Complete',
-            parallax: pulsar.parallax,
-            properMotionRA: pulsar.properMotion?.split(',')[0] || "N/A",
-            properMotionDec: pulsar.properMotion?.split(',')[1] || "N/A",
+            parallax: pulsar.distance?.value ? (1 / parseFloat(pulsar.distance.value.replace(/[^\d.-]/g, ''))) : null,
+            properMotionRA: pulsar.binary_properties?.orbital_period || "N/A",
+            properMotionDec: pulsar.period || "N/A",
             coordinates: {
-              ra: 'N/A',
-              dec: 'N/A'
+              ra: pulsar.recommended_visualizations?.[0] || 'N/A',
+              dec: pulsar.recommended_visualizations?.[1] || 'N/A'
             },
             description: '',
             originalData: pulsar
