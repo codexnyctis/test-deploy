@@ -3,6 +3,8 @@
   "heroDescription": "MSPSRπ2 is an extension of the original MSPSRπ program, aiming to nearly triple the number of millisecond pulsars (MSPs) with VLBI astrometric measurements to enhance pulsar timing array sensitivity.",
   "dataReleaseUrl": "/test-deploy/#/data-release",
   "publicationsUrl": "/test-deploy/#/publications",
+  "showResultsOverlay": true,
+  "showPublicationsPlaceholder": true,
   "overview": [
     "Millisecond pulsars (MSPs) are the most precise celestial timekeepers, providing unparalleled tests of gravitational phenomena, including the direct detection of the stochastic gravitational-wave background (GWB). Pulsar timing arrays (PTAs) - arrays of precisely timed MSPs - are key tools for these studies.",
     "MSPSRπ2 is an extension of the original MSPSRπ program that ran from 2014-2018. While the original program astrometrically studied 18 MSP systems and achieved 15 significant parallaxes, this new campaign targets 44 additional PTA MSPs that currently lack VLBI constraints.",
