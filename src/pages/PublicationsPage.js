@@ -616,7 +616,7 @@ const PublicationsPage = () => {
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     <a 
-                      href="https://ui.adsabs.harvard.edu/abs/2022MNRAS.519.4982D/abstract" 
+                      href="https://ui.adsabs.harvard.edu/abs/2023MNRAS.519.4982D/abstract" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center text-cyan-300 text-sm hover:text-cyan-200 transition"
@@ -625,7 +625,8 @@ const PublicationsPage = () => {
                       View on ADS
                     </a>
                     <a 
-                      href="#" 
+                      href="/bibtex/ding2023.bib" 
+                      download="ding2023.bib"
                       className="inline-flex items-center px-3 py-1 border border-indigo-500/50 rounded-md text-white text-sm bg-indigo-600 hover:bg-indigo-700 transition duration-300 shadow-sm"
                     >
                       <Download className="mr-1.5 h-3 w-3" />
@@ -633,7 +634,7 @@ const PublicationsPage = () => {
                     </a>
                   </div>
                 </div>
-                
+
                 <div className="bg-slate-800/50 p-4 rounded-md">
                   <p className="text-indigo-200 text-sm italic">
                     "The PSRπ Pulsar Astrometry Project: Final Results"<br />
@@ -650,7 +651,8 @@ const PublicationsPage = () => {
                       View on ADS
                     </a>
                     <a 
-                      href="#" 
+                      href="/bibtex/deller2019.bib" 
+                      download="deller2019.bib"
                       className="inline-flex items-center px-3 py-1 border border-indigo-500/50 rounded-md text-white text-sm bg-indigo-600 hover:bg-indigo-700 transition duration-300 shadow-sm"
                     >
                       <Download className="mr-1.5 h-3 w-3" />
