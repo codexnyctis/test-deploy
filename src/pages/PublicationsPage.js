@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Search,
   Download,
@@ -22,6 +22,7 @@ edit in the future. Feel free to play with the page and create your own design. 
 the information to show on the publication cards throughly so this was just a prototype. You go nuts! */
 
 const PublicationsPage = () => {
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPhase, setFilterPhase] = useState('all');
   const [filterYear, setFilterYear] = useState('all');

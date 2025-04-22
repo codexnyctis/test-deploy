@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Users,
   Mail,
@@ -20,6 +20,7 @@ The data here is hardcoded, you need it to be retrieved from github. Also you wi
 teammembers if they are willing to be displayed. Moreover, you can redesign it as you wish */
 
 const TeamPage = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('research');
 
   // Research Team Members

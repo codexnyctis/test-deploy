@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Search,
   Download,
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 
 const DataReleasePage = () => {
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedParallaxRange, setSelectedParallaxRange] = useState('all');
   const [selectedObsPhase, setSelectedObsPhase] = useState('MSPSRPI2');
