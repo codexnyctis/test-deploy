@@ -187,11 +187,36 @@ const PublicationsPage = () => {
               <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/test-deploy" className="text-indigo-400 px-3 py-2 font-medium">Home</Link>
-              <Link to="/project" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Project</Link>
-              <Link to="/data-release" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Data Release</Link>
-              <Link to="/publications" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Publications</Link>
-              <Link to="/team" className="text-gray-300 hover:text-indigo-400 px-3 py-2 font-medium">Team</Link>
+              <Link
+                to="/test-deploy"
+                className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Home
+              </Link>
+              <Link
+                to="/project"
+                className={`${location.pathname === '/project' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Project
+              </Link>
+              <Link
+                to="/data-release"
+                className={`${location.pathname === '/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Data Release
+              </Link>
+              <Link
+                to="/publications"
+                className={`${location.pathname === '/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Publications
+              </Link>
+              <Link
+                to="/team"
+                className={`${location.pathname === '/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
+              >
+                Team
+              </Link>
             </div>
           </div>
         </div>

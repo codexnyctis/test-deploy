@@ -29,7 +29,6 @@ const Homepage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 添加错误检查
         const response = await fetch(`${process.env.PUBLIC_URL}/data/homepage/HomePage.json`);
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.status}`);
@@ -176,32 +175,32 @@ const Homepage = () => {
               <Link to="/test-deploy" className="text-xl font-bold">MSPSR<span className="text-indigo-400">π</span></Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link 
-                to="/test-deploy" 
+              <Link
+                to="/test-deploy"
                 className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
                 Home
               </Link>
-              <Link 
-                to="/project" 
+              <Link
+                to="/project"
                 className={`${location.pathname === '/project' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
                 Project
               </Link>
-              <Link 
-                to="/data-release" 
+              <Link
+                to="/data-release"
                 className={`${location.pathname === '/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
                 Data Release
               </Link>
-              <Link 
-                to="/publications" 
+              <Link
+                to="/publications"
                 className={`${location.pathname === '/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
                 Publications
               </Link>
-              <Link 
-                to="/team" 
+              <Link
+                to="/team"
                 className={`${location.pathname === '/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
                 Team
