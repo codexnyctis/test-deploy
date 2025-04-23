@@ -1,3 +1,6 @@
+//------------------------------------------------------------------
+//                        LIBRARY IMPORTS
+//------------------------------------------------------------------
 import React, { useState, useEffect } from 'react';
 import {
   ChevronLeft,
@@ -11,12 +14,15 @@ import {
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
+//------------------------------------------------------------------
+//                     COMPONENT DEFINITION
+//------------------------------------------------------------------
 const MSPSRPIDetailsPage = () => {
+
+  // STATE VARIABLES AND HOOKS
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
   const [showScrollTop, setShowScrollTop] = useState(false);
-
-  // Simplified state - removed refreshing and lastUpdated
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,13 +33,13 @@ const MSPSRPIDetailsPage = () => {
 
   // For flux density filtering
   const [fluxFilter, setFluxFilter] = useState('all');
-
-  // Simplified data loading - no caching or refresh tracking
+ 
+  // DATA FETCHING
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // Simple fetch without cache-busting
+        // Fetch the JSON data from the public URL
         const response = await fetch(`${process.env.PUBLIC_URL}/data/mspsrpi/mspsrpiDetails.json`);
 
         if (!response.ok) {
@@ -54,6 +60,9 @@ const MSPSRPIDetailsPage = () => {
     loadData();
   }, []); // Only runs once on component mount
 
+  //------------------------------------------------------------------
+  //                     FILTERING AND PAGINATION
+  //------------------------------------------------------------------
   // Filter pulsars based on flux density
   const filteredPulsars = data?.pulsars
     ? data.pulsars.filter(pulsar => {
@@ -84,7 +93,7 @@ const MSPSRPIDetailsPage = () => {
     ? Math.ceil(filteredPulsars.length / pulsarsPerPage)
     : 0;
 
-  // Scroll to top function
+  // SCROLL TO TOP FUNCTIONALITY
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -109,6 +118,9 @@ const MSPSRPIDetailsPage = () => {
     };
   }, []);
 
+  //------------------------------------------------------------------
+  //                     CONDITIONAL RENDERING
+  //------------------------------------------------------------------
   // Show loading state
   if (loading) {
     return (
@@ -157,9 +169,13 @@ const MSPSRPIDetailsPage = () => {
     );
   }
 
+  //------------------------------------------------------------------
+  //                  MAIN RENDERING / UI CONTENT
+  //------------------------------------------------------------------
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100">
-      {/* Navigation - Updated with conditional styling */}
+      {/* Navigation */}
       <nav className="bg-slate-900/90 backdrop-blur-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
