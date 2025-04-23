@@ -134,8 +134,8 @@
   "pulsarsStudied": {
     "overview": "MSPSRπ2 targets 44 millisecond pulsars from various pulsar timing arrays (PTAs) including NANOGrav, EPTA, PPTA, CPTA, and MPTA.",
     "catalogueInfo": "The targets are divided into three groups based on their 1.4 GHz flux density, which determines the observing time required for each pulsar.",
-    "catalogueTitle": "MSPSRπ2: Turbocharging the most precisely timed pulsars with VLBI astrometry",
-    "catalogueUrl": "/publications/mspsrpi2-catalogue"
+    "catalogueTitle": "",
+    "catalogueUrl": ""
   },
   "dataPipeline": {
     "description": "MSPSRπ2 uses the psrvlbireduce pipeline developed during the original PSRπ and MSPSRπ projects. This pipeline provides consistent and efficient data reduction for high-precision pulsar astrometry.",
