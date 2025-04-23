@@ -1,21 +1,17 @@
+//importing the libraries
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  ChevronRight,
-  ExternalLink
-} from 'lucide-react';
+import {ChevronRight, ExternalLink} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const ProjectPage = () => {
-  const location = useLocation();
-  const [activePhase, setActivePhase] = useState('mspsrpi2');
+  const location = useLocation(); // Get the current location to highlight the active link in the navigation
+  const [activePhase, setActivePhase] = useState('mspsrpi2'); // Default active phase
+  const [projectData, setProjectData] = useState(null); // State to hold project data
+  const [observationData, setObservationData] = useState(null); // State to hold observation data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  // Simplified state - removed refreshing and lastUpdated
-  const [projectData, setProjectData] = useState(null);
-  const [observationData, setObservationData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Simplified data loading - no caching or refresh tracking
+  // Fetch project data and observation data from JSON files
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -56,59 +52,63 @@ const ProjectPage = () => {
 
   // Calculate simplified progress statistics
   const progressStats = useMemo(() => {
-    // If no observation data yet, return empty stats
+    // If we don't have data yet, return all zeros
     if (!observationData) {
       return {
         total: 0,
         scheduled: 0,
         inProgress: 0,
         complete: 0,
-        issue: 0,
         percentComplete: 0
       };
     }
-
-    // We'll track unique pulsars by their status
+  
+    // track each pulsar's status
     const pulsarStatusMap = new Map();
-
-    // Process all observations to determine the final status for each pulsar
+  
+    // For each observation in our data
     observationData.forEach(obs => {
+      // Get the current status of this pulsar 
       const currentStatus = pulsarStatusMap.get(obs.srcname);
-
-      // Prioritize statuses: complete > in-progress > issue > scheduled
+  
+      // The logic below:
+      // 1. If we've never observed this pulsar before, save its status
+      // 2. If it was "scheduled" before but now has any other status, update it
+      // 3. If it was "in-progress" before but now is "complete", update it
       if (!currentStatus ||
         (currentStatus === 'scheduled' && obs.status !== 'scheduled') ||
-        (currentStatus === 'issue' && (obs.status === 'in-progress' || obs.status === 'complete')) ||
         (currentStatus === 'in-progress' && obs.status === 'complete')) {
         pulsarStatusMap.set(obs.srcname, obs.status);
       }
     });
-
-    // Count pulsars in each status category
+  
+    // Now we'll count how many pulsars are in each status
     let complete = 0;
     let inProgress = 0;
     let scheduled = 0;
-    let issue = 0;
-
+  
+    // Loop through each pulsar in our map
     pulsarStatusMap.forEach(status => {
+      // Increase the right counter based on the status
       if (status === 'complete') complete++;
       else if (status === 'in-progress') inProgress++;
       else if (status === 'scheduled') scheduled++;
-      else if (status === 'issue') issue++;
+      // Note: We're no longer tracking "issue" status
     });
-
-    // Total unique pulsars
+  
+    // Total number of pulsars is just the size of our map
     const total = pulsarStatusMap.size;
-
+  
+    // Return an object with all our stats
+    // The percentComplete calculation rounds to the nearest whole number
     return {
       total,
       scheduled,
       inProgress,
       complete,
-      issue,
       percentComplete: Math.round((complete / total) * 100)
     };
-  }, [observationData]);
+  }, [observationData]); // Only recalculate when observationData changes
 
   // Show loading state
   if (loading) {
