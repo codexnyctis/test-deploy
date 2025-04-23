@@ -14,8 +14,8 @@
     { "label": "Years of Research", "value": "15" }
   ],
   "phase1Progress": {
-    "totalPulsars": 33,
-    "observedPulsars": 1
+    "totalPulsars": 124,
+    "observedPulsars": 24
   },
   "phase2Progress": {
     "totalPulsars": 44,
