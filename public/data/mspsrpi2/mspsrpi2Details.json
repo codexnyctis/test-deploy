@@ -116,19 +116,19 @@
   ],
   "publications": [
     {
-      "citation": "Ding, H., et al. (2023). \"MSPSRπ: VLBI astrometry of 18 millisecond pulsars.\" Monthly Notices of the Royal Astronomical Society, 519, 4982",
-      "doi": "https://doi.org/10.1093/mnras/stac3672",
-      "arxiv": "https://arxiv.org/abs/2211.09112"
+      "citation": "just as an example: Ding, H., et al. (2023). \"MSPSRπ2: Turbocharging the most precisely timed pulsars with VLBI astrometry.\" Monthly Notices of the Royal Astronomical Society, 520, 1, 1-12",
+      "doi": "there should be a doi link here",
+      "arxiv": "there should be an arxiv link here" 
     },
     {
-      "citation": "Ding, H., et al. (2021). \"A Precise Mass Measurement of PSR J2045+3633 with a Highly Eccentric Orbit.\" The Astrophysical Journal Letters, 921, L19",
-      "doi": "https://doi.org/10.3847/2041-8213/ac32d6",
-      "arxiv": "https://arxiv.org/abs/2110.15368"
+      "citation": "just as an example: Ding, H., et al. (2023). \"MSPSRπ2: Turbocharging the most precisely timed pulsars with VLBI astrometry.\" Monthly Notices of the Royal Astronomical Society, 520, 1, 1-12",
+      "doi": "there should be a doi link here",
+      "arxiv": "there should be an arxiv link here" 
     },
     {
-      "citation": "Ding, H., et al. (2020). \"VLBI Astrometry of PSR J1012+5307: A Pulsar-White Dwarf Binary.\" The Astrophysical Journal, 896, 85",
-      "doi": "https://doi.org/10.3847/1538-4357/ab8f29",
-      "arxiv": "https://arxiv.org/abs/2005.01717"
+      "citation": "just as an example: Ding, H., et al. (2023). \"MSPSRπ2: Turbocharging the most precisely timed pulsars with VLBI astrometry.\" Monthly Notices of the Royal Astronomical Society, 520, 1, 1-12",
+      "doi": "there should be a doi link here",
+      "arxiv": "there should be an arxiv link here" 
     }
   ],
   "pulsarsStudied": {
