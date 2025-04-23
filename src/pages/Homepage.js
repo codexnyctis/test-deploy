@@ -34,7 +34,7 @@ const Homepage = () => {
     const fetchData = async () => {
       try {
         const [homepageRes, observationRes, teamRes] = await Promise.all([
-          fetch(`${process.env.PUBLIC_URL}/data/homepage/homePage.json`),
+          fetch(`${process.env.PUBLIC_URL}/data/homepage/HomePage.json`),
           fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/observationData.json`),
           fetch(`${process.env.PUBLIC_URL}/data/teamPage/teamMembers.json`)
         ]);
