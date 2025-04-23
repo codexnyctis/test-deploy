@@ -1,22 +1,29 @@
-//importing the libraries
+//---------------------------------------------------------------------------
+//                           LIBRARY IMPORTS
+//---------------------------------------------------------------------------
 import React, { useState, useEffect, useMemo } from 'react';
 import {ChevronRight, ExternalLink} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
+//---------------------------------------------------------------------------
+//                           COMPONENT DEFINITION
+//---------------------------------------------------------------------------
 const ProjectPage = () => {
-  const location = useLocation(); // Get the current location to highlight the active link in the navigation
-  const [activePhase, setActivePhase] = useState('mspsrpi2'); // Default active phase
-  const [projectData, setProjectData] = useState(null); // State to hold project data
-  const [observationData, setObservationData] = useState(null); // State to hold observation data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
 
-  // Fetch project data and observation data from JSON files
+  // STATE VARIABLES AND HOOKS
+  const location = useLocation(); 
+  const [activePhase, setActivePhase] = useState('mspsrpi2'); 
+  const [projectData, setProjectData] = useState(null); 
+  const [observationData, setObservationData] = useState(null); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+
+  // DATA FETCHING
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // Fetch both JSON files in parallel - removed timestamp parameter
+        // Fetch both JSON files using Promise.all for parallel requests
         const [projectResponse, observationResponse] = await Promise.all([
           fetch(`${process.env.PUBLIC_URL}/data/projectpage/projectData.json`),
           fetch(`${process.env.PUBLIC_URL}/data/mspsrpi2/observationData.json`)
@@ -50,7 +57,9 @@ const ProjectPage = () => {
     loadData();
   }, []); // Only runs once on component mount
 
-  // Calculate simplified progress statistics
+  //---------------------------------------------------------------------------
+  //                MSPSRPI2 Progress Tracker Calculation
+  //---------------------------------------------------------------------------
   const progressStats = useMemo(() => {
     // If we don't have data yet, return all zeros
     if (!observationData) {
@@ -82,34 +91,35 @@ const ProjectPage = () => {
       }
     });
   
-    // Now we'll count how many pulsars are in each status
+    // count how many pulsars are in each status
     let complete = 0;
     let inProgress = 0;
     let scheduled = 0;
   
-    // Loop through each pulsar in our map
+    // Loop through each pulsar in the map
     pulsarStatusMap.forEach(status => {
       // Increase the right counter based on the status
       if (status === 'complete') complete++;
       else if (status === 'in-progress') inProgress++;
       else if (status === 'scheduled') scheduled++;
-      // Note: We're no longer tracking "issue" status
     });
   
-    // Total number of pulsars is just the size of our map
+    // Total number of pulsars is just the size of the map
     const total = pulsarStatusMap.size;
   
-    // Return an object with all our stats
-    // The percentComplete calculation rounds to the nearest whole number
+    // Return an object with all the stats
     return {
       total,
       scheduled,
       inProgress,
       complete,
-      percentComplete: Math.round((complete / total) * 100)
+      percentComplete: Math.round((complete / total) * 100) //round to the nearest whole number
     };
   }, [observationData]); // Only recalculate when observationData changes
 
+  //---------------------------------------------------------------------------
+  //                CONDITIONAL RENDERING BASED ON DATA STATE
+  //---------------------------------------------------------------------------
   // Show loading state
   if (loading) {
     return (
@@ -121,7 +131,6 @@ const ProjectPage = () => {
       </div>
     );
   }
-
   // Show error state
   if (error) {
     return (
@@ -140,7 +149,6 @@ const ProjectPage = () => {
       </div>
     );
   }
-
   // If we have no data even though we're not loading
   if (!projectData || !observationData) {
     return (
@@ -165,9 +173,12 @@ const ProjectPage = () => {
     mspsrpi: projectData.mspsrpi,
     mspsrpi2: projectData.mspsrpi2
   };
-
+  //---------------------------------------------------------------------------
+  //                     UI COMPONENTS - MAIN RENDERING
+  //---------------------------------------------------------------------------
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-slate-900 to-black text-gray-100">
+
       {/* Navigation - Now with conditional styling based on current path */}
       <nav className="bg-slate-900/90 backdrop-blur-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -218,29 +229,23 @@ const ProjectPage = () => {
           <div className="w-full h-full bg-slate-950">
             {/* Large stars layer */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE3NSIgY3k9IjE1MCIgcj0iMS4yIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjEwMCIgcj0iMSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUiIHI9IjEuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjEuMiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxNzUiIHI9IjEuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PGNpcmNsZSBjeD0iMTI1IiBjeT0iMTc1IiByPSIxIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48L3N2Zz4=')] opacity-50"></div>
-
             {/* Small stars layer */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjEwIiBjeT0iMTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iMzAiIGN5PSIxMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjcwIiBjeT0iMTAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iOTAiIGN5PSIzMCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI5MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI3MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iNzAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iMzAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iODAiIGN5PSI0MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNjAiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNjAiIGN5PSI4MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI4MCIgY3k9IjYwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-60"></div>
-
             {/* Star Field Layer 1 for timeline - Distant small stars */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iNzUiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNTAiIHI9IjAuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjgwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSI3NSIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIzNTAiIGN5PSI1MCIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjM1Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSIxMjUiIHI9IjAuMyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTUwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEyNSIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjI1Ii8+PGNpcmNsZSBjeD0iMjAwIiBjeT0iMTUwIiByPSIwLjUiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMyIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9IjEyNSIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjM1Ii8+PGNpcmNsZSBjeD0iMzAwIiBjeT0iMTUwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjEyNSIgcj0iMC40IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwMCIgcj0iMC41IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjMiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIyMjUiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zNSIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjIwMCIgcj0iMC4zIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjIiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIyMjUiIHI9IjAuNCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMjUwIiBjeT0iMjAwIiByPSIwLjMiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIyMjUiIHI9IjAuNSIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSBjeD0iMzUwIiBjeT0iMjAwIiByPSIwLjQiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMzUiLz48L3N2Zz4=')] opacity-40"></div>
-
             {/* Star Field Layer 2 for timeline - Mid-distance medium stars */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMjUiIHI9IjAuNyIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC41Ii8+PGNpcmNsZSBjeD0iNzUiIGN5PSI1MCIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIxMjUiIGN5PSIyNSIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIxNzUiIGN5PSI1MCIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIyMjUiIGN5PSIyNSIgcj0iMC43IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSIyNzUiIGN5PSI1MCIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSIzMjUiIGN5PSIyNSIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIzNzUiIGN5PSI1MCIgcj0iMC43IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI0MjUiIGN5PSIyNSIgcj0iMC44IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSI0NzUiIGN5PSI1MCIgcj0iMC42IiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI1MCIgY3k9Ijc1IiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9Ijc1IiByPSIwLjgiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9Ijc1IiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9Ijc1IiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjI1MCIgY3k9Ijc1IiByPSIwLjgiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9Ijc1IiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9Ijc1IiByPSIwLjciIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNCIvPjxjaXJjbGUgY3g9IjQwMCIgY3k9Ijc1IiByPSIwLjgiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjQ1MCIgY3k9Ijc1IiByPSIwLjYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-25"></div>
-
             {/* Subtle blue glow effect for nebula-like impression */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-900/10 to-transparent"></div>
-
             {/* Cosmic nebula glow effects for timeline */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent opacity-50"></div>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-30"></div>
-
             {/* Darker gradient overlay at the edges */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950 opacity-40"></div>
           </div>
         </div>
 
-        {/* Hero content - Now using data from siteInfo */}
+        {/* Hero content - data from siteInfo */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
           <div className="max-w-3xl">
             <h1 className="text-4xl font-bold text-white mb-4">{siteInfo.heroTitle}</h1>
@@ -253,7 +258,7 @@ const ProjectPage = () => {
           </div>
         </div>
 
-        {/* Timeline section - Now using data from siteInfo.timeline */}
+        {/* Timeline section - data from siteInfo.timeline */}
         <div className="relative py-6 mb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="relative">
@@ -305,11 +310,11 @@ const ProjectPage = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">Project Phases</h2>
             <p className="text-xl text-indigo-300 max-w-3xl mx-auto">
-              Spanning over a decade of research, our program has evolved through three distinct phases
+              Spanning over a decade of research, our program has evolved through three phases
             </p>
           </div>
 
-          {/* Phase navigation tabs with different colored neon effects */}
+          {/* Phase navigation tabs with neon effects */}
           <div className="flex justify-center mb-10">
             <div className="inline-flex rounded-md shadow-sm bg-slate-900/70 backdrop-blur-sm p-1 border border-slate-700/50">
               <button
@@ -439,7 +444,7 @@ const ProjectPage = () => {
             </p>
           </div>
 
-          {/* Simplified Progress Summary Cards */}
+          {/* Progress Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             {/* Target Pulsars */}
             <div className="bg-slate-900/60 backdrop-blur-sm border-2 border-blue-500/30 rounded-lg p-4 text-center relative overflow-hidden group transition-all duration-300 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)]">
