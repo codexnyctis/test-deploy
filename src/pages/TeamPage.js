@@ -376,7 +376,7 @@ const TeamPage = () => {
                     {/* Full rotating planet background */}
 <div
   className="absolute inset-0 bg-cover bg-center opacity-20"
-  style={{ backgroundImage: "url('/planet.png')" }}
+  style={{ backgroundImage: `${process.env.PUBLIC_URL}/planet.png` }}
 />
                     {/* Profile image or avatar */}
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
