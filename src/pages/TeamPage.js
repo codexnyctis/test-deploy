@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Mail, Globe, Github, Linkedin, ChevronRight, Building } from 'lucide-react';
+import { Users, Mail, Globe, Building } from 'lucide-react';
 
 const TeamPage = () => {
   const [activeTab, setActiveTab] = useState('research');
@@ -54,7 +54,12 @@ const TeamPage = () => {
               className="bg-gradient-to-br from-slate-900/90 via-indigo-950/30 to-slate-900/90 backdrop-blur-sm border border-indigo-500/30 rounded-lg overflow-hidden shadow-lg hover:shadow-indigo-500/20 hover:border-indigo-500/50 transition-all duration-300"
             >
               <div className="relative overflow-hidden">
-                <div className="h-40 bg-indigo-900/30 animate-cosmic-fade animate-pulse animate-ping"></div>
+                <div className="h-40 bg-indigo-900/30 animate-cosmic-fade animate-pulse animate-ping">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-20"
+                    style={{ backgroundImage: `${process.env.PUBLIC_URL}/data/planet.png` }}
+                  />
+                </div>
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
                   <div className="w-20 h-20 rounded-full border-4 border-slate-900 overflow-hidden bg-indigo-800/30 flex items-center justify-center">
                     <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
@@ -71,6 +76,17 @@ const TeamPage = () => {
                   <span>{member.institution}</span>
                 </div>
                 <p className="text-gray-300 text-sm mb-4 italic">"{member.quote}"</p>
+                {member.email && (
+                  <div className="mt-4">
+                    <a 
+                      href={`mailto:${member.email}`} 
+                      className="inline-flex items-center px-3 py-1 border border-indigo-500 rounded-md text-sm text-indigo-300 hover:bg-indigo-800/30 transition"
+                    >
+                      <Mail className="h-4 w-4 mr-1" />
+                      Email
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           ))}
