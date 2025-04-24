@@ -7,7 +7,7 @@ const TeamPage = () => {
   const [teamMembers, setTeamMembers] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/data/teamPage`)
+    fetch(`${process.env.PUBLIC_URL}/data/teamPage/teamMembers.json`)
       .then((response) => response.json())
       .then((data) => setTeamMembers(data.teamMembers))
       .catch((error) => console.error('Error loading team data:', error));
