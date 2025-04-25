@@ -222,10 +222,10 @@ const MSPSRPIDetailsPage = () => {
       <div className="pt-20 pb-4 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <Link to="/project" className="inline-flex items-center text-purple-300 hover:text-purple-400 transition">
           <ChevronLeft className="w-5 h-5 mr-1" />
-          Back to Project Overview
+          {data.backLinkText || "Back to Project Overview"}
         </Link>
         <Link to="/projects/mspsrpi2-details" className="inline-flex items-center text-purple-300 hover:text-purple-400 transition">
-          Go to MSPSRπ2
+          {data.nextLinkText || "Go to MSPSRπ2"}
           <ArrowRight className="w-5 h-5 ml-1" />
         </Link>
       </div>
@@ -250,10 +250,10 @@ const MSPSRPIDetailsPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="max-w-3xl">
             <div className="inline-block mb-4 px-4 py-1 bg-purple-900/60 backdrop-blur-sm rounded-full text-purple-300 text-sm font-medium border border-purple-700/50">
-              Project Phase 2014-2018
+              {data.heroTagline || "Project Phase 2014-2018"}
             </div>
             <h1 className="text-5xl font-bold text-white mb-4">
-              MSPSRπ
+              {data.heroTitle || "MSPSRπ"}
             </h1>
             <p className="text-xl text-purple-200 mb-6">
               {data.heroSubtitle}
@@ -267,14 +267,14 @@ const MSPSRPIDetailsPage = () => {
                 className="inline-flex items-center px-5 py-2 border border-purple-500/40 rounded-md text-purple-300 bg-purple-900/30 hover:bg-purple-800/50 transition duration-300 shadow-[0_0_10px_rgba(147,51,234,0.3)] hover:shadow-[0_0_15px_rgba(147,51,234,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
-                Access Data Release
+                {data.dataReleaseButtonText || "Access Data Release"}
               </a>
               <a
                 href={data.publicationsUrl}
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
-                View Publications
+                {data.publicationsButtonText || "View Publications"}
               </a>
             </div>
           </div>
@@ -292,7 +292,7 @@ const MSPSRPIDetailsPage = () => {
                 : 'text-gray-400 hover:text-purple-300'
                 }`}
             >
-              Overview
+              {data.tabLabels?.overview || "Overview"}
             </button>
             <button
               onClick={() => setActiveTab('objectives')}
@@ -301,7 +301,7 @@ const MSPSRPIDetailsPage = () => {
                 : 'text-gray-400 hover:text-purple-300'
                 }`}
             >
-              Details
+              {data.tabLabels?.objectives || "Details"}
             </button>
             <button
               onClick={() => setActiveTab('results')}
@@ -310,7 +310,7 @@ const MSPSRPIDetailsPage = () => {
                 : 'text-gray-400 hover:text-purple-300'
                 }`}
             >
-              Key Results
+              {data.tabLabels?.results || "Key Results"}
             </button>
             <button
               onClick={() => setActiveTab('pulsars')}
@@ -319,7 +319,7 @@ const MSPSRPIDetailsPage = () => {
                 : 'text-gray-400 hover:text-purple-300'
                 }`}
             >
-              Target Pulsars
+              {data.tabLabels?.pulsars || "Target Pulsars"}
             </button>
           </div>
         </div>
@@ -333,7 +333,9 @@ const MSPSRPIDetailsPage = () => {
           {activeTab === 'overview' && (
             <div>
               <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 mb-8 shadow-xl">
-                <h2 className="text-2xl font-bold text-white mb-4">Project Overview</h2>
+                <h2 className="text-2xl font-bold text-white mb-4">
+                  {data.sectionTitles?.overview || "Project Overview"}
+                </h2>
                 <div className="prose prose-invert prose-purple max-w-none">
                   {data.overview.map((paragraph, index) => (
                     <p key={index} className="mb-4 text-gray-300">
@@ -356,7 +358,9 @@ const MSPSRPIDetailsPage = () => {
 
               {/* Project Timeline */}
               <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 shadow-xl">
-                <h2 className="text-2xl font-bold text-white mb-6">Project Timeline</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">
+                  {data.sectionTitles?.timeline || "Project Timeline"}
+                </h2>
                 <div className="relative">
                   {/* Timeline line */}
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-purple-700/50 ml-6 md:ml-8"></div>
@@ -383,7 +387,9 @@ const MSPSRPIDetailsPage = () => {
           {/* Objectives Tab Content */}
           {activeTab === 'objectives' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 shadow-xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Project Objectives</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {data.sectionTitles?.objectives || "Project Objectives"}
+              </h2>
 
               <div className="space-y-6">
                 {data.objectives.map((objective, index) => (
@@ -395,7 +401,9 @@ const MSPSRPIDetailsPage = () => {
               </div>
 
               <div className="mt-10">
-                <h3 className="text-xl font-bold text-white mb-4">Technical Approach</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.technicalApproach || "Technical Approach"}
+                </h3>
                 <div className="prose prose-invert prose-purple max-w-none">
                   {data.technicalApproach.map((paragraph, index) => (
                     <p key={index} className="mb-4 text-gray-300">
@@ -410,7 +418,9 @@ const MSPSRPIDetailsPage = () => {
           {/* Key Results Tab Content */}
           {activeTab === 'results' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 shadow-xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Key Results & Discoveries</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {data.sectionTitles?.keyResults || "Key Results & Discoveries"}
+              </h2>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
                 {data.keyResults.map((result, index) => (
@@ -421,7 +431,9 @@ const MSPSRPIDetailsPage = () => {
                 ))}
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-4">Scientific Impact</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                {data.sectionTitles?.scientificImpact || "Scientific Impact"}
+              </h3>
               <div className="prose prose-invert prose-purple max-w-none mb-6">
                 {data.scientificImpact.map((paragraph, index) => (
                   <p key={index} className="mb-4 text-gray-300">
@@ -432,7 +444,9 @@ const MSPSRPIDetailsPage = () => {
 
               {/* Publications List */}
               <div className="mt-8">
-                <h3 className="text-xl font-bold text-white mb-4">MSPSRπ Publications</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.publications || "MSPSRπ Publications"}
+                </h3>
                 <div className="space-y-4">
                   {data.publications.map((pub, index) => (
                     <div key={index} className="bg-slate-800/30 p-4 rounded-lg border border-purple-700/20">
@@ -467,7 +481,7 @@ const MSPSRPIDetailsPage = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-purple-500/40 rounded-md text-purple-300 bg-purple-900/30 hover:bg-purple-800/50 transition duration-300"
                   >
-                    View All Publications <ExternalLink className="ml-2 h-4 w-4" />
+                    {data.viewAllPublicationsText || "View All Publications"} <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </div>
               </div>
@@ -480,7 +494,9 @@ const MSPSRPIDetailsPage = () => {
               <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 shadow-xl mb-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">Pulsars Studied</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                      {data.sectionTitles?.pulsars || "Pulsars Studied"}
+                    </h2>
                     <p className="text-gray-300 mt-1">
                       {data.pulsarsStudied.overview}
                     </p>
@@ -491,7 +507,7 @@ const MSPSRPIDetailsPage = () => {
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-white mb-3">
                     <span className="flex items-center">
-                      <Filter className="w-5 h-5 mr-2" /> Filter by Flux Density
+                      <Filter className="w-5 h-5 mr-2" /> {data.fluxFilterTitle || "Filter by Flux Density"}
                     </span>
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -502,7 +518,7 @@ const MSPSRPIDetailsPage = () => {
                         }`}
                       onClick={() => setFluxFilter('all')}
                     >
-                      All Pulsars
+                      {data.fluxFilterLabels?.all || "All Pulsars"}
                     </button>
                     <button
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${fluxFilter === 'low'
@@ -511,7 +527,7 @@ const MSPSRPIDetailsPage = () => {
                         }`}
                       onClick={() => setFluxFilter('low')}
                     >
-                      0.2-0.76 mJy
+                      {data.fluxFilterLabels?.low || "0.2-0.76 mJy"}
                     </button>
                     <button
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${fluxFilter === 'medium'
@@ -520,7 +536,7 @@ const MSPSRPIDetailsPage = () => {
                         }`}
                       onClick={() => setFluxFilter('medium')}
                     >
-                      0.76-1.2 mJy
+                      {data.fluxFilterLabels?.medium || "0.76-1.2 mJy"}
                     </button>
                     <button
                       className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${fluxFilter === 'high'
@@ -529,7 +545,7 @@ const MSPSRPIDetailsPage = () => {
                         }`}
                       onClick={() => setFluxFilter('high')}
                     >
-                      &gt;1.2 mJy
+                      {data.fluxFilterLabels?.high || ">1.2 mJy"}
                     </button>
                   </div>
                 </div>
@@ -554,12 +570,24 @@ const MSPSRPIDetailsPage = () => {
                   <table className="min-w-full divide-y divide-purple-900/50">
                     <thead className="bg-slate-800/50">
                       <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Pulsar</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">RA</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Dec</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">1.4 GHz flux density (mJy)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of inbeam calibrators</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">Number of epochs observed</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.name || "Pulsar"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.ra || "RA"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.dec || "Dec"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.fluxDensity || "1.4 GHz flux density (mJy)"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.inbeamCalibrators || "Number of inbeam calibrators"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-purple-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.epochsObserved || "Number of epochs observed"}
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -593,10 +621,10 @@ const MSPSRPIDetailsPage = () => {
                         : 'text-purple-300 hover:bg-purple-900/30'
                         }`}
                     >
-                      Previous
+                      {data.paginationLabels?.previous || "Previous"}
                     </button>
                     <span className="text-gray-300">
-                      Page {currentPage} of {totalPages}
+                      {data.paginationLabels?.pageLabel || "Page"} {currentPage} {data.paginationLabels?.ofLabel || "of"} {totalPages}
                     </span>
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
@@ -606,7 +634,7 @@ const MSPSRPIDetailsPage = () => {
                         : 'text-purple-300 hover:bg-purple-900/30'
                         }`}
                     >
-                      Next
+                      {data.paginationLabels?.next || "Next"}
                     </button>
                   </div>
                 )}
@@ -614,7 +642,9 @@ const MSPSRPIDetailsPage = () => {
 
               {/* Data Processing Pipeline */}
               <div className="bg-slate-900/40 backdrop-blur-sm border border-purple-900/30 rounded-xl p-6 shadow-xl">
-                <h3 className="text-xl font-bold text-white mb-4">Data Processing Pipeline</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.dataPipeline || "Data Processing Pipeline"}
+                </h3>
                 <p className="text-gray-300 mb-6">
                   {data.dataPipeline.description}
                 </p>
@@ -649,7 +679,7 @@ const MSPSRPIDetailsPage = () => {
       <div className="py-6 border-t border-slate-800/50 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-gray-500 text-sm">
-            © 2025 - MSPSRπ Project. All rights reserved.
+            {data.footerText || "© 2025 - MSPSRπ Project. All rights reserved."}
           </p>
         </div>
       </div>
