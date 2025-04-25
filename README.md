@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+# Millisecond Pulsar Parallax Program 🌌
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![Website Status](https://img.shields.io/badge/Website-Online-brightgreen)](https://codexnyctis.github.io/test-deploy/#/test-deploy)
+[![VLBA](https://img.shields.io/badge/VLBA-Pulsar%20Astrometry-blueviolet)](https://public.nrao.edu/telescopes/vla/)
 
-## Available Scripts
+> Mapping the Galaxy's Most Precise Timekeepers with Very Long Baseline Interferometry
 
-In the project directory, you can run:
+## 📡 Project Overview
 
-### `npm start`
+Our multi-phase program (PSRπ, MSPSRπ, MSPSRπ2) uses Very Long Baseline Interferometry to measure millisecond pulsar positions throughout the Galaxy. The VLBA achieves parallax and proper motion accuracies of ~40 microarcseconds and ~40 microarcseconds/year for pulsars as faint as 1 mJy.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+These precise measurements help us:
+- Enhance gravitational wave detection
+- Test Einstein's theories
+- Map dark matter distribution
+- Create a cosmic GPS network revealing the invisible structure of spacetime
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🔗 Quick Links
 
-### `npm test`
+- **Live Website:** [Millisecond Pulsar Parallax Program](https://codexnyctis.github.io/test-deploy/#/test-deploy)
+- **System Requirements:** Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- **Current Status:** Desktop optimized (mobile version in development)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Editing Content
 
-### `npm run build`
+### Local Editing (Recommended)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository to your local machine
+   ```bash
+   git clone [repository-url]
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Navigate to the `/public/data/` directory
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Edit the relevant JSON files with your preferred text editor
 
-### `npm run eject`
+4. Commit and push your changes
+   ```bash
+   git add .
+   git commit -m "explanation of the change"
+   git push origin main
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. The site will automatically rebuild with your changes (visible in the repository's Actions tab)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### JSON Formatting Tips
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```json
+{
+  "date": "2023",
+  "title": "Project Proposal",
+  "description": "MSPSRπ2 proposal submitted to VLBA for observing time allocation."
+}
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Items in a list need comma between them, but not after the last item
+- All property names need double quotes
+- Text values need double quotes
+- Numbers don't need quotes
 
-## Learn More
+## 📊 Site Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Home Page
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The homepage introduces the VLBA pulsar astrometry project, highlighting its mission to measure precise distances to millisecond pulsars.
 
-### Code Splitting
+**Key Sections:**
+- Research Title & Questions
+- Key Discoveries
+- Journey of a Pulsar
+- Project Statistics
+- Phase Progress
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Edit File:** `homePage.json`
 
-### Analyzing the Bundle Size
+### Project Page
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Key Sections:**
+- Project Overview - MSPSRπ & MSPSRπ2 phases
+- Phase Details
+- Observation Status Tracker
 
-### Making a Progressive Web App
+**Edit Files:**
+- `projectData.json` - Project descriptions, timeline, phase details
+- `observationData.json` - Current observation status
+- `mspsrpiDetails.json` - MSPSRπ details
+- `mspsrpi2Details.json` - MSPSRπ2 details
+- `mspsrpi2Pulsars.json` - Target pulsars
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Data Release Page
 
-### Advanced Configuration
+Displays comprehensive data for all observed pulsars.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**Edit Files:**
+- `pulsars.json` - MSPSRπ pulsars
+- `mspsrpi2Pulsars.json` - MSPSRπ2 pulsars
 
-### Deployment
+### Publications Page
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Showcases research papers from the project with filtering and search.
 
-### `npm run build` fails to minify
+**Edit File:** `publications.json`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Team Page
+
+Displays all project members with profiles and contact information.
+
+**Edit File:** `teamMembers.json`
+
+## 🚀 Upcoming Features
+
+- **Home:** Mobile version optimization
+- **Project:** Mobile navigation and responsive design
+- **Data Release:** Dynamic data display, functional download buttons, visualization interface
+- **Publications:** Mobile optimization
+- **Team:** Global collaboration map showing geographic distribution
+
+## ❓ Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Content not updating | Save file and wait a few minutes |
+| "Loading..." message | Verify files are in correct `/public/data/` folder |
+| Progress statistics incorrect | Check pulsar status values ("scheduled", "in-progress", "complete", "issue") |
+| Missing content | Verify JSON format (check commas, quotes, brackets) |
+| Error messages | Create backup before editing; check JSON syntax |
+
+---
+
+*For additional support or to report issues, please contact the team.*
