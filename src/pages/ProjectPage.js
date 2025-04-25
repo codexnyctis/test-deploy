@@ -308,9 +308,9 @@ const ProjectPage = () => {
       <div id="project-phases" className="py-12 bg-gradient-to-b from-indigo-950 via-slate-900 to-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Project Phases</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">{projectData.projectPhasesTitle}</h2>
             <p className="text-xl text-indigo-300 max-w-3xl mx-auto">
-              Spanning over a decade of research, our program has evolved through three phases
+              {projectData.projectPhasesDescription}
             </p>
           </div>
 
@@ -438,9 +438,9 @@ const ProjectPage = () => {
       <div id="progress-tracker" className="py-12 bg-gradient-to-b from-slate-950 via-slate-900 to-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-white mb-4">MSPSRPI2 Progress Tracker</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">{projectData.progressTrackerTitle}</h2>
             <p className="text-xl text-indigo-300 max-w-3xl mx-auto">
-              Current status of pulsar observations
+              {projectData.progressTrackerDescription}
             </p>
           </div>
 
