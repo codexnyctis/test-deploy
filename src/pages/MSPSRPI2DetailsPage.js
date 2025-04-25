@@ -32,7 +32,6 @@ const MSPSRPI2DetailsPage = () => {
 
   // For filtering pulsars by flux density category
   const [fluxFilter, setFluxFilter] = useState('all');
-  const fluxCategories = ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
   // DATA FETCHING
   useEffect(() => {
@@ -76,6 +75,9 @@ const MSPSRPI2DetailsPage = () => {
   //------------------------------------------------------------------
   //                     FILTERING AND PAGINATION
   //------------------------------------------------------------------
+
+  // Get flux categories from data if available, otherwise use defaults
+  const fluxCategories = data?.fluxCategories || ['all', '0.2-0.76 mJy', '0.76-1.2 mJy', '>1.2 mJy'];
 
   // Filter pulsars based on selected flux category
   const filteredPulsars = pulsars && fluxFilter === 'all'
@@ -130,7 +132,7 @@ const MSPSRPI2DetailsPage = () => {
       <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-400 border-r-transparent"></div>
-          <p className="mt-4 text-xl">Loading MSPSRπ2 data...</p>
+          <p className="mt-4 text-xl">{data?.loadingText || "Loading MSPSRπ2 data..."}</p>
         </div>
       </div>
     );
@@ -142,13 +144,13 @@ const MSPSRPI2DetailsPage = () => {
       <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-red-400 text-6xl mb-4">!</div>
-          <h2 className="text-2xl mb-4">Something went wrong</h2>
+          <h2 className="text-2xl mb-4">{data?.errorTitle || "Something went wrong"}</h2>
           <p className="text-gray-300 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Try Again
+            {data?.tryAgainText || "Try Again"}
           </button>
         </div>
       </div>
@@ -160,12 +162,12 @@ const MSPSRPI2DetailsPage = () => {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-950 via-slate-900 to-black text-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl">No data available. Please refresh the page.</p>
+          <p className="text-xl">{data?.noDataText || "No data available. Please refresh the page."}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Refresh Data
+            {data?.refreshText || "Refresh Data"}
           </button>
         </div>
       </div>
@@ -189,31 +191,31 @@ const MSPSRPI2DetailsPage = () => {
                 to="/test-deploy" 
                 className={`${location.pathname === '/test-deploy' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
-                Home
+                {data.navLinks?.home || "Home"}
               </Link>
               <Link 
                 to="/project" 
                 className={`${location.pathname.includes('project') ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
-                Project
+                {data.navLinks?.project || "Project"}
               </Link>
               <Link 
                 to="/data-release" 
                 className={`${location.pathname === '/data-release' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
-                Data Release
+                {data.navLinks?.dataRelease || "Data Release"}
               </Link>
               <Link 
                 to="/publications" 
                 className={`${location.pathname === '/publications' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
-                Publications
+                {data.navLinks?.publications || "Publications"}
               </Link>
               <Link 
                 to="/team" 
                 className={`${location.pathname === '/team' ? 'text-indigo-400' : 'text-gray-300 hover:text-indigo-400'} px-3 py-2 font-medium`}
               >
-                Team
+                {data.navLinks?.team || "Team"}
               </Link>
             </div>
           </div>
@@ -224,10 +226,10 @@ const MSPSRPI2DetailsPage = () => {
       <div className="pt-20 pb-4 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <Link to="/project" className="inline-flex items-center text-blue-300 hover:text-blue-400 transition">
           <ChevronLeft className="w-5 h-5 mr-1" />
-          Back to Project Overview
+          {data.backLinkText || "Back to Project Overview"}
         </Link>
         <Link to="/projects/mspsrpi-details" className="inline-flex items-center text-blue-300 hover:text-blue-400 transition">
-          Go to MSPSRπ
+          {data.nextLinkText || "Go to MSPSRπ"}
           <ArrowRight className="w-5 h-5 ml-1" />
         </Link>
       </div>
@@ -250,10 +252,10 @@ const MSPSRPI2DetailsPage = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="max-w-3xl">
             <div className="inline-block mb-4 px-4 py-1 bg-blue-900/60 backdrop-blur-sm rounded-full text-blue-300 text-sm font-medium border border-blue-700/50">
-              Project Phase 2023-2025
+              {data.heroTagline || "Project Phase 2023-2025"}
             </div>
             <h1 className="text-5xl font-bold text-white mb-4">
-              MSPSRπ2
+              {data.heroTitle || "MSPSRπ2"}
             </h1>
             <p className="text-xl text-blue-200 mb-6">
               {data.heroSubtitle}
@@ -269,7 +271,7 @@ const MSPSRPI2DetailsPage = () => {
                 className="inline-flex items-center px-5 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300 shadow-[0_0_10px_rgba(59,130,246,0.3)] hover:shadow-[0_0_15px_rgba(59,130,246,0.5)]"
               >
                 <Download className="mr-2 h-5 w-5" />
-                Access Data Release
+                {data.dataReleaseButtonText || "Access Data Release"}
               </a>
               <a
                 href={data.publicationsUrl}
@@ -278,7 +280,7 @@ const MSPSRPI2DetailsPage = () => {
                 className="inline-flex items-center px-5 py-2 border border-indigo-500/40 rounded-md text-indigo-300 bg-indigo-900/30 hover:bg-indigo-800/50 transition duration-300"
               >
                 <FileText className="mr-2 h-5 w-5" />
-                View Publications
+                {data.publicationsButtonText || "View Publications"}
               </a>
             </div>
           </div>
@@ -296,7 +298,7 @@ const MSPSRPI2DetailsPage = () => {
                 : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
-              Overview
+              {data.tabLabels?.overview || "Overview"}
             </button>
             <button
               onClick={() => setActiveTab('objectives')}
@@ -305,7 +307,7 @@ const MSPSRPI2DetailsPage = () => {
                 : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
-              Details
+              {data.tabLabels?.objectives || "Details"}
             </button>
             <button
               onClick={() => setActiveTab('results')}
@@ -314,7 +316,7 @@ const MSPSRPI2DetailsPage = () => {
                 : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
-              Key Results
+              {data.tabLabels?.results || "Key Results"}
             </button>
             <button
               onClick={() => setActiveTab('pulsars')}
@@ -323,7 +325,7 @@ const MSPSRPI2DetailsPage = () => {
                 : 'text-gray-400 hover:text-blue-300'
                 }`}
             >
-              Target Pulsars
+              {data.tabLabels?.pulsars || "Target Pulsars"}
             </button>
           </div>
         </div>
@@ -337,7 +339,9 @@ const MSPSRPI2DetailsPage = () => {
           {activeTab === 'overview' && (
             <div>
               <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 mb-8 shadow-xl">
-                <h2 className="text-2xl font-bold text-white mb-4">Project Overview</h2>
+                <h2 className="text-2xl font-bold text-white mb-4">
+                  {data.sectionTitles?.overview || "Project Overview"}
+                </h2>
                 <div className="prose prose-invert prose-blue max-w-none">
                   {data.overview.map((paragraph, index) => (
                     <p key={index} className="mb-4 text-gray-300">
@@ -360,7 +364,9 @@ const MSPSRPI2DetailsPage = () => {
 
               {/* Project Timeline */}
               <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
-                <h2 className="text-2xl font-bold text-white mb-6">Project Timeline</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">
+                  {data.sectionTitles?.timeline || "Project Timeline"}
+                </h2>
                 <div className="relative">
                   {/* Timeline line */}
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-700/50 ml-6 md:ml-8"></div>
@@ -387,7 +393,9 @@ const MSPSRPI2DetailsPage = () => {
           {/* Objectives Tab Content */}
           {activeTab === 'objectives' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Project Objectives</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {data.sectionTitles?.objectives || "Project Objectives"}
+              </h2>
 
               <div className="space-y-6">
                 {data.objectives.map((objective, index) => (
@@ -399,7 +407,9 @@ const MSPSRPI2DetailsPage = () => {
               </div>
 
               <div className="mt-10">
-                <h3 className="text-xl font-bold text-white mb-4">Technical Approach</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.technicalApproach || "Technical Approach"}
+                </h3>
                 <div className="prose prose-invert prose-blue max-w-none">
                   {data.technicalApproach.map((paragraph, index) => (
                     <p key={index} className="mb-4 text-gray-300">
@@ -414,7 +424,9 @@ const MSPSRPI2DetailsPage = () => {
           {/* Key Results Tab Content */}
           {activeTab === 'results' && (
             <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Key Results & Impact</h2>
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {data.sectionTitles?.keyResults || "Key Results & Impact"}
+              </h2>
 
               {/* Conditional overlay based on data.showResultsOverlay flag */}
               {data.showResultsOverlay && (
@@ -442,14 +454,16 @@ const MSPSRPI2DetailsPage = () => {
                   {/* Content of the overlay */}
                   <div className="relative py-16 px-8 text-center">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-900/60 mb-6 backdrop-blur-md border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                      <span className="text-3xl">🔭</span>
+                      <span className="text-3xl">{data.resultsOverlay?.icon || "🔭"}</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">Results Coming Soon</h3>
+                    <h3 className="text-2xl font-bold text-white mb-4">
+                      {data.resultsOverlay?.title || "Results Coming Soon"}
+                    </h3>
                     <p className="text-xl text-blue-200 max-w-2xl mx-auto mb-6">
-                      The key results will be available shortly after the observations are complete
+                      {data.resultsOverlay?.subtitle || "The key results will be available shortly after the observations are complete"}
                     </p>
                     <p className="text-gray-300 max-w-2xl mx-auto">
-                      Our team is currently conducting observations and analyzing data. Check back later to see the groundbreaking discoveries from the MSPSRπ2 project.
+                      {data.resultsOverlay?.description || "Our team is currently conducting observations and analyzing data. Check back later to see the groundbreaking discoveries from the MSPSRπ2 project."}
                     </p>
                   </div>
                 </div>
@@ -466,7 +480,9 @@ const MSPSRPI2DetailsPage = () => {
                   ))}
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-4">Scientific Impact</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.scientificImpact || "Scientific Impact"}
+                </h3>
                 <div className="prose prose-invert prose-blue max-w-none mb-6">
                   {data.scientificImpact.map((paragraph, index) => (
                     <p key={index} className="mb-4 text-gray-300">
@@ -478,7 +494,9 @@ const MSPSRPI2DetailsPage = () => {
               
               {/* Publications section with conditional placeholder */}
               <div className="mt-8">
-                <h3 className="text-2xl font-bold text-white mb-4">Related Publications</h3>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {data.sectionTitles?.publications || "Related Publications"}
+                </h3>
                 
                 {/* Conditional publications placeholder */}
                 {data.showPublicationsPlaceholder ? (
@@ -487,9 +505,11 @@ const MSPSRPI2DetailsPage = () => {
                       <div className="w-16 h-16 bg-blue-900/60 rounded-full flex items-center justify-center mb-4 backdrop-blur-md border border-blue-500/50">
                         <FileText className="h-8 w-8 text-blue-300" />
                       </div>
-                      <h4 className="text-xl font-semibold text-blue-300 mb-3">Publications Coming Soon</h4>
+                      <h4 className="text-xl font-semibold text-blue-300 mb-3">
+                        {data.publicationsPlaceholder?.title || "Publications Coming Soon"}
+                      </h4>
                       <p className="text-gray-300 max-w-2xl">
-                        Publications related to the MSPSRπ2 project will be listed here once research papers have been published. Please check back later.
+                        {data.publicationsPlaceholder?.description || "Publications related to the MSPSRπ2 project will be listed here once research papers have been published. Please check back later."}
                       </p>
                     </div>
                   </div>
@@ -527,7 +547,7 @@ const MSPSRPI2DetailsPage = () => {
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-4 py-2 border border-blue-500/40 rounded-md text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 transition duration-300"
                       >
-                        View All Publications <ExternalLink className="ml-2 h-4 w-4" />
+                        {data.viewAllPublicationsText || "View All Publications"} <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </div>
                   </div>
@@ -542,7 +562,9 @@ const MSPSRPI2DetailsPage = () => {
               <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl mb-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-white">Target Pulsars</h2>
+                    <h2 className="text-2xl font-bold text-white">
+                      {data.sectionTitles?.pulsars || "Target Pulsars"}
+                    </h2>
                     <p className="text-gray-300 mt-1">
                       {data.pulsarsStudied.overview}
                     </p>
@@ -570,7 +592,9 @@ const MSPSRPI2DetailsPage = () => {
                 <div className="mb-6">
                   <div className="flex items-center mb-3">
                     <Filter className="h-5 w-5 text-blue-400 mr-2" />
-                    <h3 className="text-lg font-semibold text-white">Filter by Flux Density</h3>
+                    <h3 className="text-lg font-semibold text-white">
+                      {data.fluxFilterTitle || "Filter by Flux Density"}
+                    </h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {fluxCategories.map(category => (
@@ -582,16 +606,16 @@ const MSPSRPI2DetailsPage = () => {
                           : 'bg-slate-800/50 text-gray-400 hover:text-blue-300 border border-blue-900/20'
                           }`}
                       >
-                        {category === 'all' ? 'All Pulsars' : category}
+                        {category === 'all' ? (data.fluxFilterLabels?.all || 'All Pulsars') : category}
                       </button>
                     ))}
                   </div>
                   <div className="mt-2 text-sm text-gray-400">
                     {fluxFilter !== 'all' && (
                       <p>
-                        {fluxFilter === '0.2-0.76 mJy' && 'Showing fainter pulsars (4-hour sessions)'}
-                        {fluxFilter === '0.76-1.2 mJy' && 'Showing medium brightness pulsars (2-hour sessions)'}
-                        {fluxFilter === '>1.2 mJy' && 'Showing brighter pulsars (1-hour sessions)'}
+                        {fluxFilter === '0.2-0.76 mJy' && (data.fluxFilterDescriptions?.low || 'Showing fainter pulsars (4-hour sessions)')}
+                        {fluxFilter === '0.76-1.2 mJy' && (data.fluxFilterDescriptions?.medium || 'Showing medium brightness pulsars (2-hour sessions)')}
+                        {fluxFilter === '>1.2 mJy' && (data.fluxFilterDescriptions?.high || 'Showing brighter pulsars (1-hour sessions)')}
                       </p>
                     )}
                   </div>
@@ -602,12 +626,24 @@ const MSPSRPI2DetailsPage = () => {
                   <table className="min-w-full divide-y divide-blue-900/50">
                     <thead className="bg-slate-800/50">
                       <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Pulsar</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">RA</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Dec</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">1.4 GHz Flux Density (mJy)</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Inbeam Calibrators</th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">Epochs Observed</th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.name || "Pulsar"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.ra || "RA"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.dec || "Dec"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.fluxDensity || "1.4 GHz Flux Density (mJy)"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.inbeamCalibrators || "Inbeam Calibrators"}
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-blue-300 uppercase tracking-wider">
+                          {data.pulsarTableHeaders?.epochsObserved || "Epochs Observed"}
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-slate-900/30 divide-y divide-slate-800/50">
@@ -630,7 +666,7 @@ const MSPSRPI2DetailsPage = () => {
                       ) : (
                         <tr>
                           <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                            No pulsars match the selected filter.
+                            {data.noResultsText || "No pulsars match the selected filter."}
                           </td>
                         </tr>
                       )}
@@ -649,10 +685,10 @@ const MSPSRPI2DetailsPage = () => {
                         : 'text-blue-300 hover:bg-blue-900/30'
                         }`}
                     >
-                      Previous
+                      {data.paginationLabels?.previous || "Previous"}
                     </button>
                     <span className="text-gray-300">
-                      Page {currentPage} of {totalPages}
+                      {data.paginationLabels?.pageLabel || "Page"} {currentPage} {data.paginationLabels?.ofLabel || "of"} {totalPages}
                     </span>
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
@@ -662,7 +698,7 @@ const MSPSRPI2DetailsPage = () => {
                         : 'text-blue-300 hover:bg-blue-900/30'
                         }`}
                     >
-                      Next
+                      {data.paginationLabels?.next || "Next"}
                     </button>
                   </div>
                 )}
@@ -670,7 +706,9 @@ const MSPSRPI2DetailsPage = () => {
 
               {/* Data Processing Pipeline */}
               <div className="bg-slate-900/40 backdrop-blur-sm border border-blue-900/30 rounded-xl p-6 shadow-xl">
-                <h3 className="text-xl font-bold text-white mb-4">Data Processing Pipeline</h3>
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {data.sectionTitles?.dataPipeline || "Data Processing Pipeline"}
+                </h3>
                 <p className="text-gray-300 mb-6">
                   {data.dataPipeline.description}
                 </p>
@@ -705,7 +743,7 @@ const MSPSRPI2DetailsPage = () => {
       <div className="py-6 border-t border-slate-800/50 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-gray-500 text-sm">
-            © 2025 - MSPSRπ2 Project. All rights reserved.
+            {data.footerText || "© 2025 - MSPSRπ2 Project. All rights reserved."}
           </p>
         </div>
       </div>
